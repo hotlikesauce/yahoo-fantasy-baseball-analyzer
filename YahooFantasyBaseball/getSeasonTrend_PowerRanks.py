@@ -1,3 +1,4 @@
+from calendar import week
 from msilib.schema import Error
 import pandas as pd
 import requests
@@ -8,10 +9,11 @@ import csv
 import urllib.request
 from functools import reduce
 import pymongo, certifi
-import time
+import time,datetime
 
 
 def get_records():
+
 
     #Actual Records
     source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/11602').read()
@@ -119,6 +121,11 @@ def get_records():
     return df
 
 def get_stats(records_df):
+    
+    #Set week number
+    my_date = datetime.date.today()
+    year, week_num, day_of_week = my_date.isocalendar()
+    thisWeek = (week_num - 15)
 
     #Batting Stats
     source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/11602/headtoheadstats?pt=B&type=stats').read()
@@ -160,7 +167,7 @@ def get_stats(records_df):
     
     df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['NW_Rank_Stats'])/12
     df_merge['Stats_Power_Rank'] = df_merge['Stats_Power_Score'].rank(ascending = True)
-    
+    df_merge["Week"]= thisWeek
     
     ##UNCOMMENT THIS WHEN TEAMS CLINCH PLAYOFFS AND HAVE ASTERISKS NEXT TO THEIR NAMES
     try:        
@@ -178,14 +185,15 @@ def get_stats(records_df):
 
 def write_mongo(power_rank_df):
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    ca = certifi.where()
+    client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tlsCAFile=ca)
     db = client['YahooFantasyBaseball']
-    collection = db['power_ranks']
+    collection = db['power_ranks_season_trend']
 
     #Delete Existing Documents
-    myquery = {}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
+    # myquery = {}
+    # x = collection.delete_many(myquery)
+    # print(x.deleted_count, " documents deleted.")
 
 
     #Insert New Live Standings
@@ -198,7 +206,7 @@ def write_mongo(power_rank_df):
 def main():
     records_df = get_records()
     power_rank_df = get_stats(records_df)
-    #write_mongo(power_rank_df)
+    write_mongo(power_rank_df)
 
 
 

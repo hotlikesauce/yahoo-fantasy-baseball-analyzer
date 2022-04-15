@@ -44,17 +44,20 @@ try:
         df_seasonRecords = df_seasonRecords.sort_values(by=['Pct'],ascending=False,ignore_index=True)
         print(df_seasonRecords[['Team','Pct','Raw_Score','Week']].sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
+        return df_seasonRecords
+
     def mongo_write(df_liveStandings):
+
         #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
         ca = certifi.where()
         client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
         db = client['YahooFantasyBaseball']
-        collection = db['season_standings']
+        collection = db['season_standings_season_trend']
 
-        #Delete Existing Documents
-        #myquery = {}
-        #x = collection.delete_many(myquery)
-        #print(x.deleted_count, " documents deleted.")
+        # Delete Existing Documents
+        # myquery = {}
+        # x = collection.delete_many(myquery)
+        # print(x.deleted_count, " documents deleted.")
 
 
         #Insert New Live Standings
@@ -70,7 +73,7 @@ except Exception as e:
 
 def main():
     df_liveStandings = getLiveStandings()
-    #mongo_write(df_liveStandings)
+    mongo_write(df_liveStandings)
 
 
 if __name__ == '__main__':

@@ -174,7 +174,8 @@ def get_stats(records_df):
 
 def write_mongo(power_rank_df):
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    ca = certifi.where()
+    client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tlsCAFile=ca)
     db = client['YahooFantasyBaseball']
     collection = db['power_ranks']
 
