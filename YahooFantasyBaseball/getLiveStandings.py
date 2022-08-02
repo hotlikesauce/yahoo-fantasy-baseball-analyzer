@@ -25,10 +25,15 @@ try:
             #Set week number
             my_date = datetime.date.today()
             year, week_num, day_of_week = my_date.isocalendar()
-            thisWeek = (week_num - 14)
+            #The if statement below handles the 2-week ASG Break which happens on week 30 of the calendar year
+            if week_num < 30:
+                thisWeek = (week_num - 14)
+            else:
+                thisWeek = (week_num - 15)
 
             #This is the correct URL, it gets team totals as opposed to the standard matchup page which has weird embedded tables
             source = uReq('https://baseball.fantasysports.yahoo.com/b1/11602/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
+            print('https://baseball.fantasysports.yahoo.com/b1/11602/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup))
             soup = bs.BeautifulSoup(source,'lxml')
 
             table = soup.find_all('table')
