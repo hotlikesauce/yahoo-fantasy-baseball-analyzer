@@ -78,6 +78,7 @@ try:
         df_seasonRecords["WLT_Win"]= new[0]
         df_seasonRecords["WLT_Loss"]= new[1]
         df_seasonRecords["WLT_Draw"]= new[2]
+        df_seasonRecords['Raw_Score_Static'] = (df_seasonRecords['WLT_Win'] + (df_seasonRecords['WLT_Draw']*.5))
 
         #calculate live standings from season records and live records
         df_liveStandings = df_seasonRecords.merge(df_currentMatchup, on='Team')
