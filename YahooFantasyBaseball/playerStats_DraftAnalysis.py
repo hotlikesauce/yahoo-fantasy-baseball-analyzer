@@ -1,5 +1,5 @@
 from os import name
-from scrapeStandings import write_mongo
+#from scrapeStandings import write_mongo
 import pandas as pd, urllib,unicodedata,time
 import requests
 from bs4 import BeautifulSoup
@@ -62,9 +62,9 @@ def get_stats():
             try:
                 #determine if a player has played for > 1 team
                 df = pd.read_html(str(table))[0]
-                df_2021 = (df.loc[df['season'] == '2021'])
+                df_2022 = (df.loc[df['season'] == '2022'])
                 
-                if len(df_2021.index) == 1:
+                if len(df_2022.index) == 1:
                     
                     #Try/Except to handle players who were drafted but yet to appear in an MLB game this year
 
@@ -87,7 +87,7 @@ def get_stats():
                     df = pd.read_html(str(table))[1]
 
                     #calculate number of teams played for, grab corresponding rows
-                    seasons = (-2)-len(df_2021.index)
+                    seasons = (-2)-len(df_2022.index)
                     
                     #Sum Most recent season stats
                     df = (df.iloc[seasons:-3])
@@ -117,8 +117,9 @@ def get_stats():
 
 def compile_stats():
     df_stats_dict = pd.read_csv("Current_Stats.csv")
-    df_draft_dict = pd.read_csv("Batters_Dict.csv")
-    print(df_stats_dict)
+    df_draft_dict = pd.read_csv("2021_Draft.csv")
+    print('-------------------------------------------------------------------------------------------------------------')
+    print(df_draft_dict)
 
 
     for column in df_stats_dict:
@@ -129,7 +130,7 @@ def compile_stats():
             # Set the index to newly created column, Rating_Rank
             #stats_dict.set_index(column+'_Rank')
 
-    #print(df_stats_dict.sort_values('OPS_Weighted'))
+    print(df_stats_dict.sort_values('OPS_Weighted'))
     
     
     # Calculate Median Power Rankings
@@ -152,14 +153,21 @@ def compile_stats():
 
     df_stats_dict['Avg_Rank'] = ((df_stats_dict['Mean_Power_Rank']+df_stats_dict['Median_Power_Rank'])/2).rank(ascending = True)
 
+    #print(df_draft_dict)
+
     # Remove Index Columns
+
     df_stats_dict = df_stats_dict.iloc[: , 1:]
-    # df_draft_dict = df_draft_dict.rename(columns={'PLAYERNAME': 'Player'})
-    # df_join = pd.merge(df_draft_dict, df_stats_dict, how="left", on=["Player","Team"])
+    df_draft_dict = df_draft_dict.rename(columns={'PLAYERNAME': 'Player'})
+    print(df_stats_dict)
+    df_draft_dict['Overall_Pick'] = (df_draft_dict['Round']+(df_draft_dict['Round']-1*12))+df_draft_dict['Pick']-1
+    print(df_draft_dict)
+    df_join = pd.merge(df_draft_dict, df_stats_dict, how="left", on=["Player"])
+    #print(df_join['Overall_Pick'])
 
 
     #Rank after join
-    df_join = df_stats_dict.dropna(subset=['Team','Overall_Pick'])
+    #df_join = df_stats_dict.dropna(subset=['Team','Overall_Pick'])
     
     
     df_join.to_csv('draft_analysis.csv')
@@ -188,8 +196,8 @@ def write_mongo():
 
 
 def main():
-    setup_tables()
-    get_stats()
+    #setup_tables()
+    #get_stats()
     compile_stats()
     write_mongo()
 

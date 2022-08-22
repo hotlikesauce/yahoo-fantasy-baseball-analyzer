@@ -17,8 +17,9 @@ from pymongo import MongoClient, collection
 def get_draft():
     draft_df = pd.DataFrame(columns = ['Round','Pick','Player','Team'])
     #Batting Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23999/draftresults').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/11602/draftresults').read()
     soup = bs.BeautifulSoup(source,'lxml')
+
 
     table = soup.find_all('table')
     for x in range(0,22):
@@ -29,6 +30,10 @@ def get_draft():
         draft_df = draft_df.append(df)
 
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(draft_df)
+        draft_df['Player'] = draft_df['Player'].str.split('(').str[0]
+        draft_df['Player'] = draft_df['Player'].str.split('').str[0]
+        draft_df['Player'] = draft_df["Player"].str[:-1]
         print(draft_df)
         draft_df.to_csv('2021_Draft.csv')
 

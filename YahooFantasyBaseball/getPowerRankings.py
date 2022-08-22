@@ -162,7 +162,7 @@ def get_stats(records_df):
     
     
     ##UNCOMMENT THIS WHEN TEAMS CLINCH PLAYOFFS AND HAVE ASTERISKS NEXT TO THEIR NAMES
-    #df_merge['Rank'] = df_merge['Rank'].str.replace('*','').astype(int)
+    df_merge['Rank'] = df_merge['Rank'].str.replace('*','').astype(int)
     df_merge['Variation'] = df_merge['Stats_Power_Rank'] - df_merge['Rank'] 
     # rankings_df = df_merge[["Team Name","Stats_Power_Rank", "Stats_Power_Score"]]
 

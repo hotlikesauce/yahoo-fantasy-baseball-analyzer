@@ -1,241 +1,265 @@
-R_Index,Round,Pick,Player,Team
-0,3,1,Freddie Freeman,Yelich My Balls
-1,3,2,Gerrit Cole,Ian Cumsler
-2,3,3,Alex Bregman,AGS
-3,3,4,Anthony Rendon,SQUEEZE
-4,3,5,Adalberto Mondesi,¯\_(ツ)_/¯
-5,3,6,Ozzie Albies,AGS
-6,3,7,Yu Darvish,BallSachs
-7,3,8,Jack Flaherty,Dookie Butts
-8,3,9,Nolan Arenado,OGsecondHand
-9,3,10,Aaron Nola,Midas Well
-10,3,11,Rafael Devers,Moniebol
-11,3,12,Lucas Giolito,Hold The Line
-0,4,1,Starling Marte,Hold The Line
-1,4,2,Marcell Ozuna,Moniebol
-2,4,3,Xander Bogaerts,Midas Well
-3,4,4,DJ LeMahieu,OGsecondHand
-4,4,5,Pete Alonso,Dookie Butts
-5,4,6,Luis Robert,AGS
-6,4,7,Vladimir Guerrero Jr.,AGS
-7,4,8,Tim Anderson,¯\_(ツ)_/¯
-8,4,9,George Springer,AGS
-9,4,10,Nelson Cruz,OGsecondHand
-10,4,11,Corey Seager,Ian Cumsler
-11,4,12,Yoán Moncada,Yelich My Balls
-0,5,1,Michael Conforto,Yelich My Balls
-1,5,2,Kyle Tucker,Ian Cumsler
-2,5,3,Aaron Judge,Kershaw?2
-3,5,4,Whit Merrifield,SQUEEZE
-4,5,5,J.T. Realmuto,¯\_(ツ)_/¯
-5,5,6,Clayton Kershaw,SQUEEZE
-6,5,7,Austin Meadows,BallSachs
-7,5,8,Tyler Glasnow,Dookie Butts
-8,5,9,Blake Snell,OGsecondHand
-9,5,10,Randy Arozarena,Midas Well
-10,5,11,Stephen Strasburg,OGsecondHand
-11,5,12,Eugenio Suárez,Hold The Line
-0,6,1,Corbin Burnes,Hold The Line
-1,6,2,Nick Castellanos,Moniebol
-2,6,3,Gleyber Torres,Midas Well
-3,6,4,Josh Hader,OGsecondHand
-4,6,5,Giancarlo Stanton,Dookie Butts
-5,6,6,Liam Hendriks,BallSachs
-6,6,7,Keston Hiura,AGS
-7,6,8,Ketel Marte,¯\_(ツ)_/¯
-8,6,9,Aroldis Chapman,SQUEEZE
-9,6,10,Brandon Woodruff,Kershaw?2
-10,6,11,Paul Goldschmidt,Ian Cumsler
-11,6,12,Hyun-Jin Ryu,Yelich My Balls
-0,7,1,Kenta Maeda,Yelich My Balls
-1,7,2,Matt Chapman,Ian Cumsler
-2,7,3,Javier Báez,Kershaw?2
-3,7,4,Anthony Rizzo,SQUEEZE
-4,7,5,Matt Olson,¯\_(ツ)_/¯
-5,7,6,Cavan Biggio,AGS
-6,7,7,Trevor Rosenthal,BallSachs
-7,7,8,Max Muncy,Dookie Butts
-8,7,9,Brandon Lowe,OGsecondHand
-9,7,10,Charlie Blackmon,Midas Well
-10,7,11,Luke Voit,Moniebol
-11,7,12,Teoscar Hernández,Hold The Line
-0,8,1,Wil Myers,Hold The Line
-1,8,2,Raisel Iglesias,Moniebol
-2,8,3,Zack Greinke,Midas Well
-3,8,4,Lourdes Gurriel,OGsecondHand
-4,8,5,Kyle Hendricks,Dookie Butts
-5,8,6,Salvador Perez,AGS
-6,8,7,Charlie Morton,AGS
-7,8,8,Kenley Jansen,OGsecondHand
-8,8,9,Edwin Díaz,SQUEEZE
-9,8,10,Kris Bryant,AGS
-10,8,11,Will Smith,Ian Cumsler
-11,8,12,Lance Lynn,Yelich My Balls
-0,9,1,Ramón Laureano,Yelich My Balls
-1,9,2,Alex Colomé,Ian Cumsler
-2,9,3,J.D. Martinez,Kershaw?2
-3,9,4,Ryan Pressly,Hold The Line
-4,9,5,Trent Grisham,¯\_(ツ)_/¯
-5,9,6,Chris Paddack,AGS
-6,9,7,Jordan Romano,BallSachs
-7,9,8,Will Smith,Dookie Butts
-8,9,9,Eddie Rosario,OGsecondHand
-9,9,10,Ian Anderson,Midas Well
-10,9,11,Tommy Pham,Midas Well
-11,9,12,Devin Williams,Hold The Line
-0,10,1,James Karinchak,Hold The Line
-1,10,2,Brad Hand,Moniebol
-2,10,3,Victor Robles,Midas Well
-3,10,4,Max Fried,OGsecondHand
-4,10,5,Jorge Soler,Dookie Butts
-5,10,6,Mitch Haniger,BallSachs
-6,10,7,Jeff McNeil,BallSachs
-7,10,8,Mike Moustakas,AGS
-8,10,9,Sixto Sánchez,AGS
-9,10,10,Zach Plesac,Kershaw?2
-10,10,11,Gavin Lux,Ian Cumsler
-11,10,12,Lance McCullers,OGsecondHand
-0,11,1,José Berríos,Yelich My Balls
-1,11,2,Gary Sánchez,Ian Cumsler
-2,11,3,Willson Contreras,Kershaw?2
-3,11,4,Franmil Reyes,AGS
-4,11,5,Sonny Gray,¯\_(ツ)_/¯
-5,11,6,Jesús Luzardo,AGS
-6,11,7,Joe Musgrove,BallSachs
-7,11,8,Byron Buxton,Dookie Butts
-8,11,9,Yasmani Grandal,Moniebol
-9,11,10,Rhys Hoskins,Midas Well
-10,11,11,Joey Gallo,Moniebol
-11,11,12,Alec Bohm,Hold The Line
-0,12,1,Dansby Swanson,SQUEEZE
-1,12,2,Rafael Montero,Moniebol
-2,12,3,Kevin Gausman,Midas Well
-3,12,4,Travis D'Arnaud,OGsecondHand
-4,12,5,Josh Donaldson,Dookie Butts
-5,12,6,Marcus Semien,BallSachs
-6,12,7,Dinelson Lamet,BallSachs
-7,12,8,Mike Yastrzemski,¯\_(ツ)_/¯
-8,12,9,Pablo López,SQUEEZE
-9,12,10,Dylan Carlson,Midas Well
-10,12,11,Michael Brantley,Ian Cumsler
-11,12,12,Dylan Moore,Yelich My Balls
-0,13,1,C.J. Cron,OGsecondHand
-1,13,2,Diego Castillo,Ian Cumsler
-2,13,3,Tanner Rainey,Hold The Line
-3,13,4,Alex Verdugo,SQUEEZE
-4,13,5,Dominic Smith,¯\_(ツ)_/¯
-5,13,6,Kyle Lewis,¯\_(ツ)_/¯
-6,13,7,Ke'Bryan Hayes,BallSachs
-7,13,8,Zack Wheeler,Dookie Butts
-8,13,9,Max Kepler,OGsecondHand
-9,13,10,Tyler Mahle,Midas Well
-10,13,11,Amir Garrett,Moniebol
-11,13,12,Tyler Duffey,Hold The Line
-0,14,1,Ian Happ,Hold The Line
-1,14,2,Anthony Santander,¯\_(ツ)_/¯
-2,14,3,Giovanny Gallegos,Midas Well
-3,14,4,Giovanny Urshela,OGsecondHand
-4,14,5,Joakim Soria,Dookie Butts
-5,14,6,Peter Fairbanks,BallSachs
-6,14,7,Wander Franco,AGS
-7,14,8,Josh Bell,¯\_(ツ)_/¯
-8,14,9,A.J. Pollock,SQUEEZE
-9,14,10,Julio Urías,Kershaw?2
-10,14,11,Andrew Benintendi,Ian Cumsler
-11,14,12,Richard Rodríguez,Yelich My Balls
-0,15,1,Miguel Sanó,Yelich My Balls
-1,15,2,Jake Diekman,Ian Cumsler
-2,15,3,Craig Kimbrel,Kershaw?2
-3,15,4,Chris Martin,SQUEEZE
-4,15,5,Emilio Pagán,¯\_(ツ)_/¯
-5,15,6,Tommy Edman,BallSachs
-6,15,7,Yulieski Gurriel,BallSachs
-7,15,8,Jordan Hicks,Dookie Butts
-8,15,9,Dylan Bundy,OGsecondHand
-9,15,10,Marco Gonzales,Midas Well
-10,15,11,Adam Ottavino,Moniebol
-11,15,12,Alex Dickerson,Hold The Line
-0,16,1,Ryan Mountcastle,Kershaw?2
-1,16,2,Andrés Giménez,Moniebol
-2,16,3,Sandy Alcantara,Midas Well
-3,16,4,Christian Walker,Yelich My Balls
-4,16,5,Joc Pederson,Dookie Butts
-5,16,6,Drew Pomeranz,BallSachs
-6,16,7,Jarred Kelenic,¯\_(ツ)_/¯
-7,16,8,Ty France,¯\_(ツ)_/¯
-8,16,9,Zac Gallen,SQUEEZE
-9,16,10,Jake Cronenworth,Kershaw?2
-10,16,11,Justin Turner,Ian Cumsler
-11,16,12,Matt Barnes,Yelich My Balls
-0,17,1,Patrick Corbin,Yelich My Balls
-1,17,2,Eric Hosmer,Ian Cumsler
-2,17,3,David Fletcher,Kershaw?2
-3,17,4,Luke Sims,SQUEEZE
-4,17,5,Trevor May,¯\_(ツ)_/¯
-5,17,6,Andrew Vaughn,BallSachs
-6,17,7,Leody Taveras,BallSachs
-7,17,8,Aaron Bummer,Dookie Butts
-8,17,9,Anthony Bass,OGsecondHand
-9,17,10,Brian Anderson,Midas Well
-10,17,11,Mark Canha,Moniebol
-11,17,12,Carlos Carrasco,Hold The Line
-0,18,1,Framber Valdez,Hold The Line
-1,18,2,Miguel Cabrera,OGsecondHand
-2,18,3,Sean Murphy,Midas Well
-3,18,4,Austin Riley,Yelich My Balls
-4,18,5,Archie Bradley,Dookie Butts
-5,18,6,Chris Sale,BallSachs
-6,18,7,Frankie Montas,AGS
-7,18,8,Trevor Rogers,¯\_(ツ)_/¯
-8,18,9,Christian Vázquez,SQUEEZE
-9,18,10,Clint Frazier,Kershaw?2
-10,18,11,Aaron Civale,Ian Cumsler
-11,18,12,Didi Gregorius,Yelich My Balls
-0,19,1,Nick Solak,Yelich My Balls
-1,19,2,Donovan Solano,Ian Cumsler
-2,19,3,Jean Segura,Kershaw?2
-3,19,4,James Paxton,SQUEEZE
-4,19,5,Seth Lugo,¯\_(ツ)_/¯
-5,19,6,Zach Eflin,AGS
-6,19,7,Taijuan Walker,BallSachs
-7,19,8,Kyle Schwarber,Dookie Butts
-8,19,9,Greg Holland,Moniebol
-9,19,10,Jake McGee,Midas Well
-10,19,11,Eduardo Rodriguez,Moniebol
-11,19,12,Jared Walsh,Hold The Line
-0,20,1,Mitch Garver,Hold The Line
-1,20,2,Mike Soroka,Moniebol
-2,20,3,Taylor Rogers,Kershaw?2
-3,20,4,Dustin May,Kershaw?2
-4,20,5,Nick Senzel,Dookie Butts
-5,20,6,Isiah Kiner-Falefa,BallSachs
-6,20,7,Tony Gonsolin,Kershaw?2
-7,20,8,Héctor Neris,¯\_(ツ)_/¯
-8,20,9,Victor González,SQUEEZE
-9,20,10,Luis Arraez,Kershaw?2
-10,20,11,Matt Foster,Ian Cumsler
-11,20,12,Daniel Bard,Yelich My Balls
-0,21,1,James McCann,Yelich My Balls
-1,21,2,Enrique Hernández,Ian Cumsler
-2,21,3,Lorenzo Cain,Kershaw?2
-3,21,4,Dallas Keuchel,SQUEEZE
-4,21,5,Chad Green,¯\_(ツ)_/¯
-5,21,6,Andrew McCutchen,SQUEEZE
-6,21,7,Andrew Heaney,AGS
-7,21,8,Ryan McMahon,Dookie Butts
-8,21,9,Triston McKenzie,OGsecondHand
-9,21,10,Mark Melancon,Moniebol
-10,21,11,David Price,Moniebol
-11,21,12,Yimi García,Hold The Line
-0,22,1,Nick Wittgren,Hold The Line
-1,22,2,Noah Syndergaard,Moniebol
-2,22,3,Blake Treinen,Midas Well
-3,22,4,Shin-Soo Choo,Moniebol
-4,22,5,Jo Adell,Dookie Butts
-5,22,6,Chris Bassitt,Kershaw?2
-6,22,7,Julio Rodriguez,SQUEEZE
-7,22,8,Elieser Hernandez,AGS
-8,22,9,Spencer Torkelson,SQUEEZE
-9,22,10,Corey Kluber,Kershaw?2
-10,22,11,Garrett Crochet,Ian Cumsler
-11,22,12,Bobby Dalbec,Yelich My Balls
+,Round,Pick,Player,Team
+0,1,1.0,Juan Soto,¯\_(ツ)_/¯
+1,1,2.0,Rafael Devers,$LZ to $15 $...
+2,1,3.0,Fernando Tatis Jr.,Hooked On Kw...
+3,1,4.0,Trea Turner,The Rosterba...
+4,1,5.0,Vladimir Guerrero Jr.,#LagrastaWeek
+5,1,6.0,Manny Machado,Grand Salami...
+6,1,7.0,Corbin Burnes,Rickie Flower
+7,1,8.0,Kyle Tucker,Ian Cumsler
+8,1,9.0,Luis Robert,Former 2A Hi...
+9,1,10.0,José Ramírez,Midas Well
+10,1,11.0,Bo Bichette,SQUEEZE AGS
+11,1,12.0,Mookie Betts,Dookie Butts
+0,2,1.0,Francisco Lindor,Dookie Butts
+1,2,2.0,Whit Merrifield,SQUEEZE AGS
+2,2,3.0,Xander Bogaerts,Midas Well
+3,2,4.0,Carlos Correa,Former 2A Hi...
+4,2,5.0,Ronald Acuña Jr.,Ian Cumsler
+5,2,6.0,Jacob deGrom,Rickie Flower
+6,2,7.0,Marcus Semien,Grand Salami...
+7,2,8.0,Yordan Alvarez,#LagrastaWeek
+8,2,9.0,Freddie Freeman,The Rosterba...
+9,2,10.0,Mike Trout,Hooked On Kw...
+10,2,11.0,Nick Castellanos,$LZ to $15 $...
+11,2,12.0,Shohei Ohtani,¯\_(ツ)_/¯
+0,3,1.0,Bryce Harper,¯\_(ツ)_/¯
+1,3,2.0,Gerrit Cole,$LZ to $15 $...
+2,3,3.0,Max Scherzer,Hooked On Kw...
+3,3,4.0,Ozzie Albies,The Rosterba...
+4,3,5.0,Aaron Judge,#LagrastaWeek
+5,3,6.0,Teoscar Hernández,Grand Salami...
+6,3,7.0,Brandon Woodruff,Hooked On Kw...
+7,3,8.0,Walker Buehler,Ian Cumsler
+8,3,9.0,Matt Olson,Former 2A Hi...
+9,3,10.0,Starling Marte,Midas Well
+10,3,11.0,Shane Bieber,SQUEEZE AGS
+11,3,12.0,Lucas Giolito,Dookie Butts
+0,4,1.0,Cedric Mullins,Dookie Butts
+1,4,2.0,Trevor Story,SQUEEZE AGS
+2,4,3.0,Tim Anderson,Midas Well
+3,4,4.0,Wander Franco,Former 2A Hi...
+4,4,5.0,Julio Urías,Ian Cumsler
+5,4,6.0,Aaron Nola,Hooked On Kw...
+6,4,7.0,Tyler O'Neill,Grand Salami...
+7,4,8.0,Jose Altuve,#LagrastaWeek
+8,4,9.0,Eloy Jiménez,The Rosterba...
+9,4,10.0,George Springer,Hooked On Kw...
+10,4,11.0,Zack Wheeler,$LZ to $15 $...
+11,4,12.0,Pete Alonso,¯\_(ツ)_/¯
+0,5,1.0,Robbie Ray,¯\_(ツ)_/¯
+1,5,2.0,Charlie Morton,$LZ to $15 $...
+2,5,3.0,Kris Bryant,Hooked On Kw...
+3,5,4.0,Randy Arozarena,The Rosterba...
+4,5,5.0,Paul Goldschmidt,#LagrastaWeek
+5,5,6.0,Freddy Peralta,Grand Salami...
+6,5,7.0,Salvador Perez,Rickie Flower
+7,5,8.0,Josh Hader,Ian Cumsler
+8,5,9.0,Sandy Alcantara,Former 2A Hi...
+9,5,10.0,Liam Hendriks,Midas Well
+10,5,11.0,Austin Riley,SQUEEZE AGS
+11,5,12.0,Byron Buxton,Dookie Butts
+0,6,1.0,José Abreu,Dookie Butts
+1,6,2.0,J.D. Martinez,SQUEEZE AGS
+2,6,3.0,Nolan Arenado,Midas Well
+3,6,4.0,Alex Bregman,Former 2A Hi...
+4,6,5.0,Corey Seager,Ian Cumsler
+5,6,6.0,Brandon Lowe,Midas Well
+6,6,7.0,Jonathan India,Grand Salami...
+7,6,8.0,Adalberto Mondesi,#LagrastaWeek
+8,6,9.0,Kevin Gausman,The Rosterba...
+9,6,10.0,Lance Lynn,SQUEEZE AGS
+10,6,11.0,Giancarlo Stanton,SQUEEZE AGS
+11,6,12.0,Trevor Rogers,¯\_(ツ)_/¯
+0,7,1.0,Javier Báez,Former 2A Hi...
+1,7,2.0,Carlos Rodón,Former 2A Hi...
+2,7,3.0,Bryan Reynolds,Hooked On Kw...
+3,7,4.0,Franmil Reyes,The Rosterba...
+4,7,5.0,Joe Musgrove,SQUEEZE AGS
+5,7,6.0,Dylan Cease,Grand Salami...
+6,7,7.0,J.T. Realmuto,Rickie Flower
+7,7,8.0,Will Smith,Ian Cumsler
+8,7,9.0,José Berríos,Former 2A Hi...
+9,7,10.0,Raisel Iglesias,Midas Well
+10,7,11.0,Yu Darvish,SQUEEZE AGS
+11,7,12.0,Anthony Rendon,Dookie Butts
+0,8,1.0,Justin Verlander,Dookie Butts
+1,8,2.0,Christian Yelich,SQUEEZE AGS
+2,8,3.0,Emmanuel Clase,Midas Well
+3,8,4.0,Aroldis Chapman,Former 2A Hi...
+4,8,5.0,Ketel Marte,Ian Cumsler
+5,8,6.0,Jazz Chisholm Jr.,Rickie Flower
+6,8,7.0,Jared Walsh,Grand Salami...
+7,8,8.0,Bobby Witt Jr.,#LagrastaWeek
+8,8,9.0,Alek Manoah,The Rosterba...
+9,8,10.0,Kyle Schwarber,Hooked On Kw...
+10,8,11.0,Ryan Pressly,$LZ to $15 $...
+11,8,12.0,Logan Webb,¯\_(ツ)_/¯
+0,9,1.0,Kenley Jansen,Former 2A Hi...
+1,9,2.0,Max Muncy,$LZ to $15 $...
+2,9,3.0,Mitch Haniger,Hooked On Kw...
+3,9,4.0,Clayton Kershaw,Former 2A Hi...
+4,9,5.0,Shohei Ohtani,#LagrastaWeek
+5,9,6.0,Jorge Polanco,Grand Salami...
+6,9,7.0,Max Fried,Rickie Flower
+7,9,8.0,Shane McClanahan,Ian Cumsler
+8,9,9.0,Jesse Winker,Former 2A Hi...
+9,9,10.0,Tommy Edman,Midas Well
+10,9,11.0,Cody Bellinger,SQUEEZE AGS
+11,9,12.0,DJ LeMahieu,Dookie Butts
+0,10,1.0,Frankie Montas,Dookie Butts
+1,10,2.0,Framber Valdez,SQUEEZE AGS
+2,10,3.0,Dansby Swanson,Midas Well
+3,10,4.0,Edwin Díaz,Former 2A Hi...
+4,10,5.0,Rhys Hoskins,Ian Cumsler
+5,10,6.0,Ryan Mountcastle,Rickie Flower
+6,10,7.0,Sean Manaea,Grand Salami...
+7,10,8.0,Chris Sale,#LagrastaWeek
+8,10,9.0,Jarred Kelenic,The Rosterba...
+9,10,10.0,Luis Castillo,Hooked On Kw...
+10,10,11.0,Craig Kimbrel,$LZ to $15 $...
+11,10,12.0,Nelson Cruz,Rickie Flower
+0,11,1.0,Devin Williams,¯\_(ツ)_/¯
+1,11,2.0,Joey Gallo,$LZ to $15 $...
+2,11,3.0,Chris Bassitt,Hooked On Kw...
+3,11,4.0,Marcus Stroman,The Rosterba...
+4,11,5.0,Jordan Romano,#LagrastaWeek
+5,11,6.0,Trent Grisham,Grand Salami...
+6,11,7.0,Giovanny Gallegos,Rickie Flower
+7,11,8.0,Blake Treinen,Ian Cumsler
+8,11,9.0,Hyun Jin Ryu,Former 2A Hi...
+9,11,10.0,Jake Cronenworth,Midas Well
+10,11,11.0,Blake Snell,SQUEEZE AGS
+11,11,12.0,Michael Kopech,Dookie Butts
+0,12,1.0,Corey Knebel,Dookie Butts
+1,12,2.0,Anthony Rizzo,SQUEEZE AGS
+2,12,3.0,Dylan Carlson,Midas Well
+3,12,4.0,Lourdes Gurriel Jr.,Former 2A Hi...
+4,12,5.0,David Bednar,Ian Cumsler
+5,12,6.0,Yasmani Grandal,¯\_(ツ)_/¯
+6,12,7.0,Nathan Eovaldi,Grand Salami...
+7,12,8.0,Tyler Mahle,#LagrastaWeek
+8,12,9.0,Matt Chapman,The Rosterba...
+9,12,10.0,Chris Taylor,Former 2A Hi...
+10,12,11.0,Willy Adames,$LZ to $15 $...
+11,12,12.0,Taylor Rogers,¯\_(ツ)_/¯
+0,13,1.0,Marcell Ozuna,¯\_(ツ)_/¯
+1,13,2.0,Daulton Varsho,$LZ to $15 $...
+2,13,3.0,Camilo Doval,Former 2A Hi...
+3,13,4.0,Ian Anderson,The Rosterba...
+4,13,5.0,Mike Clevinger,#LagrastaWeek
+5,13,6.0,Seiya Suzuki,Grand Salami...
+6,13,7.0,Pablo López,Rickie Flower
+7,13,8.0,Josh Bell,Ian Cumsler
+8,13,9.0,Trey Mancini,Hooked On Kw...
+9,13,10.0,Sonny Gray,Midas Well
+10,13,11.0,Willson Contreras,SQUEEZE AGS
+11,13,12.0,Austin Meadows,Dookie Butts
+0,14,1.0,Mark Melancon,Dookie Butts
+1,14,2.0,C.J. Cron,SQUEEZE AGS
+2,14,3.0,Joey Votto,Midas Well
+3,14,4.0,Keibert Ruiz,Former 2A Hi...
+4,14,5.0,Yoán Moncada,Ian Cumsler
+5,14,6.0,Justin Turner,Rickie Flower
+6,14,7.0,Myles Straw,Grand Salami...
+7,14,8.0,Hunter Renfroe,#LagrastaWeek
+8,14,9.0,Scott Barlow,The Rosterba...
+9,14,10.0,Randal Grichuk,Hooked On Kw...
+10,14,11.0,Jorge Soler,$LZ to $15 $...
+11,14,12.0,Ty France,¯\_(ツ)_/¯
+0,15,1.0,Ke'Bryan Hayes,¯\_(ツ)_/¯
+1,15,2.0,Paul Sewald,¯\_(ツ)_/¯
+2,15,3.0,Michael Brantley,Hooked On Kw...
+3,15,4.0,Adolis García,The Rosterba...
+4,15,5.0,Shane Baz,#LagrastaWeek
+5,15,6.0,Joe Ryan,Grand Salami...
+6,15,7.0,Eduardo Rodriguez,Rickie Flower
+7,15,8.0,Yuli Gurriel,Ian Cumsler
+8,15,9.0,Adam Duvall,Former 2A Hi...
+9,15,10.0,Adam Wainwright,Midas Well
+10,15,11.0,Josh Donaldson,SQUEEZE AGS
+11,15,12.0,Mitch Garver,Dookie Butts
+0,16,1.0,Ryan McMahon,Dookie Butts
+1,16,2.0,Luis Garcia,SQUEEZE AGS
+2,16,3.0,Christian Vázquez,Midas Well
+3,16,4.0,José Urquidy,Former 2A Hi...
+4,16,5.0,Nathaniel Lowe,Ian Cumsler
+5,16,6.0,Alex Verdugo,Rickie Flower
+6,16,7.0,Austin Hays,Grand Salami...
+7,16,8.0,Jack Flaherty,#LagrastaWeek
+8,16,9.0,Eddie Rosario,The Rosterba...
+9,16,10.0,Adley Rutschman,Hooked On Kw...
+10,16,11.0,Avisaíl García,$LZ to $15 $...
+11,16,12.0,Gleyber Torres,¯\_(ツ)_/¯
+0,17,1.0,Spencer Torkelson,¯\_(ツ)_/¯
+1,17,2.0,Lucas Sims,$LZ to $15 $...
+2,17,3.0,Jonathan Schoop,Hooked On Kw...
+3,17,4.0,Ranger Suárez,The Rosterba...
+4,17,5.0,Matt Barnes,#LagrastaWeek
+5,17,6.0,Tanner Houck,Grand Salami...
+6,17,7.0,Eugenio Suárez,Rickie Flower
+7,17,8.0,Diego Castillo,Ian Cumsler
+8,17,9.0,Logan Gilbert,Hooked On Kw...
+9,17,10.0,Chris Flexen,Midas Well
+10,17,11.0,Robbie Grossman,SQUEEZE AGS
+11,17,12.0,AJ Pollock,Dookie Butts
+0,18,1.0,Stephen Strasburg,Dookie Butts
+1,18,2.0,Trevor Bauer,SQUEEZE AGS
+2,18,3.0,Tyler Matzek,Midas Well
+3,18,4.0,Noah Syndergaard,Former 2A Hi...
+4,18,5.0,Jo Adell,Ian Cumsler
+5,18,6.0,Andrew Benintendi,Rickie Flower
+6,18,7.0,Alex Kirilloff,Grand Salami...
+7,18,8.0,Tyler Stephenson,#LagrastaWeek
+8,18,9.0,Lou Trivino,The Rosterba...
+9,18,10.0,Jake McGee,Hooked On Kw...
+10,18,11.0,Michael Conforto,$LZ to $15 $...
+11,18,12.0,Will Smith,¯\_(ツ)_/¯
+0,19,1.0,Jonathan Villar,¯\_(ツ)_/¯
+1,19,2.0,Andrew Kittredge,$LZ to $15 $...
+2,19,3.0,Joe Barlow,Hooked On Kw...
+3,19,4.0,Brendan Rodgers,The Rosterba...
+4,19,5.0,Eduardo Escobar,#LagrastaWeek
+5,19,6.0,Oneil Cruz,Grand Salami...
+6,19,7.0,Gregory Soto,Rickie Flower
+7,19,8.0,Anthony Bender,Ian Cumsler
+8,19,9.0,Miguel Sanó,$LZ to $15 $...
+9,19,10.0,Ian Happ,Midas Well
+10,19,11.0,Tommy Pham,SQUEEZE AGS
+11,19,12.0,Grayson Rodriguez,Dookie Butts
+0,20,1.0,Kendall Graveman,Dookie Butts
+1,20,2.0,Cristian Javier,Hooked On Kw...
+2,20,3.0,Daniel Hudson,Midas Well
+3,20,4.0,Luis Urías,The Rosterba...
+4,20,5.0,Riley Greene,Ian Cumsler
+5,20,6.0,Jean Segura,Rickie Flower
+6,20,7.0,Patrick Sandoval,Grand Salami...
+7,20,8.0,Nick Lodolo,#LagrastaWeek
+8,20,9.0,Sean Murphy,The Rosterba...
+9,20,10.0,Luis Severino,Rickie Flower
+10,20,11.0,Zac Gallen,$LZ to $15 $...
+11,20,12.0,Chad Green,¯\_(ツ)_/¯
+0,21,1.0,Héctor Neris,¯\_(ツ)_/¯
+1,21,2.0,Brandon Belt,$LZ to $15 $...
+2,21,3.0,Gary Sánchez,Hooked On Kw...
+3,21,4.0,Dylan Floro,The Rosterba...
+4,21,5.0,Akil Baddoo,#LagrastaWeek
+5,21,6.0,Mark Canha,Grand Salami...
+6,21,7.0,Luke Voit,Rickie Flower
+7,21,8.0,Josh Staumont,Ian Cumsler
+8,21,9.0,Charlie Blackmon,¯\_(ツ)_/¯
+9,21,10.0,Dinelson Lamet,Midas Well
+10,21,11.0,Aaron Ashby,#LagrastaWeek
+11,21,12.0,MacKenzie Gore,Dookie Butts
+0,22,1.0,Tanner Rainey,Dookie Butts
+1,22,2.0,Kiké Hernández,$LZ to $15 $...
+2,22,3.0,Garrett Whitlock,Rickie Flower
+3,22,4.0,Brandon Crawford,$LZ to $15 $...
+4,22,5.0,Gio Urshela,Ian Cumsler
+5,22,6.0,Daniel Espino,#LagrastaWeek
+6,22,7.0,Isiah Kiner-Falefa,Grand Salami...
+7,22,8.0,Tyler Rogers,Rickie Flower
+8,22,9.0,Andrew Vaughn,The Rosterba...
+9,22,10.0,Bobby Dalbec,Rickie Flower
+10,22,11.0,Jonathan Loáisiga,$LZ to $15 $...
+11,22,12.0,Julio Rodríguez,¯\_(ツ)_/¯
