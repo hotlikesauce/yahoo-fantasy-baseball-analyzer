@@ -21,11 +21,16 @@ def getAllplay():
     #Set week number
     my_date = datetime.date.today()
     year, week_num, day_of_week = my_date.isocalendar()
-    thisWeek = (week_num - 15)
+    #adjust to match all star break. 13 for pre-all star
+    #The if statement below handles the 2-week ASG Break which happens on week 30 of the calendar year
+    if week_num < 30:
+        thisWeek = (week_num - 13)
+    else:
+        thisWeek = (week_num - 14)
     # Loop through weeks and matchups
-    sleep_nums = [2,4,5,8,9,11,14,17]
+    sleep_nums = [3,5,8,9,11,14,17]
     for week in range(1,thisWeek):
-        allPlaydf = pd.DataFrame(columns = ['Team','Week','R','H','HR','SB','OPS','RBI','ERA','WHIP','K9','QS','SVH','NW'])
+        allPlaydf = pd.DataFrame(columns = ['Team','Week','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH'])
         for matchup in range(1,13):
             data=[]      
             #Setting this sleep timer on a few weeks helps with the rapid requests to the Yahoo servers
@@ -34,13 +39,15 @@ def getAllplay():
                 time.sleep(5)     
             else:
                 pass
-            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/11602/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
             soup = bs.BeautifulSoup(source,'lxml')
 
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df['Week'] = week
             df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
+            #RENAME COLUMN FOR HR ALLOWED SINCE IT'S A DUPLICATE OF THE BATTING CATEGORY
+            df.rename(columns={df.columns[9]: 'HRA'},inplace=True)
             
             # Logic below to handle asterisks that happen for % based stats when ties occur
             df['WHIP'] = df['WHIP'].astype(str)
@@ -61,10 +68,15 @@ def getAllplay():
             df['K9'] = df['K9'].astype(float)
 
 
-            df=df[['Team','Week','R','H','HR','SB','OPS','RBI','ERA','WHIP','K9','QS','SVH','NW']]
+            df=df[['Team','Week','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH']]
+            #df = df.reset_index()
             #print(df)
             #print(df.loc[1,'Team'])
+            print(df)
             df['Opponent'] = df.loc[1,'Team']
+            print(df)
+            
+
             allPlaydf = allPlaydf.append(df.loc[0], True)
 
             #print(allPlaydf)
@@ -114,7 +126,7 @@ def getAllplay():
         # Set Up Connections
         ca = certifi.where()
         client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
-        db = client['YahooFantasyBaseball']
+        db = client['YahooFantasyBaseball_2023']
         collection = db['coefficient']
 
 
@@ -135,7 +147,7 @@ def clearMongo():
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
-    db = client['YahooFantasyBaseball']
+    db = client['YahooFantasyBaseball_2023']
     collection = db['coefficient']
     
     #Delete Existing Documents

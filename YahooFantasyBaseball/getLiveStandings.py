@@ -27,13 +27,13 @@ try:
             year, week_num, day_of_week = my_date.isocalendar()
             #The if statement below handles the 2-week ASG Break which happens on week 30 of the calendar year
             if week_num < 30:
-                thisWeek = (week_num - 14)
+                thisWeek = (week_num - 13)
             else:
-                thisWeek = (week_num - 15)
+                thisWeek = (week_num - 14)
 
             #This is the correct URL, it gets team totals as opposed to the standard matchup page which has weird embedded tables
-            source = uReq('https://baseball.fantasysports.yahoo.com/b1/11602/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
-            print('https://baseball.fantasysports.yahoo.com/b1/11602/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup))
+            source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
+            print('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup))
             soup = bs.BeautifulSoup(source,'lxml')
 
             table = soup.find_all('table')
@@ -64,7 +64,7 @@ try:
 
 
     def getLiveStandings(df_currentMatchup):
-        source = uReq('https://baseball.fantasysports.yahoo.com/b1/11602').read()
+        source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
         soup = bs.BeautifulSoup(source,'lxml')
 
         table = soup.find_all('table')
@@ -91,14 +91,15 @@ try:
         df_liveStandings['Current Matchup'] = df_liveStandings['Team_Wins'].astype(int).astype(str) + '-' + df_liveStandings['Team_Loss'].astype(int).astype(str) + '-' + df_liveStandings['Team_Draw'].astype(int).astype(str)
         df_liveStandings = df_liveStandings.sort_values(by=['Pct'],ascending=False,ignore_index=True)
         print(df_liveStandings[['Team','Pct','Raw_Score']].sort_values(by=['Pct'],ascending=False,ignore_index=True))
-        df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*','').astype(int)
+        #Need to change below when people clinch playoffs
+        #df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*','').astype(int)
         return df_liveStandings
 
     def mongo_write(df_liveStandings):
         #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
         ca = certifi.where()
         client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
-        db = client['YahooFantasyBaseball']
+        db = client['YahooFantasyBaseball_2023']
         collection = db['live_standings']
 
         #Delete Existing Documents
