@@ -92,7 +92,10 @@ try:
         df_liveStandings = df_liveStandings.sort_values(by=['Pct'],ascending=False,ignore_index=True)
         print(df_liveStandings[['Team','Pct','Raw_Score']].sort_values(by=['Pct'],ascending=False,ignore_index=True))
         #Need to change below when people clinch playoffs
-        #df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*','').astype(int)
+        try:        
+            df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*','').astype(int)
+        except AttributeError:
+            print("No one has clinched playoffs yet, yo")
         return df_liveStandings
 
     def mongo_write(df_liveStandings):

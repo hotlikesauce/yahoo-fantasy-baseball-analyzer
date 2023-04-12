@@ -168,7 +168,10 @@ def get_stats(records_df):
     
     
     ##UNCOMMENT THIS WHEN TEAMS CLINCH PLAYOFFS AND HAVE ASTERISKS NEXT TO THEIR NAMES
-    #df_merge['Rank'] = df_merge['Rank'].str.replace('*','').astype(int)
+    try:        
+        df_merge['Rank'] = df_merge['Rank'].str.replace('*','').astype(int)
+    except AttributeError:
+        print("No one has clinched playoffs yet, yo")
     
     df_merge['Variation'] = df_merge['Stats_Power_Rank'] - df_merge['Rank'] 
     # rankings_df = df_merge[["Team Name","Stats_Power_Rank", "Stats_Power_Score"]]
@@ -186,10 +189,10 @@ def write_mongo(power_rank_df):
     db = client['YahooFantasyBaseball_2023']
     collection = db['power_ranks']
 
-    #Delete Existing Documents
-    myquery = {}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
+    # #Delete Existing Documents
+    # myquery = {}
+    # x = collection.delete_many(myquery)
+    # print(x.deleted_count, " documents deleted.")
 
 
     #Insert New Live Standings
