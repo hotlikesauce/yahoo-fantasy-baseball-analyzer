@@ -190,7 +190,6 @@ def write_mongo(power_rank_df):
     collection = db['power_ranks']
 
     #Delete Existing Documents
-    #test
     myquery = {}
     x = collection.delete_many(myquery)
     print(x.deleted_count, " documents deleted.")
