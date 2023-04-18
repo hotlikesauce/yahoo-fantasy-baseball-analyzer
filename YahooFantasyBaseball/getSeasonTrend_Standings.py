@@ -92,9 +92,9 @@ try:
         collection = db['standings_season_trend']
 
         #Delete Existing Documents
-        myquery = {"Week":1}
-        x = collection.delete_many(myquery)
-        print(x.deleted_count, " documents deleted.")
+        #myquery = {"Week":1}
+        #x = collection.delete_many(myquery)
+        #print(x.deleted_count, " documents deleted.")
 
 
         #Insert New Season Standings
