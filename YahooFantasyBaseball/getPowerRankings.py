@@ -5,6 +5,7 @@ import bs4 as bs
 import urllib
 import csv
 import urllib.request
+from urllib.request import urlopen as uReq
 from functools import reduce
 import pymongo, certifi
 import time
@@ -177,8 +178,55 @@ def get_stats(records_df):
     # rankings_df = df_merge[["Team Name","Stats_Power_Rank", "Stats_Power_Score"]]
 
 
+
     # print(rankings_df.sort_values(by=['Stats_Power_Rank']))
     # df_merge.to_csv("Results.csv")
+
+
+    #BUILD TABLE WITH TEAM NAME AND NUMBER
+    source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+    soup = bs.BeautifulSoup(source,'lxml')
+
+    table = soup.find('table')  # Use find() to get the first table
+
+    # Extract all href links from the table, if found
+    if table is not None:
+        links = []
+        for link in table.find_all('a'):  # Find all <a> tags within the table
+            link_text = link.text.strip()  # Extract the hyperlink text
+            link_url = link['href']  # Extract the href link
+            if link_text != '':
+                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
+
+        # Print the extracted links and their associated hyperlink text
+        for link_text, link_url in links:
+            print(f'{link_text}, {link_url[-1]}')
+        
+        #Here contains the Team name and team number
+        result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
+        print(result_dict)
+
+
+
+    # Map team numbers from the dictionary to a new Series
+    #Iterate through the rows of the DataFrame
+    for index, row in df_merge.iterrows():
+        team_name = row['Team Name']
+        for link in links:
+            if link[0] == team_name:
+                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
+                df_merge.at[index, 'Team_Number'] = team_number
+                break
+    teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
+    df_merge['Player_Name'] = df_merge['Team_Number'].map(teamDict)
+    #print(df_merge.sort_values(by=['Pct'],ascending=False,ignore_index=True))
+
+    print(df_merge)
+    #time.sleep(5000)
+
+
+
+
 
     return df_merge
 
