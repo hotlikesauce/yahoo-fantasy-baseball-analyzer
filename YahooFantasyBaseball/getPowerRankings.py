@@ -177,7 +177,13 @@ def get_stats(records_df):
     df_merge['Variation'] = df_merge['Stats_Power_Rank'] - df_merge['Rank'] 
     # rankings_df = df_merge[["Team Name","Stats_Power_Rank", "Stats_Power_Score"]]
 
-
+    # Create a new column for the batter rank
+    df_merge['batter_rank'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats'])/6
+    
+    # Create a new column for the pitcher rank
+    df_merge['pitcher_rank'] = (df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/6
+    
+    
 
     # print(rankings_df.sort_values(by=['Stats_Power_Rank']))
     # df_merge.to_csv("Results.csv")
@@ -199,12 +205,12 @@ def get_stats(records_df):
                 links.append((link_text, link_url))  # Append the hyperlink text and link to the list
 
         # Print the extracted links and their associated hyperlink text
-        for link_text, link_url in links:
-            print(f'{link_text}, {link_url[-1]}')
+        # for link_text, link_url in links:
+            # print(f'{link_text}, {link_url[-1]}')
         
         #Here contains the Team name and team number
         result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
-        print(result_dict)
+        #print(result_dict)
 
 
 
@@ -220,6 +226,9 @@ def get_stats(records_df):
     teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
     df_merge['Player_Name'] = df_merge['Team_Number'].map(teamDict)
     #print(df_merge.sort_values(by=['Pct'],ascending=False,ignore_index=True))
+
+
+
 
     print(df_merge)
     #time.sleep(5000)
