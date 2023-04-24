@@ -133,7 +133,7 @@ except Exception as e:
 def main():
     df_Standings = getStandings()
     mongo_write(df_Standings)
-    mongo_write_team_IDs(df_Standings)
+    #mongo_write_team_IDs(df_Standings)
 
 
 if __name__ == '__main__':
