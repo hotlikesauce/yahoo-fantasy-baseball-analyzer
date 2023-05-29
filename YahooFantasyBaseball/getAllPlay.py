@@ -15,6 +15,9 @@ from pymongo import MongoClient, collection
 import time, datetime
 import certifi
 
+
+
+
 my_date = datetime.date.today()
 year, week_num, day_of_week = my_date.isocalendar()
 
@@ -40,8 +43,30 @@ def getAllplay():
                 time.sleep(5)     
             else:
                 pass
-            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
-            soup = bs.BeautifulSoup(source,'lxml')
+
+
+
+            def open_url(url):
+                try:
+                    source = urllib.request.urlopen(url).read()
+                    return source
+                except urllib.error.HTTPError as e:
+                    if e.code == 404:
+                        print("Error 404: Page not found. Retrying...")
+                        return open_url(url)  # Recursive call to retry opening the URL
+                    else:
+                        raise e  # Reraise any other HTTP errors
+            try:            
+                source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                soup = bs.BeautifulSoup(source,'lxml')
+            except urllib.error.HTTPError as e:
+                if e.code == 404:
+                    print("Error 404: Page not found. Retrying...")
+                    print('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
+                    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                else:
+                    raise e
+
 
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
@@ -109,9 +134,13 @@ def getAllplay():
         
         cols_to_sum = rankings_df.columns[ : df.shape[1]-1]
         rankings_df['Expected_Wins'] = rankings_df[cols_to_sum].sum(axis=1)
+        
+        #Keep individual Stat Columns
+        rankings_df_stat = rankings_df
 
         #Remove Individual Stat Columns
         rankings_df = rankings_df[['Team','Week','Opponent','Expected_Wins']]
+        
         #print(rankings_df)
         rankings_df_expanded = rankings_df.merge(right=rankings_df, left_on='Team', right_on='Opponent')
         
@@ -180,6 +209,16 @@ def getAllplay():
         # Reset Index and insert entire DF into MondgoDB
         # df.reset_index(inplace=True)
         data_dict = rankings_df_expanded.to_dict("records")
+        collection.insert_many(data_dict)
+        client.close()
+
+        # Set Up Connections
+        ca = certifi.where()
+        client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
+        db = client['YahooFantasyBaseball_2023']
+        collection = db['coefficient_expanded']
+
+        data_dict = rankings_df_stat.to_dict("records")
         collection.insert_many(data_dict)
         client.close()
         
