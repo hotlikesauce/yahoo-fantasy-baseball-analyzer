@@ -9,13 +9,15 @@ from urllib.request import urlopen as uReq
 from functools import reduce
 from time import sleep
 import numpy as np
-import pymongo, certifi
+import certifi
+from pymongo import MongoClient, collection
 from datetime import datetime
 import datetime, os, time
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
+
+#Local Modules
+from email_utils import send_failure_email
+from mongo_utils import mongo_write_team_IDs
 
 load_dotenv()
 
@@ -146,10 +148,10 @@ def getLiveStandings(df_currentMatchup):
 
 def mongo_write(df_liveStandings):
     #Get Mongo Password from env vars
-    MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
+    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
-    client = pymongo.MongoClient("mongodb+srv://admin:"+MONGO_PASSWORD+"@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tlsCAFile=ca)
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
     db = client['YahooFantasyBaseball_2023']
     collection = db['live_standings']
 
@@ -165,56 +167,6 @@ def mongo_write(df_liveStandings):
     collection.insert_many(data_dict)
     client.close()
     
-def mongo_write_team_IDs(df_Standings):
-    
-    df_teamIDs = df_Standings[['Team', 'Team_Number', 'Player_Name']].copy()    
-
-    #Get Mongo Password from env vars
-    MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
-    #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    ca = certifi.where()
-    client = pymongo.MongoClient("mongodb+srv://admin:"+MONGO_PASSWORD+"@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['team_dict']
-
-    #Delete Existing Documents
-    myquery = {}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
-
-
-    #Insert New Season Standings
-    df_teamIDs.reset_index(inplace=True)
-    data_dict = df_teamIDs.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
-
-def send_failure_email(error_message):
-    #Get gmail pass
-    password = os.environ.get('GMAIL_PASSWORD')
-
-    sender_email = 'taylorreeseward@gmail.com'
-    receiver_email = 'taylorreeseward@gmail.com'
-
-    message = MIMEMultipart("alternative")
-    message["Subject"] = "Summertime Sadness Error: Get Live Standings Failure"
-    message["From"] = sender_email
-    message["To"] = receiver_email
-
-    text = f"An error occurred in your function:\n\n{error_message}"
-    part1 = MIMEText(text, "plain")
-    message.attach(part1)
-
-    try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message.as_string())
-        server.close()
-        print("Email sent successfully")
-    except Exception as e:
-        print("Failed to send email. Error:", str(e))
 
 def main():
     try:
@@ -223,8 +175,9 @@ def main():
         mongo_write(df_liveStandings)
         mongo_write_team_IDs(df_liveStandings)
     except Exception as e:
+        filename = os.path.basename(__file__)
         error_message = str(e)
-        send_failure_email(error_message)
+        send_failure_email(error_message,filename)
 
 
 if __name__ == '__main__':
