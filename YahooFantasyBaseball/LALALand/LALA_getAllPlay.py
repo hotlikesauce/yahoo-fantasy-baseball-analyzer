@@ -43,7 +43,7 @@ def getAllplay():
                 time.sleep(5)     
             else:
                 pass
-            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
             soup = bs.BeautifulSoup(source,'lxml')
 
             table = soup.find_all('table')
