@@ -1,5 +1,7 @@
 import certifi,os,pandas
 from pymongo import MongoClient, collection
+from dotenv import load_dotenv
+load_dotenv()
 
 def mongo_write_team_IDs(df_Standings):
     
