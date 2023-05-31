@@ -3,6 +3,7 @@
 *.csv
 *.docx
 *.xlsx
+*.txt
 week5_Recalc.py
 exportCSV.py
 getLeagueHistory.py
