@@ -1,20 +1,25 @@
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 import bs4 as bs
 import urllib
-import csv
 import urllib.request
 from urllib.request import urlopen as uReq
 from functools import reduce
-import pymongo, certifi
-import time
+from pymongo import MongoClient
+import certifi
+import os
+from dotenv import load_dotenv
 
+#Local Modules
+from email_utils import send_failure_email
+from mongo_utils import mongo_write_team_IDs
+
+
+load_dotenv()
 
 def get_records():
 
     #Actual Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
@@ -23,19 +28,22 @@ def get_records():
     
 
     #Batting Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/headtoheadstats?pt=B&type=record').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=B&type=record').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfb = pd.read_html(str(table))[0]
 
     #Pitching Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/headtoheadstats?pt=P&type=record').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=P&type=record').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfp = pd.read_html(str(table))[0]
     
+    #RENAME COLUMN FOR HR ALLOWED SINCE IT'S A DUPLICATE OF THE BATTING CATEGORY
+    dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
+
 
     for column in dfb:
         if str(column) == 'Team Name':
@@ -51,16 +59,18 @@ def get_records():
     
     #make tuples
     dfb['R'] = list(zip(dfb.R_Win,dfb.R_Draw,dfb.R_Loss))
+    dfb['H'] = list(zip(dfb.H_Win,dfb.H_Draw,dfb.H_Loss))
     dfb['HR'] = list(zip(dfb.HR_Win,dfb.HR_Draw,dfb.HR_Loss))
     dfb['SB'] = list(zip(dfb.SB_Win,dfb.SB_Draw,dfb.SB_Loss))
-    dfb['OBP'] = list(zip(dfb.OBP_Win,dfb.OBP_Draw,dfb.OBP_Loss))
+    dfb['OPS'] = list(zip(dfb.OPS_Win,dfb.OPS_Draw,dfb.OPS_Loss))
     dfb['RBI'] = list(zip(dfb.RBI_Win,dfb.RBI_Draw,dfb.RBI_Loss))
 
     #convert tuples to ints
-    dfb['R'] = tuple(tuple(map(int, tup)) for tup in  dfb['R'])
+    dfb['R'] = tuple(tuple(map(int, tup)) for tup in  dfb['R'])  
+    dfb['H'] = tuple(tuple(map(int, tup)) for tup in dfb['H'])  
     dfb['HR'] = tuple(tuple(map(int, tup)) for tup in dfb['HR'])  
     dfb['SB'] = tuple(tuple(map(int, tup)) for tup in dfb['SB'])  
-    dfb['OBP'] = tuple(tuple(map(int, tup)) for tup in dfb['OBP'])  
+    dfb['OPS'] = tuple(tuple(map(int, tup)) for tup in dfb['OPS'])  
     dfb['RBI'] = tuple(tuple(map(int, tup)) for tup in dfb['RBI'])  
 
 
@@ -80,24 +90,26 @@ def get_records():
     dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
 
     #make tuples
-    dfp['W'] = list(zip(dfp.W_Win,dfp.W_Draw,dfp.W_Loss))
+    dfp['HRA'] = list(zip(dfp.HRA_Win,dfp.HRA_Draw,dfp.HRA_Loss))
     dfp['ERA'] = list(zip(dfp.ERA_Win,dfp.ERA_Draw,dfp.ERA_Loss))
     dfp['WHIP'] = list(zip(dfp.WHIP_Win,dfp.WHIP_Draw,dfp.WHIP_Loss))
-    dfp['K'] = list(zip(dfp.K_Win,dfp.K_Draw,dfp.K_Loss))
-    dfp['SV'] = list(zip(dfp.SV_Win,dfp.SV_Draw,dfp.SV_Loss))
+    dfp['K9'] = list(zip(dfp.K9_Win,dfp.K9_Draw,dfp.K9_Loss))
+    dfp['QS'] = list(zip(dfp.QS_Win,dfp.QS_Draw,dfp.QS_Loss))
+    dfp['SVH'] = list(zip(dfp.SVH_Win,dfp.SVH_Draw,dfp.SVH_Loss))
     
    
    #convert tuples to ints
-    dfp['W'] = tuple(tuple(map(int, tup)) for tup in dfp['W'])     
+    dfp['HRA'] = tuple(tuple(map(int, tup)) for tup in dfp['HRA'])     
     dfp['ERA'] = tuple(tuple(map(int, tup)) for tup in dfp['ERA'] )     
     dfp['WHIP'] = tuple(tuple(map(int, tup)) for tup in dfp['WHIP'])     
-    dfp['K'] = tuple(tuple(map(int, tup)) for tup in dfp['K'])      
-    dfp['SV'] = tuple(tuple(map(int, tup)) for tup in dfp['SV'])     
+    dfp['K9'] = tuple(tuple(map(int, tup)) for tup in dfp['K9'])     
+    dfp['QS'] = tuple(tuple(map(int, tup)) for tup in dfp['QS'])     
+    dfp['SVH'] = tuple(tuple(map(int, tup)) for tup in dfp['SVH'])     
     
 
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp,df_rec])
 
-    df=df[['Team Name','R','HR','SB','OBP','RBI','W','ERA','WHIP','K','SV','Rank','GB','Moves']]
+    df=df[['Team Name','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH','Rank','GB','Moves']]
     
     for column in df:
         if column in ['Team Name','Rank','GB','Moves']:
@@ -118,27 +130,28 @@ def get_records():
 def get_stats(records_df):
 
     #Batting Stats
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/headtoheadstats?pt=B&type=stats').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=B&type=stats').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfb = pd.read_html(str(table))[0]
 
     #Pitching Stats
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/headtoheadstats?pt=P&type=stats').read()
+    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=P&type=stats').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfp = pd.read_html(str(table))[0]
     
     dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
+    dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
 
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
     
     for column in df:
         if column == 'Team Name':
             pass
-        elif column == 'ERA' or column == 'WHIP':
+        elif column == 'ERA' or column == 'WHIP' or column == 'HRA':
             df[column+'_Rank'] = df[column].rank(ascending = True)
             # Set the index to newly created column, Rating_Rank
             df.set_index(column+'_Rank')
@@ -156,7 +169,7 @@ def get_stats(records_df):
     df_merge=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [df, records_df])
     print(df_merge.head())
     
-    df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OBP_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K_Rank_Stats']+df_merge['W_Rank_Stats']+df_merge['SV_Rank_Stats'])/10
+    df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/12
     df_merge['Stats_Power_Rank'] = df_merge['Stats_Power_Score'].rank(ascending = True)
     
     
@@ -170,10 +183,10 @@ def get_stats(records_df):
     # rankings_df = df_merge[["Team Name","Stats_Power_Rank", "Stats_Power_Score"]]
 
     # Create a new column for the batter rank
-    df_merge['batter_rank'] = (df_merge['R_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OBP_Rank_Stats']+df_merge['RBI_Rank_Stats'])/5
+    df_merge['batter_rank'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats'])/6
     
     # Create a new column for the pitcher rank
-    df_merge['pitcher_rank'] = (df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K_Rank_Stats']+df_merge['W_Rank_Stats']+df_merge['SV_Rank_Stats'])/5
+    df_merge['pitcher_rank'] = (df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/6
     
     
 
@@ -182,7 +195,7 @@ def get_stats(records_df):
 
 
     #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq('https://baseball.fantasysports.yahoo.com/b1/51133').read()
+    source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find('table')  # Use find() to get the first table
@@ -208,15 +221,15 @@ def get_stats(records_df):
 
     # Map team numbers from the dictionary to a new Series
     #Iterate through the rows of the DataFrame
-    # for index, row in df_merge.iterrows():
-    #     team_name = row['Team Name']
-    #     for link in links:
-    #         if link[0] == team_name:
-    #             team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-    #             df_merge.at[index, 'Team_Number'] = team_number
-    #             break
-    # teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
-    # df_merge['Player_Name'] = df_merge['Team_Number'].map(teamDict)
+    for index, row in df_merge.iterrows():
+        team_name = row['Team Name']
+        for link in links:
+            if link[0] == team_name:
+                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
+                df_merge.at[index, 'Team_Number'] = team_number
+                break
+    teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
+    df_merge['Player_Name'] = df_merge['Team_Number'].map(teamDict)
     #print(df_merge.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
 
@@ -232,10 +245,12 @@ def get_stats(records_df):
     return df_merge
 
 def write_mongo(power_rank_df):
+    #Get Mongo Password from env vars
+    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
-    client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023_LALA']
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+    db = client['YahooFantasyBaseball_2023']
     collection = db['power_ranks']
 
     #Delete Existing Documents
@@ -251,10 +266,18 @@ def write_mongo(power_rank_df):
     client.close()
 
 
+
 def main():
-    records_df = get_records()
-    power_rank_df = get_stats(records_df)
-    write_mongo(power_rank_df)
+    try:
+        records_df = get_records()
+        power_rank_df = get_stats(records_df)
+        write_mongo(power_rank_df)
+    except Exception as e:
+        filename = os.path.basename(__file__)
+        error_message = str(e)
+        print(error_message)
+        send_failure_email(error_message,filename)
+
 
 
 

@@ -1,17 +1,20 @@
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 import bs4 as bs
 import urllib
-import csv
 import urllib.request
 from urllib.request import urlopen as uReq
-from functools import reduce
-from time import sleep
-import numpy as np
-import pymongo, certifi
+import certifi
+from pymongo import MongoClient
 from datetime import datetime
-import datetime
+import datetime, os
+from dotenv import load_dotenv
+
+#Local Modules
+from email_utils import send_failure_email
+from mongo_utils import mongo_write_team_IDs
+
+load_dotenv()
+
 
 try:
     def getCurrentMatchups():
@@ -137,9 +140,13 @@ try:
         return df_liveStandings
 
     def mongo_write(df_liveStandings):
+        #Get Mongo Password from env vars
+        MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
+
         #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
         ca = certifi.where()
-        client = pymongo.MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
+        client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+
         db = client['LALA_YahooFantasyBaseball_2023']
         collection = db['live_standings']
 

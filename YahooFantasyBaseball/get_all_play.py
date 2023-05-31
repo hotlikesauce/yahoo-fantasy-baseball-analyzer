@@ -1,21 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 import bs4 as bs
 import urllib
-import csv
 import urllib.request
 from urllib.request import urlopen as uReq
-from functools import reduce
-import json
-from pymongo import MongoClient, collection
-import time, datetime
+from pymongo import MongoClient
+import time, datetime, os
 import certifi
+from dotenv import load_dotenv
 
+#Local Modules
+from email_utils import send_failure_email
+from mongo_utils import mongo_write_team_IDs
+#from datetime_utils import set_this_weeks
 
+load_dotenv()
 
 
 my_date = datetime.date.today()
@@ -32,7 +30,7 @@ def getAllplay():
     else:
         thisWeek = (week_num - 14)
     # Loop through weeks and matchups
-    sleep_nums = [3,5,8,9,11,14,17]
+    sleep_nums = [1,3,5,7,9,11,13,15,17,19,21,23,25]
     for week in range(1,thisWeek):
         allPlaydf = pd.DataFrame(columns = ['Team','Week','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH'])
         for matchup in range(1,13):
@@ -43,8 +41,30 @@ def getAllplay():
                 time.sleep(5)     
             else:
                 pass
-            source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/51133/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
-            soup = bs.BeautifulSoup(source,'lxml')
+
+
+
+            def open_url(url):
+                try:
+                    source = urllib.request.urlopen(url).read()
+                    return source
+                except urllib.error.HTTPError as e:
+                    if e.code == 404:
+                        print("Error 404: Page not found. Retrying...")
+                        return open_url(url)  # Recursive call to retry opening the URL
+                    else:
+                        raise e  # Reraise any other HTTP errors
+            try:            
+                source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                soup = bs.BeautifulSoup(source,'lxml')
+            except urllib.error.HTTPError as e:
+                if e.code == 404:
+                    print("Error 404: Page not found. Retrying...")
+                    print('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
+                    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                else:
+                    raise e
+
 
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
@@ -170,16 +190,13 @@ def getAllplay():
         #print(rankings_df_expanded.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
         print(rankings_df_expanded)
-        #time.sleep(5000)
 
-
-
-
-
-
+        #Get Mongo Password from env vars
+        MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
         # Set Up Connections
         ca = certifi.where()
-        client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
+        client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+        
         db = client['YahooFantasyBaseball_2023']
         collection = db['coefficient']
 
@@ -190,9 +207,10 @@ def getAllplay():
         collection.insert_many(data_dict)
         client.close()
 
-        # Set Up Connections
+        
+        #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
         ca = certifi.where()
-        client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
+        client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
         db = client['YahooFantasyBaseball_2023']
         collection = db['coefficient_expanded']
 
@@ -207,15 +225,16 @@ def getAllplay():
 
 
 def clearMongo():
-    
+    #Get Mongo Password from env vars
+    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     # Set Up Connections
     ca = certifi.where()
-    client = MongoClient("mongodb+srv://admin:Aggies_1435@cluster0.qj2j8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&verify=false", tlsCAFile=ca)
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
     db = client['YahooFantasyBaseball_2023']
     collection = db['coefficient']
     
     #Delete Existing Documents
-    #myquery = {"Week":week}
+    #myquery = {}
     x = collection.delete_many({})
     print(x.deleted_count, " documents deleted.")
 
@@ -223,10 +242,14 @@ def clearMongo():
     #db.collection.insert(records)
 
 
-
 def main():
-    clearMongo()
-    rankings_df = getAllplay()
+    try:
+        clearMongo()
+        rankings_df = getAllplay()
+    except Exception as e:
+        filename = os.path.basename(__file__)
+        error_message = str(e)
+        send_failure_email(error_message,filename)
 
 if __name__ == '__main__':
     main()
