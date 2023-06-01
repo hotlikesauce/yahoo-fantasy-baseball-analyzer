@@ -1,6 +1,0 @@
-beautifulsoup4==4.11.1
-certifi==2022.9.24
-pandas==1.5.1
-pymongo==4.2.0
-python-dotenv==1.0.0
-Requests==2.31.0
