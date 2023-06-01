@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
+from datetime_utils import set_last_week
 from player_dict import player_dict
 
 # Load obfuscated strings from .env file
@@ -21,7 +22,6 @@ MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
 def get_records():
-
 
     #Actual Records
     source = urllib.request.urlopen(YAHOO_LEAGUE_ID).read()
@@ -127,19 +127,14 @@ def get_records():
     keep_same = {'Team Name','Rank','GB','Moves'}
     df.columns = ['{}{}'.format(c, '' if c in keep_same else '_Record') for c in df.columns]
     
-    print(df.sort_values(by=['R_Record'],ascending=False))
+    #print(df.sort_values(by=['R_Record'],ascending=False))
     df = df.dropna()
     return df
 
 def get_stats(records_df):
     
     #Set week number
-    my_date = datetime.date.today()
-    year, week_num, day_of_week = my_date.isocalendar()
-    if week_num < 30:
-        thisWeek = (week_num - 14)
-    else:
-        thisWeek = (week_num - 15)
+    lastWeek = set_last_week()
 
     #Batting Stats
     source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=stats').read()
@@ -182,7 +177,7 @@ def get_stats(records_df):
     
     df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/12
     df_merge['Stats_Power_Rank'] = df_merge['Stats_Power_Score'].rank(ascending = True)
-    df_merge["Week"]= thisWeek
+    df_merge["Week"]= lastWeek
     
     ##FOR WHEN TEAMS CLINCH PLAYOFFS AND HAVE ASTERISKS NEXT TO THEIR NAMES
     try:        
@@ -191,6 +186,7 @@ def get_stats(records_df):
         print("No one has clinched playoffs yet, yo")
     df_merge['Variation'] = df_merge['Stats_Power_Rank'] - df_merge['Rank'] 
 
+    
 
     #BUILD TABLE WITH TEAM NAME AND NUMBER
     source = uReq(YAHOO_LEAGUE_ID).read()
@@ -208,8 +204,8 @@ def get_stats(records_df):
                 links.append((link_text, link_url))  # Append the hyperlink text and link to the list
 
         # Print the extracted links and their associated hyperlink text
-        for link_text, link_url in links:
-            print(f'{link_text}, {link_url[-1]}')
+        # for link_text, link_url in links:
+            # print(f'{link_text}, {link_url[-1]}')
         
         #Here contains the Team name and team number
         result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
@@ -247,9 +243,23 @@ def write_mongo(power_rank_df):
     client.close()
 
 
+def clearMongo():
+    lastWeek = set_last_week()
+    # Set Up Connections
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+    db = client['YahooFantasyBaseball_2023']
+    collection = db['power_ranks_season_trend']
+
+    #Delete Existing Documents From Last Week Only
+    myquery = {"Week":lastWeek}
+    x = collection.delete_many(myquery)
+    print(x.deleted_count, " documents deleted.")   
+
 
 def main():
     try:
+        clearMongo()
         records_df = get_records()
         power_rank_df = get_stats(records_df)
         write_mongo(power_rank_df)

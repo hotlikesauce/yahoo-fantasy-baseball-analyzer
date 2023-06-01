@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
+from datetime_utils import set_last_week
 from player_dict import player_dict
 
 # Load obfuscated strings from .env file
@@ -22,12 +23,8 @@ YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 def getStandings():
 
     #Set week number - These weeks are going to be 1 off since we are technically recording last week's data
-    my_date = datetime.date.today()
-    year, week_num, day_of_week = my_date.isocalendar()
-    if week_num < 30:
-        thisWeek = (week_num - 14)
-    else:
-        thisWeek = (week_num - 15)
+    #Set week number
+    lastWeek = set_last_week()
 
     source = uReq(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
@@ -44,8 +41,8 @@ def getStandings():
                 links.append((link_text, link_url))  # Append the hyperlink text and link to the list
 
         # Print the extracted links and their associated hyperlink text
-        for link_text, link_url in links:
-            print(f'{link_text}, {link_url[-1]}')
+        # for link_text, link_url in links:
+            # print(f'{link_text}, {link_url[-1]}')
         
         #Here contains the Team name and team number
         result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
@@ -60,7 +57,7 @@ def getStandings():
     new = new.astype(int)
 
     # making separate first name column from new data frame
-    df_seasonRecords["Week"]= thisWeek
+    df_seasonRecords["Week"]= lastWeek
     df_seasonRecords["WLT_Win"]= new[0]
     df_seasonRecords["WLT_Loss"]= new[1]
     df_seasonRecords["WLT_Draw"]= new[2]
@@ -99,11 +96,23 @@ def mongo_write(df_Standings):
     collection.insert_many(data_dict)
     client.close()
     
-    
+def clearMongo():
+    lastWeek = set_last_week()
+    # Set Up Connections
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+    db = client['YahooFantasyBaseball_2023']
+    collection = db['standings_season_trend']
+
+    #Delete Existing Documents From Last Week Only
+    myquery = {"Week":lastWeek}
+    x = collection.delete_many(myquery)
+    print(x.deleted_count, " documents deleted.")   
 
 
 def main():
     try:
+        clearMongo()
         df_Standings = getStandings()
         mongo_write(df_Standings)
     except Exception as e:

@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from email_utils import send_failure_email
 from mongo_utils import mongo_write_team_IDs
 from player_dict import player_dict
+from datetime_utils import set_this_week
 
 # Load obfuscated strings from .env file
 load_dotenv()    
@@ -30,14 +31,7 @@ def getCurrentMatchups():
         time.sleep(4)
         df_currentMatchup = pd.DataFrame(columns = ['Team','Score'])
         
-        #Set week number
-        my_date = datetime.date.today()
-        year, week_num, day_of_week = my_date.isocalendar()
-        #The if statement below handles the 2-week ASG Break which happens on week 30 of the calendar year
-        if week_num < 30:
-            thisWeek = (week_num - 13)
-        else:
-            thisWeek = (week_num - 14)
+        thisWeek = set_this_week()
 
         #This is the correct URL, it gets team totals as opposed to the standard matchup page which has weird embedded tables
         source = uReq(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
