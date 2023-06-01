@@ -22,7 +22,7 @@ Technologies Used: Python, mongo dB
   - GMAIL = 'Your Email'<br>
   - GMAIL_PASSWORD = 'Your App Password From Gmail'<br>
   - MONGO_CLIENT = 'Your mongodb client string'
-  - YAHOO_LEAGUE_ID = 'Your Yahoo Leace ID string (https://baseball.fantasysports.yahoo.com/b1/#####/)'
+  - YAHOO_LEAGUE_ID = 'Your Yahoo Leage ID string (https://baseball.fantasysports.yahoo.com/b1/#####/)'
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
 
