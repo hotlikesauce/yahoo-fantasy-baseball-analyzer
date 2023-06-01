@@ -29,8 +29,12 @@ Technologies Used: Python, mongodb
 
 ## Usage
 
-- One of the many ways you can use this project is to run the Live Standings script every hour as a scheduled task. That will push data to mongodb where you can then use the mongodb charts interface to make a live-updating table
+- One of the many ways you can use this project is to run the Live Standings script every hour as a scheduled task. That will push data to mongodb where you can then use a free tier of mongo db, and utilize tthe mongodb charts interface to make a live-updating table
   - [Live Standings](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9ca-38db-40b7-8761-892ed32c586e)
+
+![Live Standings](https://imgur.com/dez40NG)
+
+
 - Additionally you can run the Weekly Updates script every week after weekly scores have been calculated which generatoes weekly standings, power rankings, and an all-play type coefficient.
   - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
 ## Contributing
