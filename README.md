@@ -1,4 +1,4 @@
-# yahoo-fbb-analyzer
+# yahoo-fantasy-baseball-analyzer
 ![yahoofb](https://github.com/hotlikesauce/yahoo-fantasy-baseball-analyzer/assets/46724986/5a63122f-c5c9-4e21-ae7c-dfded8a2c26e)
 
 ## Description
