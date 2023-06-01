@@ -35,6 +35,7 @@ Technologies Used: Python, mongodb
 
 - Additionally you can run the Weekly Updates script every week after weekly scores have been calculated which generatoes weekly standings, power rankings, and an all-play type coefficient.
   - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
+  - ![Video](https://i.imgur.com/W2BHMek.mp4)
 ## Contributing
 
 Please feel free to improve on my code and provide any optimizations you can create. I am always looking for improvements and recommendataions on how to structure my code.
