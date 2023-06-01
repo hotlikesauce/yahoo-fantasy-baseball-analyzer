@@ -1,4 +1,4 @@
-# yahoo-fbb-analyzer
+# yahoo-fantasy-baseball-analyzer
 ![yahoofb](https://github.com/hotlikesauce/yahoo-fantasy-baseball-analyzer/assets/46724986/5a63122f-c5c9-4e21-ae7c-dfded8a2c26e)
 
 ## Description
@@ -22,8 +22,11 @@ Technologies Used: Python, mongo dB
   - GMAIL = 'Your Email'<br>
   - GMAIL_PASSWORD = 'Your App Password From Gmail'<br>
   - MONGO_CLIENT = 'Your mongodb client string'
+  - YAHOO_LEAGUE_ID = 'Your Yahoo Leage ID string (https://baseball.fantasysports.yahoo.com/b1/#####/)'
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
+
+- You will need a player_dict.py file containing the names of players in your league. This is used to create a team dictionary to handle team name changes throughtout the course of the year. I have created a player_dict_example.py file as a template.
 
 ## Usage
 
