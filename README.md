@@ -26,7 +26,7 @@ Technologies Used: Python, mongo dB
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
 
-- You will need a player_dict.py file containing the names of players in your league. This is used to create a team dictionary to handle team name changes throughtout the course of the year. I have created a player_dict_example.py file as a template.
+- You will need a player_dict.py file containing the names of players in your league. This is used to create a team dictionary to handle team name changes throughout the course of the year. I have created a player_dict_example.py file as a template.
 
 ## Usage
 
