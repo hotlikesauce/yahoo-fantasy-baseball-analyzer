@@ -8,11 +8,15 @@ import time, datetime, os
 import certifi
 from dotenv import load_dotenv
 
-#Local Modules
+# Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from mongo_utils import mongo_write_team_IDs
+from player_dict import player_dict
 
-load_dotenv()
+# Load obfuscated strings from .env file
+load_dotenv()    
+MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
+YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
 
 def getCurrentMatchups():
@@ -20,8 +24,9 @@ def getCurrentMatchups():
     df_teamRecords = pd.DataFrame(columns = ['Team','Team_Wins','Team_Loss','Team_Draw','Record'])
     df_weeklyMatchups = pd.DataFrame(columns = ['Team','Record'])
 
+    # Change this to the number of teams in your league (I have 12)
     for matchup in range(1,13):
-        #To prevent DDOS, Yahoo limits your URL requests over a set amount of time
+        #To prevent DDOS, Yahoo limits your URL requests over a set amount of time. Sleep timer to hlep space our requests
         time.sleep(4)
         df_currentMatchup = pd.DataFrame(columns = ['Team','Score'])
         
@@ -35,8 +40,8 @@ def getCurrentMatchups():
             thisWeek = (week_num - 14)
 
         #This is the correct URL, it gets team totals as opposed to the standard matchup page which has weird embedded tables
-        source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
-        print('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup))
+        source = uReq(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup)).read()
+        print(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(thisWeek)+'&mid1='+str(matchup))
         soup = bs.BeautifulSoup(source,'lxml')
 
         table = soup.find_all('table')
@@ -67,7 +72,7 @@ def getCurrentMatchups():
 
 
 def getLiveStandings(df_currentMatchup):
-    source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+    source = uReq(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
@@ -102,7 +107,7 @@ def getLiveStandings(df_currentMatchup):
 
 
     #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+    source = uReq(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find('table')  # Use find() to get the first table
@@ -133,15 +138,12 @@ def getLiveStandings(df_currentMatchup):
                 team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
                 df_liveStandings.at[index, 'Team_Number'] = team_number
                 break
-    teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
-    df_liveStandings['Player_Name'] = df_liveStandings['Team_Number'].map(teamDict)
+    df_liveStandings['Player_Name'] = df_liveStandings['Team_Number'].map(player_dict)
     
 
     return df_liveStandings
 
 def mongo_write(df_liveStandings):
-    #Get Mongo Password from env vars
-    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)

@@ -5,5 +5,5 @@
 *.xlsx
 *.txt
 week5_Recalc.py
-exportCSV.py
-getLeagueHistory.py
+export_csv.py
+player_dict.py

@@ -11,19 +11,20 @@ from pymongo import MongoClient
 import time,datetime,os
 from dotenv import load_dotenv
 
-#Local Modules
+# Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
-from mongo_utils import mongo_write_team_IDs
+from player_dict import player_dict
 
-
-load_dotenv()
-
+# Load obfuscated strings from .env file
+load_dotenv()    
+MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
+YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
 def get_records():
 
 
     #Actual Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+    source = urllib.request.urlopen(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
@@ -32,14 +33,14 @@ def get_records():
     
 
     #Batting Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=B&type=record').read()
+    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=record').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfb = pd.read_html(str(table))[0]
 
     #Pitching Records
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=P&type=record').read()
+    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=record').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
@@ -141,14 +142,14 @@ def get_stats(records_df):
         thisWeek = (week_num - 15)
 
     #Batting Stats
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=B&type=stats').read()
+    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=stats').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
     dfb = pd.read_html(str(table))[0]
 
     #Pitching Stats
-    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/headtoheadstats?pt=P&type=stats').read()
+    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=stats').read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find_all('table')
@@ -192,7 +193,7 @@ def get_stats(records_df):
 
 
     #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+    source = uReq(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
 
     table = soup.find('table')  # Use find() to get the first table
@@ -225,32 +226,19 @@ def get_stats(records_df):
                 team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
                 df_merge.at[index, 'Team_Number'] = team_number
                 break
-    teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
-    df_merge['Player_Name'] = df_merge['Team_Number'].map(teamDict)
+    df_merge['Player_Name'] = df_merge['Team_Number'].map(player_dict)
     #print(df_merge.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
     print(df_merge)
-    #time.sleep(5000)
-
-
-
 
     return df_merge
 
 def write_mongo(power_rank_df):
-    #Get Mongo Password from env vars
-    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
     db = client['YahooFantasyBaseball_2023']
     collection = db['power_ranks_season_trend']
-
-    #Delete Existing Documents
-    # myquery = {"Week":week}
-    # x = collection.delete_many(myquery)
-    # print(x.deleted_count, " documents deleted.")
-
 
     #Insert New Live Standings
     power_rank_df.reset_index(inplace=True)

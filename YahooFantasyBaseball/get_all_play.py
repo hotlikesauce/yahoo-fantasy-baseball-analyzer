@@ -8,13 +8,14 @@ import time, datetime, os
 import certifi
 from dotenv import load_dotenv
 
-#Local Modules
+# Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
-from mongo_utils import mongo_write_team_IDs
-#from datetime_utils import set_this_weeks
+from player_dict import player_dict
 
-load_dotenv()
-
+# Load obfuscated strings from .env file
+load_dotenv()    
+MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
+YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
 my_date = datetime.date.today()
 year, week_num, day_of_week = my_date.isocalendar()
@@ -55,13 +56,13 @@ def getAllplay():
                     else:
                         raise e  # Reraise any other HTTP errors
             try:            
-                source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
                 soup = bs.BeautifulSoup(source,'lxml')
             except urllib.error.HTTPError as e:
                 if e.code == 404:
                     print("Error 404: Page not found. Retrying...")
-                    print('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
-                    source = urllib.request.urlopen('https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                    print(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
+                    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
                 else:
                     raise e
 
@@ -152,7 +153,7 @@ def getAllplay():
 
         
         #BUILD TABLE WITH TEAM NAME AND NUMBER
-        source = uReq('https://baseball.fantasysports.yahoo.com/b1/23893').read()
+        source = uReq(YAHOO_LEAGUE_ID).read()
         soup = bs.BeautifulSoup(source,'lxml')
 
         table = soup.find('table')  # Use find() to get the first table
@@ -185,14 +186,11 @@ def getAllplay():
                     team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
                     rankings_df_expanded.at[index, 'Team_Number'] = team_number
                     break
-        teamDict = {"1": 'Taylor',"2":'Austin',"3":'Kurtis',"4":'Bryant',"5":'Greg',"6":'Josh',"7":'Eric',"8":'David',"9":'Jamie',"10":'Kevin',"11":'Mikey',"12":'Cooch'}
-        rankings_df_expanded['Player_Name'] = rankings_df_expanded['Team_Number'].map(teamDict)
+        rankings_df_expanded['Player_Name'] = rankings_df_expanded['Team_Number'].map(player_dict)
         #print(rankings_df_expanded.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
         print(rankings_df_expanded)
 
-        #Get Mongo Password from env vars
-        MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
         # Set Up Connections
         ca = certifi.where()
         client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
@@ -207,7 +205,6 @@ def getAllplay():
         collection.insert_many(data_dict)
         client.close()
 
-        
         #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
         ca = certifi.where()
         client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
@@ -217,16 +214,12 @@ def getAllplay():
         data_dict = rankings_df_stat.to_dict("records")
         collection.insert_many(data_dict)
         client.close()
-        
-        #return rankings_df
 
         # Reset dfs for new weeks so data isn't aggregated
         del allPlaydf,rankings_df
 
 
 def clearMongo():
-    #Get Mongo Password from env vars
-    MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
