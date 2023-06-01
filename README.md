@@ -1,6 +1,4 @@
-# Project Name
-
-Yahoo Fantasy Baseball League Data Aggregator
+# yahoo-fbb-analyzer
 
 ## Description
 
