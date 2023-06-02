@@ -26,7 +26,7 @@ Technologies Used: Python, mongo dB
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
 
-- You will need a player_dict.py file containing the names of players in your league. This is used to create a team dictionary to handle team name changes throughout the course of the year. I have created a player_dict_example.py file as a template.
+- You will need a player_dict.py file containing the names of fantasy team managers in your league. This is used to create a team dictionary to handle fantasy team name changes throughout the course of the year. I have created a player_dict_example.py file as a template.
 
 ## Usage
 
@@ -37,6 +37,7 @@ Technologies Used: Python, mongo dB
 
 
 - Additionally, you can run the Weekly Updates script every week after weekly scores have been calculated which generates weekly standings, power rankings, and an all-play type coefficient.
+
   - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
   - ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
  
