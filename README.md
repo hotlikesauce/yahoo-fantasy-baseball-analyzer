@@ -3,9 +3,9 @@
 
 ## Description
 
-This python web scraping project will help you aggregate your Yahoo Fantasy Baseball League stats and create datasets for power rankings, season trends, and live standings. Additionally, it will create an expected wins dataset to give you an idea of an All-Play record on a week-by-week basis. This project has been created to write to a mongo dB but can be edited to use any database technology you would like.
+This python web scraping project will help you aggregate your Yahoo Fantasy Baseball League stats and create datasets for power rankings, season trends, and live standings. Additionally, it will create an expected wins dataset to give you an idea of an All-Play record on a week-by-week basis. This project has been created to write to a MongoDB but can be edited to use any database technology you would like.
 
-Technologies Used: Python, mongo dB
+Technologies Used: Python, MongoDB
 
 ## Table of Contents
 
