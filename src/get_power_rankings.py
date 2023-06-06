@@ -147,13 +147,13 @@ def get_stats(records_df):
 
     table = soup.find_all('table')
     dfp = pd.read_html(str(table))[0]
-    
+
     # In case your team names get squirrely 
     dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
     # Rename HR to HRA since it's a duplicate of HR on the batting side
     dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
-    
+
     for column in df:
         if column == 'Team Name':
             pass
