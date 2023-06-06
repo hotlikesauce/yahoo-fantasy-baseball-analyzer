@@ -13,6 +13,7 @@ from email_utils import send_failure_email
 from mongo_utils import mongo_write_team_IDs
 from manager_dict import manager_dict
 from datetime_utils import set_this_week
+from yahoo_utils import build_team_numbers
 
 # Load obfuscated strings from .env file
 load_dotenv()    
@@ -63,8 +64,6 @@ def getCurrentMatchups():
     
     return df_weeklyMatchups
 
-
-
 def getLiveStandings(df_currentMatchup):
     source = uReq(YAHOO_LEAGUE_ID).read()
     soup = bs.BeautifulSoup(source,'lxml')
@@ -100,42 +99,11 @@ def getLiveStandings(df_currentMatchup):
         print("No one has clinched playoffs yet, yo")
 
 
-    #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq(YAHOO_LEAGUE_ID).read()
-    soup = bs.BeautifulSoup(source,'lxml')
-
-    table = soup.find('table')  # Use find() to get the first table
-
-    # Extract all href links from the table, if found
-    if table is not None:
-        links = []
-        for link in table.find_all('a'):  # Find all <a> tags within the table
-            link_text = link.text.strip()  # Extract the hyperlink text
-            link_url = link['href']  # Extract the href link
-            if link_text != '':
-                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
-
-        # Print the extracted links and their associated hyperlink text
-        for link_text, link_url in links:
-            print(f'{link_text}, {link_url[-1]}')
-        
-        #Here contains the Team name and team number
-        result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
-        print(result_dict)
-
-    #Map team numbers from the dictionary to a new Series
-    #Iterate through the rows of the DataFrame
-    for index, row in df_liveStandings.iterrows():
-        team_name = row['Team']
-        for link in links:
-            if link[0] == team_name:
-                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-                df_liveStandings.at[index, 'Team_Number'] = team_number
-                break
-    df_liveStandings['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
+    final_return_df = build_team_numbers(df_liveStandings )
+    final_return_df['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
     
 
-    return df_liveStandings
+    return final_return_df
 
 def mongo_write(df_liveStandings):
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues

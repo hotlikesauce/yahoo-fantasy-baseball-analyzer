@@ -42,6 +42,7 @@ def last_four_weeks_coefficient():
 
     # You can now work with the filtered DataFrame
     print(last_four_weeks_df)
+    return(last_four_weeks_df)
 
 def last_four_weeks(matchups_df):
     
@@ -266,15 +267,32 @@ def get_records(last_four_weeks_stats_df):
 
 def main():
     try:
-        clear_mongo('Weekly_Predictions_Records')
-        clear_mongo('Weekly_Predictions_Stats')
-        #last_four_weeks_coefficient_df = last_four_weeks_coefficient()
+        #Get coefficient of last 4 weeks
+        last_four_weeks_coefficient_df = last_four_weeks_coefficient()
+        clear_mongo('Coefficient_Last_Four')
+        write_mongo(last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
+        
+        #Get matchups/schedule and last 4 weeks avg stats
         matchups_df = get_matchups()
         last_four_weeks_avg = last_four_weeks(matchups_df)
-        predictions_df = predict_matchups(last_four_weeks_avg)
+
+        #Get stats and predicted records
         records_df = get_records(predictions_df)
-        write_mongo(predictions_df,'Weekly_Predictions_Stats')
+        clear_mongo('Weekly_Predictions_Records')
         write_mongo(records_df, 'Weekly_Predictions_Records')
+
+        #compare based on matchups
+        predictions_df = predict_matchups(last_four_weeks_avg)
+        clear_mongo('Weekly_Predictions_Stats')
+        write_mongo(predictions_df,'Weekly_Predictions_Stats')
+        
+        
+        
+        
+        
+        
+        
+        
 
     except Exception as e:
         filename = os.path.basename(__file__)
