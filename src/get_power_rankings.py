@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
-from player_dict import player_dict
+from manager_dict import manager_dict
 
 # Load obfuscated strings from .env file
 load_dotenv()    
@@ -228,7 +228,7 @@ def get_stats(records_df):
                 df_merge.at[index, 'Team_Number'] = team_number
                 break
     #Need to obfuscate team dictionary to protect player identities (player_dict imported from hidden config.py file)  
-    df_merge['Player_Name'] = df_merge['Team_Number'].map(player_dict)
+    df_merge['Manager_Name'] = df_merge['Team_Number'].map(manager_dict)
     
     print(df_merge)
 

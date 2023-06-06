@@ -11,14 +11,14 @@ from dotenv import load_dotenv
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from datetime_utils import set_last_week
-from player_dict import player_dict
+from manager_dict import manager_dict
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
-def getAllplay():
+def get_all_play():
     #Set week number
     lastWeek = set_last_week()
     allPlaydf = pd.DataFrame(columns = ['Team','Week','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH'])
@@ -169,7 +169,7 @@ def getAllplay():
                 team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
                 rankings_df_expanded.at[index, 'Team_Number'] = team_number
                 break
-    rankings_df_expanded['Player_Name'] = rankings_df_expanded['Team_Number'].map(player_dict)
+    rankings_df_expanded['Manager_Name'] = rankings_df_expanded['Team_Number'].map(manager_dict)
     #print(rankings_df_expanded.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
     print(rankings_df_expanded)
@@ -202,7 +202,7 @@ def getAllplay():
     del allPlaydf,rankings_df
 
 
-def clearMongo():
+def clear_mongo():
     lastWeek = set_last_week()
     # Set Up Connections
     ca = certifi.where()
@@ -221,8 +221,8 @@ def clearMongo():
 
 def main():
     try:
-        clearMongo()
-        rankings_df = getAllplay()
+        clear_mongo()
+        rankings_df = get_all_play()
     except Exception as e:
         filename = os.path.basename(__file__)
         error_message = str(e)
