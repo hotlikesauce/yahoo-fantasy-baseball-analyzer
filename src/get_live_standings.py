@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from mongo_utils import mongo_write_team_IDs
-from player_dict import player_dict
+from manager_dict import manager_dict
 from datetime_utils import set_this_week
 
 # Load obfuscated strings from .env file
@@ -132,7 +132,7 @@ def getLiveStandings(df_currentMatchup):
                 team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
                 df_liveStandings.at[index, 'Team_Number'] = team_number
                 break
-    df_liveStandings['Player_Name'] = df_liveStandings['Team_Number'].map(player_dict)
+    df_liveStandings['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
     
 
     return df_liveStandings

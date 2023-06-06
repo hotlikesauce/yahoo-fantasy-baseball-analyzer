@@ -1,11 +1,11 @@
-# yahoo-fbb-analyzer
+# yahoo-fantasy-baseball-analyzer
 ![yahoofb](https://github.com/hotlikesauce/yahoo-fantasy-baseball-analyzer/assets/46724986/5a63122f-c5c9-4e21-ae7c-dfded8a2c26e)
 
 ## Description
 
-This python web scraping project will help you aggregate your Yahoo Fantasy Baseball League stats and create datasets for power rankings, season trends, and live standings. Additionally, it will create an expected wins dataset to give you an idea of an All-Play record on a week-by-week basis. This project has been created to write to a mongo dB but can be edited to use any database technology you would like.
+This python web scraping project will help you aggregate your Yahoo Fantasy Baseball League stats and create datasets for power rankings, season trends, and live standings. Additionally, it will create an expected wins dataset to give you an idea of an All-Play record on a week-by-week basis. This project has been created to write to a MongoDB but can be edited to use any database technology you would like.
 
-Technologies Used: Python, mongo dB
+Technologies Used: Python, MongoDB
 
 ## Table of Contents
 
@@ -22,8 +22,11 @@ Technologies Used: Python, mongo dB
   - GMAIL = 'Your Email'<br>
   - GMAIL_PASSWORD = 'Your App Password From Gmail'<br>
   - MONGO_CLIENT = 'Your mongodb client string'
+  - YAHOO_LEAGUE_ID = 'Your Yahoo Leage ID string (https://baseball.fantasysports.yahoo.com/b1/#####/)'
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
+
+- You will need a player_dict.py file containing the names of fantasy team managers in your league. This is used to create a team dictionary to handle fantasy team name changes throughout the course of the year. I have created a player_dict_example.py file as a template.
 
 ## Usage
 
@@ -34,6 +37,7 @@ Technologies Used: Python, mongo dB
 
 
 - Additionally, you can run the Weekly Updates script every week after weekly scores have been calculated which generates weekly standings, power rankings, and an all-play type coefficient.
+
   - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
   - ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
  
