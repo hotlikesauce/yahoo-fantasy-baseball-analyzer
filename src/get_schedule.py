@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
-from datetime_utils import set_last_week
+from datetime_utils import *
 from manager_dict import manager_dict
 
 # Load obfuscated strings from .env file
@@ -20,22 +20,20 @@ YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 
 def get_schedule():
     schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
-    for week in range(11,22):
+    this_week = set_this_week()
+    for week in range(1,22):
         for matchup in range(1,13):
             time.sleep(3)
 
-            #Setting this sleep timer on a few weeks helps with the rapid requests to the Yahoo servers
-            #If you request the site too much in a short amount of time you will be blocked temporarily
-            #time.sleep(3)     
-            
-            try:            
-                source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+        
+            try:
+                source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup)).read()
                 soup = bs.BeautifulSoup(source,'lxml')
             except urllib.error.HTTPError as e:
                 if e.code == 404:
                     print("Error 404: Page not found. Retrying...")
                     print(YAHOO_LEAGUE_ID+'matchup?pspid=782201763&activity=matchups&week='+str(week))
-                    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup)).read()
+                    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup)).read()
                 else:
                     raise e
 
@@ -49,6 +47,7 @@ def get_schedule():
             df=df[['Team','Opponent','Week']]
 
             schedule_df = schedule_df.append(df.loc[0], True)
+            print(schedule_df)
 
 
 
@@ -98,10 +97,10 @@ def get_schedule():
         db = client['YahooFantasyBaseball_2023']
         collection = db['schedule']
 
-        #Delete Existing Documents From Last Week Only
-        myquery = {"Week":week}
-        x = collection.delete_many(myquery)
-        print(x.deleted_count, " documents deleted.")
+        # #Delete Existing Documents From Last Week Only
+        # myquery = {"Week":week}
+        # x = collection.delete_many(myquery)
+        # print(x.deleted_count, " documents deleted.")
 
         
         # Reset Index and insert entire DF into MondgoDB

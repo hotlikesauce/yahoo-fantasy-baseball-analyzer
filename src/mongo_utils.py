@@ -1,6 +1,7 @@
 import certifi,os,pandas
 from pymongo import MongoClient, collection
 from dotenv import load_dotenv
+import pandas as pd
 load_dotenv()
 
 #Get Mongo Password from env vars
@@ -45,6 +46,7 @@ def write_mongo(df,coll):
 
 def clear_mongo(coll):
 
+
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
@@ -55,3 +57,19 @@ def clear_mongo(coll):
     myquery = {}
     x = collection.delete_many(myquery)
     print(x.deleted_count, " documents deleted.")
+
+def get_mongo_data(coll,query):
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+
+    # Access the database and collection
+    db = client['YahooFantasyBaseball_2023']
+    collection = db[coll]
+
+    # Retrieve the data from the collection
+    data = list(collection.find(query))
+
+    # Convert the data to a pandas DataFrame
+    df = pd.DataFrame(data)
+
+    return df

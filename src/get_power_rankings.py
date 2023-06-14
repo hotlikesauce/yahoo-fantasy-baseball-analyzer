@@ -8,15 +8,21 @@ from pymongo import MongoClient
 import certifi
 import os
 from dotenv import load_dotenv
+from sklearn.preprocessing import MinMaxScaler
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from manager_dict import manager_dict
+from mongo_utils import *
+from datetime_utils import *
+
+from yahoo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+
 
 def get_records():
     
@@ -135,24 +141,36 @@ def get_records():
 def get_stats(records_df):
 
     # Get Batting Stats
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=stats').read()
-    soup = bs.BeautifulSoup(source,'lxml')
+    with urllib.request.urlopen(YAHOO_LEAGUE_ID + 'headtoheadstats?pt=B&type=stats') as response:
+        source = response.read()
+        encoding = response.headers.get_content_charset()
+        html_content = source.decode(encoding)
+
+    soup = bs.BeautifulSoup(html_content, 'lxml')
 
     table = soup.find_all('table')
     dfb = pd.read_html(str(table))[0]
 
     # Get Pitching Stats
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=stats').read()
-    soup = bs.BeautifulSoup(source,'lxml')
+    with urllib.request.urlopen(YAHOO_LEAGUE_ID + 'headtoheadstats?pt=P&type=stats') as response:
+        source = response.read()
+        encoding = response.headers.get_content_charset()
+        html_content = source.decode(encoding)
+
+    soup = bs.BeautifulSoup(html_content, 'lxml')
 
     table = soup.find_all('table')
     dfp = pd.read_html(str(table))[0]
 
     # In case your team names get squirrely 
     dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
+    print(dfp)
+    print(dfb)
     # Rename HR to HRA since it's a duplicate of HR on the batting side
     dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
+    print(df)
+
 
     for column in df:
         if column == 'Team Name':
@@ -173,9 +191,7 @@ def get_stats(records_df):
     keep_same = {'Team Name'}
     df.columns = ['{}{}'.format(c, '' if c in keep_same else '_Stats') for c in df.columns]
     
-    
     df_merge=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [df, records_df])
-    print(df_merge.head())
     
     df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/12
     df_merge['Stats_Power_Rank'] = df_merge['Stats_Power_Score'].rank(ascending = True)
@@ -196,69 +212,129 @@ def get_stats(records_df):
     # Create a new column for the pitcher rank
     df_merge['pitcher_rank'] = (df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/6
     
+    df_merge = df_merge.rename(columns={'Team Name': 'Team'})
 
-    #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq(YAHOO_LEAGUE_ID).read()
-    soup = bs.BeautifulSoup(source,'lxml')
-    table = soup.find('table')  # Use find() to get the first table
+    df_merge_teams = build_team_numbers(df_merge)  
+    df_merge_teams['Manager_Name'] = df_merge_teams['Team_Number'].map(manager_dict)
+    
+    print(df_merge_teams)
 
-    # Extract all href links from the table, if found
-    # We need to get a list of team names to map to player names, since team names change throughout the years
-    if table is not None:
-        links = []
-        for link in table.find_all('a'):  # Find all <a> tags within the table
-            link_text = link.text.strip()  # Extract the hyperlink text
-            link_url = link['href']  # Extract the href link
-            if link_text != '':
-                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
+    return df_merge_teams
         
-        #Here contains the Team name and team number
-        result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
-        #print(result_dict)
+# Normalized Ranks 
+def get_normalized_ranks(power_rank_df):
+    #power_rank_df['Overall'] = 1200 - (power_rank_df['Stats_Power_Score'] * 100)
+ 
+    # Columns to analyze
+    high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
 
+    low_columns_to_analyze = ['ERA_Stats', 'WHIP_Stats', 'HRA_Stats']
 
-
-    # Map team numbers from the dictionary to a new Series
-    # Iterate through the rows of the DataFrame
-    for index, row in df_merge.iterrows():
-        team_name = row['Team Name']
-        for link in links:
-            if link[0] == team_name:
-                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-                df_merge.at[index, 'Team_Number'] = team_number
-                break
-    #Need to obfuscate team dictionary to protect player identities (player_dict imported from hidden config.py file)  
-    df_merge['Manager_Name'] = df_merge['Team_Number'].map(manager_dict)
+    # Calculate Score for each column grouped by team_number
+    for column in high_columns_to_analyze:
+        min_score = 50  # Set the desired minimum Score value
+        min_value = power_rank_df[column].min()
+        max_value = power_rank_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        power_rank_df[column + '_Score'] = scaler.fit_transform(power_rank_df[column].values.reshape(-1, 1))    
     
-    print(df_merge)
+    # Calculate Score for each LOW column grouped by team_number
+    for column in low_columns_to_analyze:
+        min_score = 50  # Set the desired minimum Score value
+        min_value = power_rank_df[column].min()
+        max_value = power_rank_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        scaled_values = 100 - ((power_rank_df[column] - min_value) / (max_value - min_value)) * 80
+        power_rank_df[column + '_Score'] = scaled_values
 
-    return df_merge
+    # Get the list of Score columns
+    score_columns = [column + '_Score' for column in high_columns_to_analyze + low_columns_to_analyze]
 
-def write_mongo(power_rank_df):
+    # Sum the Score columns
+    power_rank_df['Score_Sum'] = power_rank_df[score_columns].sum(axis=1)
+    power_rank_df['Score_Rank'] = power_rank_df['Score_Sum'].rank(ascending=False)
+    power_rank_df['Score_Variation'] = power_rank_df['Score_Rank'] - power_rank_df['Rank']
+
+    return power_rank_df
+
+def running_normalized_ranks(week_df):
+    #week_3_df['Overall'] = 1200 - (week_3_df['Stats_Power_Score'] * 100)
+    # Columns to analyze
+    high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
+
+    low_columns_to_analyze = ['ERA_Stats', 'WHIP_Stats', 'HRA_Stats']
+
+    # Calculate Score for each column grouped by team_number
+    for column in high_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = week_df[column].min()
+        max_value = week_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        week_df[column + '_Score'] = scaler.fit_transform(week_df[column].values.reshape(-1, 1))    
     
-    #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['power_ranks']
+    # Calculate Score for each LOW column grouped by team_number
+    for column in low_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = week_df[column].min()
+        max_value = week_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        scaled_values = 100 - ((week_df[column] - min_value) / (max_value - min_value)) * 80
+        week_df[column + '_Score'] = scaled_values
 
-    #Delete Existing Documents
-    myquery = {}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
+    # Get the list of Score columns
+    score_columns = [column + '_Score' for column in high_columns_to_analyze + low_columns_to_analyze]
 
-    #Insert New Live Standings
-    power_rank_df.reset_index(inplace=True)
-    data_dict = power_rank_df.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
+    # Sum the Score columns
+    week_df['Score_Sum'] = week_df[score_columns].sum(axis=1)
+    week_df['Score_Rank'] = week_df['Score_Sum'].rank(ascending=False)
+    #week_df['Score_Variation'] = week_df['Score_Rank'] - week_df['Rank']
+
+    return week_df
+
 
 
 def main():
     try:
         records_df = get_records()
         power_rank_df = get_stats(records_df)
-        write_mongo(power_rank_df)
+        clear_mongo('Power_Ranks')
+        write_mongo(power_rank_df,'Power_Ranks')
+
+        empty_dict = {}
+        power_rank_df = get_mongo_data('power_ranks',empty_dict)
+        power_rank_season_df = get_mongo_data('power_ranks_season_trend',empty_dict)
+        schedule_df = get_mongo_data('schedule',empty_dict)
+
+
+        normalized_ranks_df = get_normalized_ranks(power_rank_df)
+        clear_mongo('normalized_ranks')
+        write_mongo(normalized_ranks_df,'normalized_ranks')
+        
+
+        this_week = set_this_week()
+        running_normalized_ranks_df = pd.DataFrame()
+        clear_mongo('running_normalized_ranks')
+
+        #Calculate full season Normalized Stat Rankings based on pasat weeks and teams' stats cumulatively at those weeks
+        for week in range(1,(this_week)):
+            week_dict =  {"Week":week}
+            stats_week = get_mongo_data('power_ranks_season_trend',week_dict)
+            running_normalized_ranks_df = running_normalized_ranks(stats_week)
+            write_mongo(running_normalized_ranks_df,'running_normalized_ranks')
+        
+
     except Exception as e:
         filename = os.path.basename(__file__)
         error_message = str(e)

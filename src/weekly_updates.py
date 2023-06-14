@@ -5,6 +5,8 @@ from get_all_play import main as get_all_play_main
 from get_season_trend_power_ranks import main as get_season_trend_power_ranks_main
 from get_season_trend_standings import main as get_season_trend_standings_main
 from get_weekly_prediction import main as get_weekly_prediction_main
+from get_weekly_results import main as get_weekly_results
+from get_elo import main as get_elo
 
 
 def main():
@@ -14,6 +16,8 @@ def main():
         ,get_all_play_main
         ,get_season_trend_standings_main
         ,get_weekly_prediction_main
+        ,get_weekly_results
+        ,get_elo
     ]
 
     for func in functions:

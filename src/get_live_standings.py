@@ -99,7 +99,7 @@ def getLiveStandings(df_currentMatchup):
         print("No one has clinched playoffs yet, yo")
 
 
-    final_return_df = build_team_numbers(df_liveStandings )
+    final_return_df = build_team_numbers(df_liveStandings)
     final_return_df['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
     
 

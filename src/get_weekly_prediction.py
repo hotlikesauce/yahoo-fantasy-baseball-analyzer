@@ -263,7 +263,8 @@ def get_records(last_four_weeks_stats_df):
     print(result_df)
     return result_df
 
-
+def elo_prediction():
+    pass
 
 def main():
     try:
@@ -275,16 +276,18 @@ def main():
         #Get matchups/schedule and last 4 weeks avg stats
         matchups_df = get_matchups()
         last_four_weeks_avg = last_four_weeks(matchups_df)
+        
+        #compare based on matchups
+        predictions_df = predict_matchups(last_four_weeks_avg)
+        clear_mongo('Weekly_Predictions_Stats')
+        write_mongo(predictions_df,'Weekly_Predictions_Stats')
 
         #Get stats and predicted records
         records_df = get_records(predictions_df)
         clear_mongo('Weekly_Predictions_Records')
         write_mongo(records_df, 'Weekly_Predictions_Records')
 
-        #compare based on matchups
-        predictions_df = predict_matchups(last_four_weeks_avg)
-        clear_mongo('Weekly_Predictions_Stats')
-        write_mongo(predictions_df,'Weekly_Predictions_Stats')
+        
         
         
         
