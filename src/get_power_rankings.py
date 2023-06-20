@@ -232,7 +232,7 @@ def get_normalized_ranks(power_rank_df):
 
     # Calculate Score for each column grouped by team_number
     for column in high_columns_to_analyze:
-        min_score = 50  # Set the desired minimum Score value
+        min_score = 0  # Set the desired minimum Score value
         min_value = power_rank_df[column].min()
         max_value = power_rank_df[column].max()
         
@@ -243,7 +243,7 @@ def get_normalized_ranks(power_rank_df):
     
     # Calculate Score for each LOW column grouped by team_number
     for column in low_columns_to_analyze:
-        min_score = 50  # Set the desired minimum Score value
+        min_score = 0  # Set the desired minimum Score value
         min_value = power_rank_df[column].min()
         max_value = power_rank_df[column].max()
         

@@ -181,6 +181,11 @@ def get_all_play():
     db = client['YahooFantasyBaseball_2023']
     collection = db['coefficient']
 
+    #Delete Existing Documents From Last Week Only
+    myquery = {"Week":11}
+    x = collection.delete_many(myquery)
+    print(x.deleted_count, " documents deleted.")
+    
 
     # Reset Index and insert entire DF into MondgoDB
     # df.reset_index(inplace=True)
