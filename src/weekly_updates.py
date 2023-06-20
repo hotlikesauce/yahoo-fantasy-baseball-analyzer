@@ -7,6 +7,7 @@ from get_season_trend_standings import main as get_season_trend_standings_main
 from get_weekly_prediction import main as get_weekly_prediction_main
 from get_weekly_results import main as get_weekly_results
 from get_elo import main as get_elo
+from export_csv import main as export_csv
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
         ,get_weekly_prediction_main
         ,get_weekly_results
         ,get_elo
+        ,export_csv
     ]
 
     for func in functions:

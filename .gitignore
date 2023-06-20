@@ -3,8 +3,9 @@
 *.csv
 *.docx
 *.xlsx
+*.pyc
 /.vscode
 week5_Recalc.py
-export_csv.py
 manager_dict.py
 /LALALand
+src/__pycache__/email_utils.cpython-311.pyc
