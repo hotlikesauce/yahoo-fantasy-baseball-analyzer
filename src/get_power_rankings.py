@@ -261,6 +261,7 @@ def get_normalized_ranks(power_rank_df):
     power_rank_df['Score_Rank'] = power_rank_df['Score_Sum'].rank(ascending=False)
     power_rank_df['Score_Variation'] = power_rank_df['Score_Rank'] - power_rank_df['Rank']
 
+    print(power_rank_df)
     return power_rank_df
 
 def running_normalized_ranks(week_df):
@@ -313,24 +314,23 @@ def main():
         write_mongo(power_rank_df,'Power_Ranks')
 
         empty_dict = {}
-        power_rank_df = get_mongo_data('power_ranks',empty_dict)
+        power_rank_df = get_mongo_data('Power_Ranks',empty_dict)
         power_rank_season_df = get_mongo_data('power_ranks_season_trend',empty_dict)
         schedule_df = get_mongo_data('schedule',empty_dict)
-
 
         normalized_ranks_df = get_normalized_ranks(power_rank_df)
         clear_mongo('normalized_ranks')
         write_mongo(normalized_ranks_df,'normalized_ranks')
-        
 
         this_week = set_this_week()
         running_normalized_ranks_df = pd.DataFrame()
         clear_mongo('running_normalized_ranks')
 
-        #Calculate full season Normalized Stat Rankings based on pasat weeks and teams' stats cumulatively at those weeks
+        #Calculate full season Normalized Stat Rankings based on past weeks and teams' stats cumulatively at those weeks
         for week in range(1,(this_week)):
             week_dict =  {"Week":week}
             stats_week = get_mongo_data('power_ranks_season_trend',week_dict)
+            print(stats_week)
             running_normalized_ranks_df = running_normalized_ranks(stats_week)
             write_mongo(running_normalized_ranks_df,'running_normalized_ranks')
         

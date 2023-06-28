@@ -1,0 +1,142 @@
+2023-06-26 11:41:26.281 | INFO     | __main__:get_all_play:86 - 12
+2023-06-26 11:41:29.051 | ERROR    | __main__:main:215 - 'int' object has no attribute 'format'
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x000001DC255BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x000001DC25A52520>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x000001DC255BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x000001DC26DFBD80>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x000001DC26DFBB00>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x000001DC26876340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x000001DC26BD66F0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x000001DC26875F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x000001DC26BD66F0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x000001DC26875B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x000001DC26BD66F0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 221, in <module>
+    main()
+    └ <function main at 0x000001DC413913A0>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 213, in main
+    get_all_play()
+    └ <function get_all_play at 0x000001DC28025B20>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in get_all_play
+    logger.info(x.deleted_count, " documents deleted.")
+    │      │    │ └ <property object at 0x000001DC408F0C70>
+    │      │    └ <pymongo.results.DeleteResult object at 0x000001DC422D7580>
+    │      └ <function Logger.info at 0x000001DC412D2AC0>
+    └ <loguru.logger handlers=[(id=0, level=10, sink=<stderr>), (id=1, level=10, sink='logs/get_all_play.log')]>
+
+AttributeError: 'int' object has no attribute 'format'
+2023-06-26 11:43:34.647 | ERROR    | __main__:get_all_play:48 - Error 404: Page not found. Retrying...
+2023-06-26 11:43:34.683 | ERROR    | __main__:get_all_play:49 - https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week=12&module=matchup&mid1=3
+2023-06-26 11:43:54.813 | ERROR    | __main__:get_all_play:48 - Error 404: Page not found. Retrying...
+2023-06-26 11:43:54.843 | ERROR    | __main__:get_all_play:49 - https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week=12&module=matchup&mid1=6
+2023-06-26 11:44:19.659 | ERROR    | __main__:get_all_play:48 - Error 404: Page not found. Retrying...
+2023-06-26 11:44:19.695 | ERROR    | __main__:get_all_play:49 - https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week=12&module=matchup&mid1=9
+2023-06-26 11:44:41.971 | INFO     | __main__:get_all_play:86 - 12
+2023-06-26 11:44:44.785 | ERROR    | __main__:main:215 - 'int' object has no attribute 'format'
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x0000028381BCF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x0000028382052520>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x0000028381BCF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x00000283833FBD80>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x00000283833FBB00>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x0000028382E76340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x0000028383191A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x0000028382E75F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x0000028383191A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x0000028382E75B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x0000028383191A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 221, in <module>
+    main()
+    └ <function main at 0x000002839DA91440>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 213, in main
+    get_all_play()
+    └ <function get_all_play at 0x0000028383625DA0>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in get_all_play
+    logger.info(x.deleted_count, " documents deleted.")
+    │      │    │ └ <property object at 0x000002839CF1CD60>
+    │      │    └ <pymongo.results.DeleteResult object at 0x000002839E9D6740>
+    │      └ <function Logger.info at 0x000002839D9CEB60>
+    └ <loguru.logger handlers=[(id=0, level=10, sink=<stderr>), (id=1, level=10, sink='logs/get_all_play.log')]>
+
+AttributeError: 'int' object has no attribute 'format'
+2023-06-26 11:46:24.829 | ERROR    | __main__:get_all_play:48 - Error 404: Page not found. Retrying...
+2023-06-26 11:46:24.856 | ERROR    | __main__:get_all_play:49 - https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week=12&module=matchup&mid1=6
+2023-06-26 11:46:46.327 | ERROR    | __main__:get_all_play:48 - Error 404: Page not found. Retrying...
+2023-06-26 11:46:46.360 | ERROR    | __main__:get_all_play:49 - https://baseball.fantasysports.yahoo.com/b1/23893/matchup?week=12&module=matchup&mid1=7
+2023-06-26 11:47:18.937 | INFO     | __main__:get_all_play:86 - 12
+2023-06-26 11:47:21.075 | INFO     | __main__:get_all_play:174 - 0 documents deleted.
+2023-06-27 19:16:49.787 | INFO     | __main__:get_all_play:86 - 12
+2023-06-27 19:16:51.744 | INFO     | __main__:get_all_play:174 - 12 documents deleted.

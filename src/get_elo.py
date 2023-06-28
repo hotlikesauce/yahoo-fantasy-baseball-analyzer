@@ -240,6 +240,7 @@ def main():
         running_elo_df['Team_Number'] = running_elo_df['Team_Number'].astype(int).astype(str).replace('\.0', '', regex=True)
         print(running_elo_df)
         clear_mongo('Running_ELO')
+        #clear_mongo_query('Running_ELO','"Week":13')
         write_mongo(running_elo_df,'Running_ELO')
 
     except Exception as e:
