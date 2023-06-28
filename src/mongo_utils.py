@@ -58,6 +58,22 @@ def clear_mongo(coll):
     x = collection.delete_many(myquery)
     print(x.deleted_count, " documents deleted.")
 
+def clear_mongo_query(coll,query):
+
+
+    # Set Up Connections
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+    db = client['YahooFantasyBaseball_2023']
+    collection = db[coll]
+    
+    #Delete Existing Documents From Last Week Only
+    myquery = {query}
+    x = collection.delete_many(myquery)
+    print(x.deleted_count, " documents deleted.")
+
+
+
 def get_mongo_data(coll,query):
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
