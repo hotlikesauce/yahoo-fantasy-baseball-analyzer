@@ -2,19 +2,20 @@ import certifi,os,pandas
 from pymongo import MongoClient, collection
 from dotenv import load_dotenv
 import pandas as pd
+import ast
 load_dotenv()
 
 #Get Mongo Password from env vars
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 
-def mongo_write_team_IDs(df_Standings):
+def mongo_write_team_IDs(db_name,df_Standings):
     
     df_teamIDs = df_Standings[['Team', 'Team_Number', 'Manager_Name']].copy()    
     
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
+    db = client[db_name]
     collection = db['team_dict']
 
     #Delete Existing Documents
@@ -29,12 +30,12 @@ def mongo_write_team_IDs(df_Standings):
     collection.insert_many(data_dict)
     client.close()
 
-def write_mongo(df,coll):
+def write_mongo(db_name,df,coll):
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
     
-    db = client['YahooFantasyBaseball_2023']
+    db = client[db_name]
     collection = db[coll]
 
 
@@ -44,13 +45,13 @@ def write_mongo(df,coll):
     collection.insert_many(data_dict)
     client.close()
 
-def clear_mongo(coll):
+def clear_mongo(db_name,coll):
 
 
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
+    db = client[db_name]
     collection = db[coll]
     
     #Delete Existing Documents From Last Week Only
@@ -58,28 +59,28 @@ def clear_mongo(coll):
     x = collection.delete_many(myquery)
     print(x.deleted_count, " documents deleted.")
 
-def clear_mongo_query(coll,query):
+def clear_mongo_query(db_name,coll,query):
 
-
+    
     # Set Up Connections
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
+    db = client[db_name]
     collection = db[coll]
-    
     #Delete Existing Documents From Last Week Only
-    myquery = {query}
+    querymod = "{" + query + "}"
+    myquery = ast.literal_eval(querymod)
     x = collection.delete_many(myquery)
     print(x.deleted_count, " documents deleted.")
 
 
 
-def get_mongo_data(coll,query):
+def get_mongo_data(db_name,coll,query):
     ca = certifi.where()
     client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
 
     # Access the database and collection
-    db = client['YahooFantasyBaseball_2023']
+    db = client[db_name]
     collection = db[coll]
 
     # Retrieve the data from the collection

@@ -19,6 +19,7 @@ from mongo_utils import *
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_weekly_results_full_season():
     #Set week number
@@ -150,7 +151,7 @@ def main():
 
         weekly_results_df = get_weekly_results()
         # clear_mongo('weekly_results')
-        write_mongo(weekly_results_df, 'weekly_results')
+        write_mongo(MONGO_DB,weekly_results_df, 'weekly_results')
 
     except Exception as e:
         filename = os.path.basename(__file__)

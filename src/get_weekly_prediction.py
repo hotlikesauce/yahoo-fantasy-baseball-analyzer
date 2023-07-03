@@ -19,6 +19,7 @@ from yahoo_utils import build_team_numbers
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 this_week = set_this_week()
 
 
@@ -39,6 +40,50 @@ def last_four_weeks_coefficient():
 
     # Filter the DataFrame based on the condition
     last_four_weeks_df = last_four_weeks_df[last_four_weeks_df['Week'] >= this_week - 4]
+
+    # You can now work with the filtered DataFrame
+    print(last_four_weeks_df)
+    return(last_four_weeks_df)
+
+def last_two_weeks_coefficient():
+    # Connect to the MongoDB server
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+
+    # Access the database and collection
+    db = client['YahooFantasyBaseball_2023']
+    collection = db['coefficient']
+
+    # Retrieve the data from the collection
+    data = list(collection.find())
+
+    # Convert the data to a pandas DataFrame
+    last_four_weeks_df = pd.DataFrame(data)
+
+    # Filter the DataFrame based on the condition
+    last_four_weeks_df = last_four_weeks_df[last_four_weeks_df['Week'] >= this_week - 2]
+
+    # You can now work with the filtered DataFrame
+    print(last_four_weeks_df)
+    return(last_four_weeks_df)
+
+def last_week_coefficient():
+    # Connect to the MongoDB server
+    ca = certifi.where()
+    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
+
+    # Access the database and collection
+    db = client['YahooFantasyBaseball_2023']
+    collection = db['coefficient']
+
+    # Retrieve the data from the collection
+    data = list(collection.find())
+
+    # Convert the data to a pandas DataFrame
+    last_four_weeks_df = pd.DataFrame(data)
+
+    # Filter the DataFrame based on the condition
+    last_four_weeks_df = last_four_weeks_df[last_four_weeks_df['Week'] >= this_week - 1]
 
     # You can now work with the filtered DataFrame
     print(last_four_weeks_df)
@@ -268,10 +313,11 @@ def elo_prediction():
 
 def main():
     try:
+        this_week = set_this_week()
         #Get coefficient of last 4 weeks
         last_four_weeks_coefficient_df = last_four_weeks_coefficient()
-        clear_mongo('Coefficient_Last_Four')
-        write_mongo(last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
+        clear_mongo(MONGO_DB,'Coefficient_Last_Four')
+        write_mongo(MONGO_DB,last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
         
         #Get matchups/schedule and last 4 weeks avg stats
         matchups_df = get_matchups()
@@ -279,13 +325,13 @@ def main():
         
         #compare based on matchups
         predictions_df = predict_matchups(last_four_weeks_avg)
-        clear_mongo('Weekly_Predictions_Stats')
-        write_mongo(predictions_df,'Weekly_Predictions_Stats')
+        clear_mongo(MONGO_DB,'Weekly_Predictions_Stats')
+        write_mongo(MONGO_DB,predictions_df,'Weekly_Predictions_Stats')
 
         #Get stats and predicted records
         records_df = get_records(predictions_df)
-        clear_mongo('Weekly_Predictions_Records')
-        write_mongo(records_df, 'Weekly_Predictions_Records')
+        clear_mongo(MONGO_DB,'Weekly_Predictions_Records')
+        write_mongo(MONGO_DB,records_df, 'Weekly_Predictions_Records')
 
         
         
