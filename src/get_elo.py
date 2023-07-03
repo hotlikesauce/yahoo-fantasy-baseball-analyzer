@@ -23,6 +23,7 @@ from yahoo_utils import *
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
 logging.basicConfig(filename='error.log', level=logging.ERROR)
 
@@ -221,13 +222,13 @@ def main():
         
         for week in range(1,(this_week)):
             week_dict =  {"Week":week}
-            schedule_df = get_mongo_data('schedule',week_dict)
+            schedule_df = get_mongo_data(MONGO_DB,'schedule',week_dict)
             print(schedule_df)
             expected_outcome_df = expected_outcome(output_df,schedule_df)
             print(expected_outcome_df)
 
             week_dict =  {"Week":(week)}
-            week_df = get_mongo_data('weekly_results', week_dict)
+            week_df = get_mongo_data(MONGO_DB,'weekly_results', week_dict)
 
            
             output_df = get_new_elo(expected_outcome_df, week_df)
@@ -239,9 +240,9 @@ def main():
         running_elo_df = running_elo_df.append(week_1_df, ignore_index=True)
         running_elo_df['Team_Number'] = running_elo_df['Team_Number'].astype(int).astype(str).replace('\.0', '', regex=True)
         print(running_elo_df)
-        clear_mongo('Running_ELO')
+        clear_mongo(MONGO_DB,'Running_ELO')
         #clear_mongo_query('Running_ELO','"Week":13')
-        write_mongo(running_elo_df,'Running_ELO')
+        write_mongo(MONGO_DB,running_elo_df,'Running_ELO')
 
     except Exception as e:
         filename = os.path.basename(__file__)

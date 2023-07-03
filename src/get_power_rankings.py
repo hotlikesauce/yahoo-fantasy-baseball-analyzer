@@ -22,6 +22,7 @@ from yahoo_utils import *
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
 
 def get_records():
@@ -164,12 +165,12 @@ def get_stats(records_df):
 
     # In case your team names get squirrely 
     dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
-    print(dfp)
-    print(dfb)
+    #print(dfp)
+    #print(dfb)
     # Rename HR to HRA since it's a duplicate of HR on the batting side
     dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
-    print(df)
+    #print(df)
 
 
     for column in df:
@@ -217,13 +218,12 @@ def get_stats(records_df):
     df_merge_teams = build_team_numbers(df_merge)  
     df_merge_teams['Manager_Name'] = df_merge_teams['Team_Number'].map(manager_dict)
     
-    print(df_merge_teams)
+    #print(df_merge_teams)
 
     return df_merge_teams
         
 # Normalized Ranks 
 def get_normalized_ranks(power_rank_df):
-    #power_rank_df['Overall'] = 1200 - (power_rank_df['Stats_Power_Score'] * 100)
  
     # Columns to analyze
     high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
@@ -265,7 +265,6 @@ def get_normalized_ranks(power_rank_df):
     return power_rank_df
 
 def running_normalized_ranks(week_df):
-    #week_3_df['Overall'] = 1200 - (week_3_df['Stats_Power_Score'] * 100)
     # Columns to analyze
     high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
 
@@ -310,29 +309,34 @@ def main():
     try:
         records_df = get_records()
         power_rank_df = get_stats(records_df)
-        clear_mongo('Power_Ranks')
-        write_mongo(power_rank_df,'Power_Ranks')
+        clear_mongo(MONGO_DB,'Power_Ranks')
+        clear_mongo(MONGO_DB,'power_ranks')
+        write_mongo(MONGO_DB,power_rank_df,'Power_Ranks')
+        write_mongo(MONGO_DB,power_rank_df,'power_ranks')
+        print('Wrote out Power Ranks Stats to both mongo dbs')
 
         empty_dict = {}
-        power_rank_df = get_mongo_data('Power_Ranks',empty_dict)
-        power_rank_season_df = get_mongo_data('power_ranks_season_trend',empty_dict)
-        schedule_df = get_mongo_data('schedule',empty_dict)
+        power_rank_df = get_mongo_data(MONGO_DB,'Power_Ranks',empty_dict)
+        power_rank_season_df = get_mongo_data(MONGO_DB,'power_ranks_season_trend',empty_dict)
+        schedule_df = get_mongo_data(MONGO_DB,'schedule',empty_dict)
 
         normalized_ranks_df = get_normalized_ranks(power_rank_df)
-        clear_mongo('normalized_ranks')
-        write_mongo(normalized_ranks_df,'normalized_ranks')
+        clear_mongo(MONGO_DB,'normalized_ranks')
+        write_mongo(MONGO_DB,normalized_ranks_df,'normalized_ranks')
+        print(f'Write Normalized Ranks')
 
         this_week = set_this_week()
         running_normalized_ranks_df = pd.DataFrame()
-        clear_mongo('running_normalized_ranks')
+        clear_mongo(MONGO_DB,'running_normalized_ranks')
 
         #Calculate full season Normalized Stat Rankings based on past weeks and teams' stats cumulatively at those weeks
         for week in range(1,(this_week)):
             week_dict =  {"Week":week}
-            stats_week = get_mongo_data('power_ranks_season_trend',week_dict)
-            print(stats_week)
+            stats_week = get_mongo_data(MONGO_DB,'power_ranks_season_trend',week_dict)
+            #print(stats_week)
             running_normalized_ranks_df = running_normalized_ranks(stats_week)
-            write_mongo(running_normalized_ranks_df,'running_normalized_ranks')
+            write_mongo(MONGO_DB,running_normalized_ranks_df,'running_normalized_ranks')
+            print(f'Done Normalized Week {week}')
         
 
     except Exception as e:

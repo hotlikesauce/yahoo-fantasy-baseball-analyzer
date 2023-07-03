@@ -15,11 +15,13 @@ from dotenv import load_dotenv
 from email_utils import send_failure_email
 from datetime_utils import set_last_week
 from manager_dict import manager_dict
+from mongo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_records():
 
@@ -229,40 +231,14 @@ def get_stats(records_df):
 
     return df_merge
 
-def write_mongo(power_rank_df):
-    #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['power_ranks_season_trend']
-
-    #Insert New Live Standings
-    power_rank_df.reset_index(inplace=True)
-    data_dict = power_rank_df.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
-
-
-def clearMongo():
-    lastWeek = set_last_week()
-    # Set Up Connections
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['power_ranks_season_trend']
-
-    #Delete Existing Documents From Last Week Only
-    myquery = {"Week":lastWeek}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")   
-
 
 def main():
     try:
-        clearMongo()
+        lastWeek = set_last_week()
+        clear_mongo_query(MONGO_DB,'power_ranks_season_trend','"Week":'+str(lastWeek))
         records_df = get_records()
         power_rank_df = get_stats(records_df)
-        write_mongo(power_rank_df)
+        write_mongo(MONGO_DB,power_rank_df,'power_ranks_season_trend')
     except Exception as e:
         filename = os.path.basename(__file__)
         error_message = str(e)

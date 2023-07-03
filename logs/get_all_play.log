@@ -140,3 +140,760 @@ AttributeError: 'int' object has no attribute 'format'
 2023-06-26 11:47:21.075 | INFO     | __main__:get_all_play:174 - 0 documents deleted.
 2023-06-27 19:16:49.787 | INFO     | __main__:get_all_play:86 - 12
 2023-06-27 19:16:51.744 | INFO     | __main__:get_all_play:174 - 12 documents deleted.
+2023-07-03 06:49:04.657 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 06:49:06.774 | INFO     | __main__:get_all_play:174 - 0 documents deleted.
+2023-07-03 10:15:36.163 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:15:37.552 | ERROR    | __main__:main:178 - filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x00000214F3BBF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x00000214F4052520>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x00000214F3BBF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x00000214F560BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x00000214F560BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x00000214F4EA6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x00000214F3FD40C0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x00000214F4EA5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x00000214F3FD40C0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x00000214F4EA5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x00000214F3FD40C0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x0000021501D2BD80>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',(f'"Week":{lastWeek}'))
+    └ <function clear_mongo_query at 0x0000021501D44180>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    x = collection.delete_many(myquery)
+        │          │           └ {'"Week":13'}
+        │          └ <function Collection.delete_many at 0x0000021501262480>
+        └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1408, in delete_many
+    self._delete_retryable(
+    │    └ <function Collection._delete_retryable at 0x00000215012622A0>
+    └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1283, in _delete_retryable
+    return self.__database.client._retryable_write(
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1448, in _retryable_write
+    return self._retry_with_session(retryable, func, s, None)
+           │    │                   │          │     └ <pymongo.client_session.ClientSession object at 0x0000021502C40C90>
+           │    │                   │          └ <function Collection._delete_retryable.<locals>._delete at 0x0000021502C27600>
+           │    │                   └ False
+           │    └ <function MongoClient._retry_with_session at 0x000002150188AFC0>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1321, in _retry_with_session
+    return self._retry_internal(retryable, func, session, bulk)
+           │    │               │          │     │        └ None
+           │    │               │          │     └ <pymongo.client_session.ClientSession object at 0x0000021502C40C90>
+           │    │               │          └ <function Collection._delete_retryable.<locals>._delete at 0x0000021502C27600>
+           │    │               └ False
+           │    └ <function MongoClient._retry_internal at 0x000002150188B100>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\_csot.py", line 105, in csot_wrapper
+    return func(self, *args, **kwargs)
+           │    │      │       └ {}
+           │    │      └ (False, <function Collection._delete_retryable.<locals>._delete at 0x0000021502C27600>, <pymongo.client_session.ClientSession...
+           │    └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+           └ <function MongoClient._retry_internal at 0x000002150188B060>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1362, in _retry_internal
+    return func(session, sock_info, retryable)
+           │    │        │          └ False
+           │    │        └ SocketInfo(<ssl.SSLSocket fd=2368, family=2, type=1, proto=0, laddr=('192.168.0.147', 63942), raddr=('54.190.72.68', 27017)>)...
+           │    └ <pymongo.client_session.ClientSession object at 0x0000021502C40C90>
+           └ <function Collection._delete_retryable.<locals>._delete at 0x0000021502C27600>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1268, in _delete
+    return self._delete(
+           │    └ <function Collection._delete at 0x0000021501262200>
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1212, in _delete
+    common.validate_is_mapping("filter", criteria)
+    │      │                             └ {'"Week":13'}
+    │      └ <function validate_is_mapping at 0x00000215011DA520>
+    └ <module 'pymongo.common' from 'C:\\Users\\taylor.ward\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2k...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\common.py", line 511, in validate_is_mapping
+    raise TypeError(
+
+TypeError: filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+2023-07-03 10:17:24.997 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:17:26.634 | ERROR    | __main__:main:178 - filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x0000021A0C3FF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x0000021A0C852480>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x0000021A0C3FF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x0000021A0DD0BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x0000021A0DD0BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x0000021A0D7A6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x0000021A0D890900, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x0000021A0D7A5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x0000021A0D890900, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x0000021A0D7A5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x0000021A0D890900, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x0000021A2862BD80>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',(f'"Week":{lastWeek}'))
+    └ <function clear_mongo_query at 0x0000021A28644180>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    x = collection.delete_many(myquery)
+        │          │           └ {'"Week":13'}
+        │          └ <function Collection.delete_many at 0x0000021A27B62480>
+        └ Collection(Database(MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net...
+
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1408, in delete_many
+    self._delete_retryable(
+    │    └ <function Collection._delete_retryable at 0x0000021A27B622A0>
+    └ Collection(Database(MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1283, in _delete_retryable
+    return self.__database.client._retryable_write(
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1448, in _retryable_write
+    return self._retry_with_session(retryable, func, s, None)
+           │    │                   │          │     └ <pymongo.client_session.ClientSession object at 0x0000021A287EDF50>
+           │    │                   │          └ <function Collection._delete_retryable.<locals>._delete at 0x0000021A287CB600>
+           │    │                   └ False
+           │    └ <function MongoClient._retry_with_session at 0x0000021A2818AFC0>
+           └ MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1321, in _retry_with_session
+    return self._retry_internal(retryable, func, session, bulk)
+           │    │               │          │     │        └ None
+           │    │               │          │     └ <pymongo.client_session.ClientSession object at 0x0000021A287EDF50>
+           │    │               │          └ <function Collection._delete_retryable.<locals>._delete at 0x0000021A287CB600>
+           │    │               └ False
+           │    └ <function MongoClient._retry_internal at 0x0000021A2818B100>
+           └ MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\_csot.py", line 105, in csot_wrapper
+    return func(self, *args, **kwargs)
+           │    │      │       └ {}
+           │    │      └ (False, <function Collection._delete_retryable.<locals>._delete at 0x0000021A287CB600>, <pymongo.client_session.ClientSession...
+           │    └ MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-s...
+           └ <function MongoClient._retry_internal at 0x0000021A2818B060>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1362, in _retry_internal
+    return func(session, sock_info, retryable)
+           │    │        │          └ False
+           │    │        └ SocketInfo(<ssl.SSLSocket fd=2348, family=2, type=1, proto=0, laddr=('192.168.0.147', 64073), raddr=('54.190.72.68', 27017)>)...
+           │    └ <pymongo.client_session.ClientSession object at 0x0000021A287EDF50>
+           └ <function Collection._delete_retryable.<locals>._delete at 0x0000021A287CB600>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1268, in _delete
+    return self._delete(
+           │    └ <function Collection._delete at 0x0000021A27B62200>
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-shard-00-02.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1212, in _delete
+    common.validate_is_mapping("filter", criteria)
+    │      │                             └ {'"Week":13'}
+    │      └ <function validate_is_mapping at 0x0000021A27ADA520>
+    └ <module 'pymongo.common' from 'C:\\Users\\taylor.ward\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2k...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\common.py", line 511, in validate_is_mapping
+    raise TypeError(
+
+TypeError: filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+2023-07-03 10:20:22.551 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:20:24.064 | ERROR    | __main__:main:178 - filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x00000259BB8EF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x00000259BBAB27A0>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x00000259BB8EF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x00000259BE40BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x00000259BE40BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x00000259BCCA6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x00000259BCE8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x00000259BCCA5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x00000259BCE8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x00000259BCCA5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x00000259BCE8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x00000259D7B2BE20>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',f'"Week":{lastWeek}')
+    └ <function clear_mongo_query at 0x00000259D7B44220>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    x = collection.delete_many(myquery)
+        │          │           └ {'"Week":13'}
+        │          └ <function Collection.delete_many at 0x00000259D7062480>
+        └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1408, in delete_many
+    self._delete_retryable(
+    │    └ <function Collection._delete_retryable at 0x00000259D70622A0>
+    └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1283, in _delete_retryable
+    return self.__database.client._retryable_write(
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1448, in _retryable_write
+    return self._retry_with_session(retryable, func, s, None)
+           │    │                   │          │     └ <pymongo.client_session.ClientSession object at 0x00000259D84C7750>
+           │    │                   │          └ <function Collection._delete_retryable.<locals>._delete at 0x00000259D91DF6A0>
+           │    │                   └ False
+           │    └ <function MongoClient._retry_with_session at 0x00000259D768AFC0>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1321, in _retry_with_session
+    return self._retry_internal(retryable, func, session, bulk)
+           │    │               │          │     │        └ None
+           │    │               │          │     └ <pymongo.client_session.ClientSession object at 0x00000259D84C7750>
+           │    │               │          └ <function Collection._delete_retryable.<locals>._delete at 0x00000259D91DF6A0>
+           │    │               └ False
+           │    └ <function MongoClient._retry_internal at 0x00000259D768B100>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\_csot.py", line 105, in csot_wrapper
+    return func(self, *args, **kwargs)
+           │    │      │       └ {}
+           │    │      └ (False, <function Collection._delete_retryable.<locals>._delete at 0x00000259D91DF6A0>, <pymongo.client_session.ClientSession...
+           │    └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+           └ <function MongoClient._retry_internal at 0x00000259D768B060>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1362, in _retry_internal
+    return func(session, sock_info, retryable)
+           │    │        │          └ False
+           │    │        └ SocketInfo(<ssl.SSLSocket fd=2208, family=2, type=1, proto=0, laddr=('192.168.0.147', 64255), raddr=('54.190.72.68', 27017)>)...
+           │    └ <pymongo.client_session.ClientSession object at 0x00000259D84C7750>
+           └ <function Collection._delete_retryable.<locals>._delete at 0x00000259D91DF6A0>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1268, in _delete
+    return self._delete(
+           │    └ <function Collection._delete at 0x00000259D7062200>
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1212, in _delete
+    common.validate_is_mapping("filter", criteria)
+    │      │                             └ {'"Week":13'}
+    │      └ <function validate_is_mapping at 0x00000259D6FDA520>
+    └ <module 'pymongo.common' from 'C:\\Users\\taylor.ward\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2k...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\common.py", line 511, in validate_is_mapping
+    raise TypeError(
+
+TypeError: filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+2023-07-03 10:23:17.271 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:23:18.702 | ERROR    | __main__:main:178 - filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x00000196865BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x0000019686A52520>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x00000196865BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x000001968900BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x000001968900BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x00000196878A6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x0000019687BD4FB0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x00000196878A5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x0000019687BD4FB0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x00000196878A5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x0000019687BD4FB0, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x00000196A282BD80>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',f'"Week":{lastWeek}')
+    └ <function clear_mongo_query at 0x00000196A2848180>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 73, in clear_mongo_query
+    x = collection.delete_many(myquery)
+        │          │           └ {'"Week":13'}
+        │          └ <function Collection.delete_many at 0x00000196A1C72480>
+        └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1408, in delete_many
+    self._delete_retryable(
+    │    └ <function Collection._delete_retryable at 0x00000196A1C722A0>
+    └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1283, in _delete_retryable
+    return self.__database.client._retryable_write(
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1448, in _retryable_write
+    return self._retry_with_session(retryable, func, s, None)
+           │    │                   │          │     └ <pymongo.client_session.ClientSession object at 0x00000196A3A3F510>
+           │    │                   │          └ <function Collection._delete_retryable.<locals>._delete at 0x00000196A33FFA60>
+           │    │                   └ False
+           │    └ <function MongoClient._retry_with_session at 0x00000196A238AFC0>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1321, in _retry_with_session
+    return self._retry_internal(retryable, func, session, bulk)
+           │    │               │          │     │        └ None
+           │    │               │          │     └ <pymongo.client_session.ClientSession object at 0x00000196A3A3F510>
+           │    │               │          └ <function Collection._delete_retryable.<locals>._delete at 0x00000196A33FFA60>
+           │    │               └ False
+           │    └ <function MongoClient._retry_internal at 0x00000196A238B100>
+           └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\_csot.py", line 105, in csot_wrapper
+    return func(self, *args, **kwargs)
+           │    │      │       └ {}
+           │    │      └ (False, <function Collection._delete_retryable.<locals>._delete at 0x00000196A33FFA60>, <pymongo.client_session.ClientSession...
+           │    └ MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net:27017', 'cluster0-s...
+           └ <function MongoClient._retry_internal at 0x00000196A238B060>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\mongo_client.py", line 1362, in _retry_internal
+    return func(session, sock_info, retryable)
+           │    │        │          └ False
+           │    │        └ SocketInfo(<ssl.SSLSocket fd=2372, family=2, type=1, proto=0, laddr=('192.168.0.147', 64454), raddr=('54.190.72.68', 27017)>)...
+           │    └ <pymongo.client_session.ClientSession object at 0x00000196A3A3F510>
+           └ <function Collection._delete_retryable.<locals>._delete at 0x00000196A33FFA60>
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1268, in _delete
+    return self._delete(
+           │    └ <function Collection._delete at 0x00000196A1C72200>
+           └ Collection(Database(MongoClient(host=['cluster0-shard-00-02.qj2j8.mongodb.net:27017', 'cluster0-shard-00-01.qj2j8.mongodb.net...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\collection.py", line 1212, in _delete
+    common.validate_is_mapping("filter", criteria)
+    │      │                             └ {'"Week":13'}
+    │      └ <function validate_is_mapping at 0x00000196A1BEA520>
+    └ <module 'pymongo.common' from 'C:\\Users\\taylor.ward\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2k...
+  File "C:\Users\taylor.ward\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pymongo\common.py", line 511, in validate_is_mapping
+    raise TypeError(
+
+TypeError: filter must be an instance of dict, bson.son.SON, or any other type that inherits from collections.Mapping
+2023-07-03 10:29:03.299 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:29:04.385 | ERROR    | __main__:main:178 - invalid syntax (<unknown>, line 1)
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x000001B0395BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x000001B039A52660>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x000001B0395BF890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x000001B03C00BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x000001B03C00BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x000001B03A8A6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x000001B039FC6A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x000001B03A8A5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x000001B039FC6A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x000001B03A8A5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x000001B039FC6A90, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x000001B05582BD80>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',f'"Week":{lastWeek}')
+    └ <function clear_mongo_query at 0x000001B055844180>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    myquery = {ast.literal_eval(query)}
+               │   │            └ '"Week":13'
+               │   └ <function literal_eval at 0x000001B03A26F6A0>
+               └ <module 'ast' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\\Lib\...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 64, in literal_eval
+    node_or_string = parse(node_or_string.lstrip(" \t"), mode='eval')
+                     │     │              └ <method 'lstrip' of 'str' objects>
+                     │     └ '"Week":13'
+                     └ <function parse at 0x000001B03A26EF20>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+                   │       │         │     └ 1024
+                   │       │         └ 'eval'
+                   │       └ '<unknown>'
+                   └ '"Week":13'
+  File "<unknown>", line 1
+    "Week":13
+          ^
+
+SyntaxError: invalid syntax
+2023-07-03 10:30:30.244 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:30:31.550 | ERROR    | __main__:main:178 - invalid syntax (<unknown>, line 1)
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x00000146E4A1F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x00000146E4E52520>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x00000146E4A1F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x00000146E630BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x00000146E630BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x00000146E5DA6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x00000146E5E8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x00000146E5DA5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x00000146E5E8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x00000146E5DA5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x00000146E5E8F250, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x0000014680C2BD80>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',f'"Week":{lastWeek}')
+    └ <function clear_mongo_query at 0x0000014680C44180>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    myquery = ast.literal_eval(query)
+              │   │            └ '"Week":13'
+              │   └ <function literal_eval at 0x00000146E568F6A0>
+              └ <module 'ast' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\\Lib\...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 64, in literal_eval
+    node_or_string = parse(node_or_string.lstrip(" \t"), mode='eval')
+                     │     │              └ <method 'lstrip' of 'str' objects>
+                     │     └ '"Week":13'
+                     └ <function parse at 0x00000146E568EF20>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+                   │       │         │     └ 1024
+                   │       │         └ 'eval'
+                   │       └ '<unknown>'
+                   └ '"Week":13'
+  File "<unknown>", line 1
+    "Week":13
+          ^
+
+SyntaxError: invalid syntax
+2023-07-03 10:35:29.271 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:35:30.437 | ERROR    | __main__:main:178 - invalid syntax (<unknown>, line 1)
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x0000020649C8F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x000002064A0527A0>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x0000020649C8F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x000002064B50BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x000002064B50BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x000002064AFA6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x000002064B1EB460, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x000002064AFA5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x000002064B1EB460, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x000002064AFA5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x000002064B1EB460, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x0000020665E2BA60>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient',f'"Week":{lastWeek}')
+    └ <function clear_mongo_query at 0x0000020665E440E0>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    myquery = ast.literal_eval(query)
+              │   │            └ '"Week":13'
+              │   └ <function literal_eval at 0x000002064A96F6A0>
+              └ <module 'ast' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\\Lib\...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 64, in literal_eval
+    node_or_string = parse(node_or_string.lstrip(" \t"), mode='eval')
+                     │     │              └ <method 'lstrip' of 'str' objects>
+                     │     └ '"Week":13'
+                     └ <function parse at 0x000002064A96EF20>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+                   │       │         │     └ 1024
+                   │       │         └ 'eval'
+                   │       └ '<unknown>'
+                   └ '"Week":13'
+  File "<unknown>", line 1
+    "Week":13
+          ^
+
+SyntaxError: invalid syntax
+2023-07-03 10:42:10.646 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:45:21.121 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:47:14.824 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:49:35.849 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:52:23.294 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 10:52:38.336 | ERROR    | __main__:main:178 - invalid syntax (<unknown>, line 1)
+Traceback (most recent call last):
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 198, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+           │         └ <code object <module> at 0x000001460C08F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+           └ <function _run_code at 0x000001460C452660>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\runpy.py", line 88, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': <_frozen_importlib_external.SourceFileLoader objec...
+         └ <code object <module> at 0x000001460C08F890, file "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonF...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy\__main__.py", line 39, in <module>
+    cli.main()
+    │   └ <function main at 0x000001460D90BCE0>
+    └ <module 'debugpy.server.cli' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFiles\\lib\...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 430, in main
+    run()
+    └ <function run_file at 0x000001460D90BA60>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\adapter/../..\debugpy\launcher/../..\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+    runpy.run_path(target, run_name="__main__")
+    │     │        └ 'S:\\North_Rockies\\Jonah\\GIS\\GIS_V2\\_Scripts - Taylor\\YahooFantasyBaseball_2023\\src\\get_all_play.py'
+    │     └ <function run_path at 0x000001460D3A6340>
+    └ <module '_pydevd_bundle.pydevd_runpy' from 'c:\\Users\\taylor.ward\\.vscode\\extensions\\ms-python.python-2023.10.1\\pythonFi...
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+    return _run_module_code(code, init_globals, run_name,
+           │                │     │             └ '__main__'
+           │                │     └ None
+           │                └ <code object <module> at 0x000001460D569F30, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+           └ <function _run_module_code at 0x000001460D3A5F80>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+    │         │     │            └ None
+    │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+    │         └ <code object <module> at 0x000001460D569F30, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+    └ <function _run_code at 0x000001460D3A5B20>
+
+  File "c:\Users\taylor.ward\.vscode\extensions\ms-python.python-2023.10.1\pythonFiles\lib\python\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+    exec(code, run_globals)
+         │     └ {'__name__': '__main__', '__doc__': None, '__package__': '', '__loader__': None, '__spec__': None, '__file__': 'S:\\North_Roc...
+         └ <code object <module> at 0x000001460D569F30, file "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2...
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 184, in <module>
+    main()
+    └ <function main at 0x000001462804BF60>
+
+> File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\get_all_play.py", line 174, in main
+    clear_mongo_query('YahooFantasyBaseball_2023','coefficient','"Week":'+str(lastWeek))
+    │                                                                         └ 13
+    └ <function clear_mongo_query at 0x00000146280604A0>
+
+  File "S:\North_Rockies\Jonah\GIS\GIS_V2\_Scripts - Taylor\YahooFantasyBaseball_2023\src\mongo_utils.py", line 72, in clear_mongo_query
+    myquery = ast.literal_eval(query)
+              │   │            └ '"Week":13'
+              │   └ <function literal_eval at 0x000001460CD6F6A0>
+              └ <module 'ast' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\\Lib\...
+
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 64, in literal_eval
+    node_or_string = parse(node_or_string.lstrip(" \t"), mode='eval')
+                     │     │              └ <method 'lstrip' of 'str' objects>
+                     │     └ '"Week":13'
+                     └ <function parse at 0x000001460CD6EF20>
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.1264.0_x64__qbz5n2kfra8p0\Lib\ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+                   │       │         │     └ 1024
+                   │       │         └ 'eval'
+                   │       └ '<unknown>'
+                   └ '"Week":13'
+  File "<unknown>", line 1
+    "Week":13
+          ^
+
+SyntaxError: invalid syntax
+2023-07-03 10:56:03.661 | INFO     | __main__:get_all_play:86 - 13
+2023-07-03 11:41:14.178 | INFO     | __main__:get_all_play:87 - 13

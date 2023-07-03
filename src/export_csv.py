@@ -9,13 +9,13 @@ from email_utils import *
 from mongo_utils import mongo_write_team_IDs
 
 load_dotenv()
+MONGO_DB = os.environ.get('MONGO_DB')
 
 #Get Mongo Password from env vars
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
 ca = certifi.where()
 client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-db = client['YahooFantasyBaseball_2023']
 
 # List of collections to export
 collections = ['coefficient', 'power_ranks', 'power_ranks_season_trend', 'standings_season_trend','Coefficient_Last_Four','Running_ELO','Weekly_Predictions_Records','Weekly_Predictions_Records','normalized_ranks','weekly_results','weekly_results','team_dict']
@@ -23,7 +23,7 @@ collections = ['coefficient', 'power_ranks', 'power_ranks_season_trend', 'standi
 def main():
     # Iterate over each collection
     for collection_name in collections:
-        collection = db[collection_name]
+        collection = MONGO_DB[collection_name]
 
         # Retrieve documents from the collection
         documents = collection.find()

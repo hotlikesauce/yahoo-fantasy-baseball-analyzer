@@ -13,15 +13,16 @@ from loguru import logger
 from email_utils import send_failure_email
 from datetime_utils import set_last_week
 from manager_dict import manager_dict
+from mongo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
-def get_all_play():
+def get_all_play(lastWeek):
     # Set week number
-    lastWeek = set_last_week()
     allPlaydf = pd.DataFrame(columns = ['Team','Week','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH'])
     for matchup in range(1, 13):
         data = []      
@@ -110,9 +111,6 @@ def get_all_play():
     cols_to_sum = rankings_df.columns[:df.shape[1]-1]
     rankings_df['Expected_Wins'] = rankings_df[cols_to_sum].sum(axis=1)
     
-    # Keep individual Stat Columns
-    rankings_df_stat = rankings_df
-
     # Remove Individual Stat Columns
     rankings_df = rankings_df[['Team', 'Week', 'Opponent', 'Expected_Wins']]
     
@@ -160,57 +158,23 @@ def get_all_play():
     rankings_df_expanded['Manager_Name'] = rankings_df_expanded['Team_Number'].map(manager_dict)
     print(rankings_df_expanded)
 
-    # Set Up Connections
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['coefficient']
-
-    # Delete Existing Documents From Last Week Only
-    myquery = {"Week": lastWeek}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
-    logger.info(f"{x.deleted_count} documents deleted.") 
-
-    # Reset Index and insert entire DF into MongoDB
-    # df.reset_index(inplace=True)
-    data_dict = rankings_df_expanded.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
-
-    # Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['coefficient_expanded']
-
-    data_dict = rankings_df_stat.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
-
     # Reset dfs for new weeks so data isn't aggregated
     del allPlaydf, rankings_df
 
+    return rankings_df_expanded
 
-def clear_mongo():
-    lastWeek = set_last_week()
-    # Set Up Connections
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['coefficient']
     
-    # Delete Existing Documents From Last Week Only
-    myquery = {"Week": lastWeek}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
 
 
 def main():
     logger.add("logs/get_all_play.log", rotation="500 MB")
     try:
-        get_all_play()
+        lastWeek = set_last_week()
+        rankings_df = get_all_play(lastWeek)
+        #db name, collection, query
+        clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(lastWeek))
+        #db name, collection, dataframe
+        write_mongo(MONGO_DB,rankings_df,'coefficient')
     except Exception as e:
         logger.exception(e)
         send_failure_email(str(e),'get all play')

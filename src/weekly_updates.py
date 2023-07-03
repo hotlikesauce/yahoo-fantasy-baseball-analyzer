@@ -12,13 +12,13 @@ from export_csv import main as export_csv
 
 def main():
     functions = [
-        get_season_trend_power_ranks_main
-        ,get_power_rankings_main
-        ,get_all_play_main
-        ,get_season_trend_standings_main
-        ,get_weekly_prediction_main
-        ,get_weekly_results
-        ,get_elo
+        get_season_trend_power_ranks_main 
+        ,get_power_rankings_main 
+        ,get_all_play_main 
+        ,get_season_trend_standings_main 
+        ,get_weekly_prediction_main 
+        ,get_weekly_results 
+        ,get_elo 
         ,export_csv
     ]
 

@@ -104,3 +104,4 @@ ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is no
 ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is not associated with a value - Error occurred at line 147
 ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is not associated with a value - Error occurred at line 148
 ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is not associated with a value - Error occurred at line 150
+ERROR:root:get_elo.py: 'Team_Number' - Error occurred at line 3805
