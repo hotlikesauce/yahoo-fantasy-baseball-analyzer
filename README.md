@@ -26,7 +26,7 @@ Technologies Used: Python, MongoDB
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
 
-- You will need a player_dict.py file containing the names of fantasy team managers in your league. This is used to create a team dictionary to handle fantasy team name changes throughout the course of the year. I have created a player_dict_example.py file as a template.
+- You will need a manager_dict.py file containing the names of fantasy team managers in your league. This is used to create a team dictionary to handle fantasy team name changes throughout the course of the year. I have created a manager_dict_example.py file as a template.
 
 ## Usage
 
