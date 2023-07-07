@@ -28,11 +28,11 @@ MONGO_DB = os.environ.get('MONGO_DB')
 logging.basicConfig(filename='error.log', level=logging.ERROR)
 
 def get_initial_elo():
-
+    league_size = league_size()
     data = {
-    'Team_Number': list(range(1, 13)),
-    'ELO_Sum': [0.9] * 12,
-    'Week': [1] * 12
+    'Team_Number': list(range(1, (league_size+1))),
+    'ELO_Sum': [0.9] * league_size,
+    'Week': [1] * league_size
     }
 
     # Creating the DataFrame
@@ -152,88 +152,30 @@ def get_new_elo(expected_outcome_df,week_df):
     print(appended_df)
     return appended_df
    
-def get_week_6_elo(week_6_df):
-
-    # Columns to analyze
-    high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
-
-    low_columns_to_analyze = ['ERA_Stats', 'WHIP_Stats', 'HRA_Stats']
-
-    # Calculate ELO for each column grouped by team_number
-    for column in high_columns_to_analyze:
-        min_elo = 75  # Set the desired minimum ELO value
-        min_value = week_6_df[column].min()
-        max_value = week_6_df[column].max()
-        
-        scaler = MinMaxScaler(feature_range=(min_elo, 100))
-        
-        # Calculate and assign the scaled ELO values
-        week_6_df[column + '_ELO'] = scaler.fit_transform(week_6_df[column].values.reshape(-1, 1))    
-    
-    # Calculate ELO for each LOW column grouped by team_number
-    for column in low_columns_to_analyze:
-        min_elo = 50  # Set the desired minimum ELO value
-        min_value = week_6_df[column].min()
-        max_value = week_6_df[column].max()
-        
-        scaler = MinMaxScaler(feature_range=(min_elo, 100))
-        
-        # Calculate and assign the scaled ELO values
-        scaled_values = 100 - ((week_6_df[column] - min_value) / (max_value - min_value)) * 80
-        week_6_df[column + '_ELO'] = scaled_values
-
-    # Get the list of ELO columns
-    elo_columns = [column + '_ELO' for column in high_columns_to_analyze + low_columns_to_analyze]
-
-    # Sum the ELO columns
-    week_6_df['ELO_Sum'] = week_6_df[elo_columns].sum(axis=1)
-
-    return week_6_df
-
 
 def main():
     try:
-        # empty_dict = {}
-        # week_6_dict = {"Week":3}
-        # power_rank_df = get_mongo_data('power_ranks',empty_dict)
-        # power_rank_season_df = get_mongo_data('power_ranks_season_trend',week_6_dict)
-        #schedule_df = get_mongo_data('schedule',empty_dict)
-
-
-        ## --------------- This is more for weighted stats than ELO will revisit---------------------- ##
-        
         this_week = set_this_week()
-        # week_6_elo_df = get_week_6_elo(power_rank_season_df)
-        # print(week_6_elo_df)
 
         data = {
-            'Team_Number': list(range(1, 13)),
-            'ELO_Team_Sum': [1000] * 12,
-            'Week': [1] * 12
+            'Team_Number': list(range(1, (league_size+1))),
+            'ELO_Team_Sum': [1000] * league_size,
+            'Week': [1] * league_size
         }
 
         # Create the DataFrame
         week_1_df = pd.DataFrame(data)
-
         running_elo_df = pd.DataFrame()
         output_df = week_1_df
-        #output_df = week_6_elo_df
         
         
         for week in range(1,(this_week)):
             week_dict =  {"Week":week}
             schedule_df = get_mongo_data(MONGO_DB,'schedule',week_dict)
-            print(schedule_df)
             expected_outcome_df = expected_outcome(output_df,schedule_df)
-            print(expected_outcome_df)
-
             week_dict =  {"Week":(week)}
             week_df = get_mongo_data(MONGO_DB,'weekly_results', week_dict)
-
-           
             output_df = get_new_elo(expected_outcome_df, week_df)
-            
-
             running_elo_df = running_elo_df.append(output_df, ignore_index=True)
 
         week_1_df = week_1_df.rename(columns={'ELO_Team_Sum': 'New_ELO'})
@@ -241,7 +183,6 @@ def main():
         running_elo_df['Team_Number'] = running_elo_df['Team_Number'].astype(int).astype(str).replace('\.0', '', regex=True)
         print(running_elo_df)
         clear_mongo(MONGO_DB,'Running_ELO')
-        #clear_mongo_query('Running_ELO','"Week":13')
         write_mongo(MONGO_DB,running_elo_df,'Running_ELO')
 
     except Exception as e:
@@ -254,4 +195,8 @@ def main():
         #send_failure_email(error_message,filename)
 
 if __name__ == '__main__':
-    main()
+    if MONGO_DB == 'YahooFantasyBaseball_2023':
+        main()
+    else:
+        pass
+

@@ -27,12 +27,13 @@ class LiveStandings:
 
 
     def get_current_matchups(self,YAHOO_LEAGUE_ID):
+        league_size = league_size()
         YAHOO_LEAGUE_URL=('https://baseball.fantasysports.yahoo.com/b1/'+YAHOO_LEAGUE_ID)
         df_teamRecords = pd.DataFrame(columns = ['Team','Team_Wins','Team_Loss','Team_Draw','Record'])
         df_weeklyMatchups = pd.DataFrame(columns = ['Team','Record'])
 
         # Change this to the number of teams in your league (I have 12)
-        for matchup in range(1,13):
+        for matchup in range(1,(league_size+1)):
             #To prevent DDOS, Yahoo limits your URL requests over a set amount of time. Sleep timer to hlep space our requests
             time.sleep(1)
             df_currentMatchup = pd.DataFrame(columns = ['Team','Score'])
@@ -54,11 +55,11 @@ class LiveStandings:
             df_teamRecords['Team'] = df_currentMatchup['Team']
             df_teamRecords['Team_Wins'] = df_currentMatchup['Score'].iloc[0]
             df_teamRecords['Team_Loss'] = df_currentMatchup['Score'].iloc[1]
-            if df_teamRecords['Team_Wins'].iloc[0] + df_teamRecords['Team_Loss'].iloc[0] == 12:
+            if df_teamRecords['Team_Wins'].iloc[0] + df_teamRecords['Team_Loss'].iloc[0] == league_size:
                 df_teamRecords['Team_Draw'] = 0
                 df_teamRecords['Record'] = list(zip(df_teamRecords.Team_Wins,df_teamRecords.Team_Draw,df_teamRecords.Team_Loss))
             else:
-                df_teamRecords['Team_Draw'] = 12 - (df_teamRecords['Team_Wins'].iloc[0] + df_teamRecords['Team_Loss'].iloc[0])
+                df_teamRecords['Team_Draw'] = league_size - (df_teamRecords['Team_Wins'].iloc[0] + df_teamRecords['Team_Loss'].iloc[0])
                 df_teamRecords['Record'] = list(zip(df_teamRecords.Team_Wins,df_teamRecords.Team_Draw,df_teamRecords.Team_Loss))
             
             # print(df_teamRecords[['Team','Record']].loc[0])
