@@ -6,48 +6,39 @@ from urllib.request import urlopen as uReq
 from functools import reduce
 from pymongo import MongoClient
 import certifi
-import os
+import os,sys
 from dotenv import load_dotenv
+from sklearn.preprocessing import MinMaxScaler
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
-from player_dict import player_dict
+from manager_dict import manager_dict
+from mongo_utils import *
+from datetime_utils import *
+from yahoo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
+
 
 def get_records():
     
     # Get Actual Records by looking up standings table on league home page
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID).read()
-    soup = bs.BeautifulSoup(source,'lxml')
+    soup = url_requests(YAHOO_LEAGUE_ID)
     table = soup.find_all('table')
     df_rec = pd.read_html(str(table))[0]
     df_rec=df_rec.rename(columns = {'Team':'Team Name'})
     
+    batting_list = league_stats_batting()
+    pitching_list = league_stats_pitching()
 
-    # Get Batting Records by going to stats page
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=record').read()
-    soup = bs.BeautifulSoup(source,'lxml')
+    dfb = league_record_batting_df()
+    dfp = league_record_pitching_df()
 
-    table = soup.find_all('table')
-    # dfb (data frame batting) will be the list of pitching stat categories you have
-    dfb = pd.read_html(str(table))[0]
-
-    # Pitching Records
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=record').read()
-    soup = bs.BeautifulSoup(source,'lxml')
-
-    table = soup.find_all('table')
-    
-    # dfp (data frame pitching) will be the list of pitching stat categories you have
-    dfp = pd.read_html(str(table))[0]
-    
-    # RENAME COLUMN FOR HR ALLOWED SINCE IT'S A DUPLICATE OF THE BATTING CATEGORY
-    dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
-
+    #Batting
     # split up columns into W-L-D
     for column in dfb:
         if str(column) == 'Team Name':
@@ -61,60 +52,50 @@ def get_records():
             dfb[str(column)+"_Loss"]= new[1]
             dfb[str(column)+"_Draw"]= new[2]
     
-    # make pitching tuples
-    dfb['R'] = list(zip(dfb.R_Win,dfb.R_Draw,dfb.R_Loss))
-    dfb['H'] = list(zip(dfb.H_Win,dfb.H_Draw,dfb.H_Loss))
-    dfb['HR'] = list(zip(dfb.HR_Win,dfb.HR_Draw,dfb.HR_Loss))
-    dfb['SB'] = list(zip(dfb.SB_Win,dfb.SB_Draw,dfb.SB_Loss))
-    dfb['OPS'] = list(zip(dfb.OPS_Win,dfb.OPS_Draw,dfb.OPS_Loss))
-    dfb['RBI'] = list(zip(dfb.RBI_Win,dfb.RBI_Draw,dfb.RBI_Loss))
+    #YOU ARE HERE. NEED TO RENAME AND ADJUST, LOOP THROUGH ALL CATS AND CREATE
+    for cat in batting_list:
+        cat_Win = f'{cat}_Win'
+        cat_Draw = f'{cat}_Draw'
+        cat_Loss = f'{cat}_Loss'
+        dfb[str(cat)] = list(zip(dfb[cat_Win], dfb[cat_Draw], dfb[cat_Loss]))
 
     # convert tuples to ints
-    dfb['R'] = tuple(tuple(map(int, tup)) for tup in  dfb['R'])  
-    dfb['H'] = tuple(tuple(map(int, tup)) for tup in dfb['H'])  
-    dfb['HR'] = tuple(tuple(map(int, tup)) for tup in dfb['HR'])  
-    dfb['SB'] = tuple(tuple(map(int, tup)) for tup in dfb['SB'])  
-    dfb['OPS'] = tuple(tuple(map(int, tup)) for tup in dfb['OPS'])  
-    dfb['RBI'] = tuple(tuple(map(int, tup)) for tup in dfb['RBI'])  
+    dfb[str(cat)] = tuple(tuple(map(int, tup)) for tup in  dfb[cat])  
 
+    dfb.columns = dfb.columns.str.replace('[#,@,&,/,+]', '')
 
+    #Pitching
     for column in dfp:
         if str(column) == 'Team Name':
             pass
         else:
             # new data frame with split value columns
             new = dfp[column].str.split("-", n = 2, expand = True)
-            new = new.astype(int)
             
             # making separate first name column from new data frame
             dfp[str(column)+"_Win"]= new[0]
             dfp[str(column)+"_Loss"]= new[1]
             dfp[str(column)+"_Draw"]= new[2]
-            
-    dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
-
-    # make pitching tuples
-    dfp['HRA'] = list(zip(dfp.HRA_Win,dfp.HRA_Draw,dfp.HRA_Loss))
-    dfp['ERA'] = list(zip(dfp.ERA_Win,dfp.ERA_Draw,dfp.ERA_Loss))
-    dfp['WHIP'] = list(zip(dfp.WHIP_Win,dfp.WHIP_Draw,dfp.WHIP_Loss))
-    dfp['K9'] = list(zip(dfp.K9_Win,dfp.K9_Draw,dfp.K9_Loss))
-    dfp['QS'] = list(zip(dfp.QS_Win,dfp.QS_Draw,dfp.QS_Loss))
-    dfp['SVH'] = list(zip(dfp.SVH_Win,dfp.SVH_Draw,dfp.SVH_Loss))
     
-   
-   # convert tuples to ints
-    dfp['HRA'] = tuple(tuple(map(int, tup)) for tup in dfp['HRA'])     
-    dfp['ERA'] = tuple(tuple(map(int, tup)) for tup in dfp['ERA'] )     
-    dfp['WHIP'] = tuple(tuple(map(int, tup)) for tup in dfp['WHIP'])     
-    dfp['K9'] = tuple(tuple(map(int, tup)) for tup in dfp['K9'])     
-    dfp['QS'] = tuple(tuple(map(int, tup)) for tup in dfp['QS'])     
-    dfp['SVH'] = tuple(tuple(map(int, tup)) for tup in dfp['SVH'])     
+    #YOU ARE HERE. NEED TO RENAME AND ADJUST, LOOP THROUGH ALL CATS AND CREATE
+    for cat in pitching_list:
+        cat_Win = f'{cat}_Win'
+        cat_Draw = f'{cat}_Draw'
+        cat_Loss = f'{cat}_Loss'
+        dfp[str(cat)] = list(zip(dfp[cat_Win], dfp[cat_Draw], dfp[cat_Loss]))
+
+    # convert tuples to ints
+    dfp[str(cat)] = tuple(tuple(map(int, tup)) for tup in  dfp[cat])  
+
+    dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')     
     
 
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp,df_rec])
 
+    print(df)
+
     # define columns for next df
-    df=df[['Team Name','R','H','HR','SB','OPS','RBI','HRA','ERA','WHIP','K9','QS','SVH','Rank','GB','Moves']]
+    df=df[['Team Name'] + batting_list + pitching_list + ['Rank', 'GB', 'Moves']]
     
     # Create a team ranking based on records in all stat categories
     for column in df:
@@ -130,35 +111,24 @@ def get_records():
     df.columns = ['{}{}'.format(c, '' if c in keep_same else '_Record') for c in df.columns]
     
     df = df.dropna()
+    print(df)
     return df
 
 def get_stats(records_df):
-
-    # Get Batting Stats
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=stats').read()
-    soup = bs.BeautifulSoup(source,'lxml')
-
-    table = soup.find_all('table')
-    dfb = pd.read_html(str(table))[0]
-
-    # Get Pitching Stats
-    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=stats').read()
-    soup = bs.BeautifulSoup(source,'lxml')
-
-    table = soup.find_all('table')
-    dfp = pd.read_html(str(table))[0]
     
-    # In case your team names get squirrely 
-    dfp.columns = dfp.columns.str.replace('[#,@,&,/,+]', '')
-    # Rename HR to HRA since it's a duplicate of HR on the batting side
-    dfp.rename(columns={dfp.columns[1]: 'HRA'},inplace=True)
+    num_teams = league_size()
+    dfb = league_stats_batting_df()
+    dfp = league_stats_pitching_df()
+
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
-    
+
+   
+    # Drop unnecessary columns
     for column in df:
         if column == 'Team Name':
             pass
         # ERA, WHIP, and HRA need to be ranked descending
-        elif column == 'ERA' or column == 'WHIP' or column == 'HRA':
+        elif column in Low_Categories:
             df[column+'_Rank'] = df[column].rank(ascending = True)
             # Set the index to newly created column, Rating_Rank
             df.set_index(column+'_Rank')
@@ -173,11 +143,10 @@ def get_stats(records_df):
     keep_same = {'Team Name'}
     df.columns = ['{}{}'.format(c, '' if c in keep_same else '_Stats') for c in df.columns]
     
-    
     df_merge=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [df, records_df])
-    print(df_merge.head())
     
-    df_merge['Stats_Power_Score'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats']+df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/12
+    columns_to_calculate = [col for col in df_merge.columns if '_Rank_Stats' in col]
+    df_merge['Stats_Power_Score'] = df_merge[columns_to_calculate].sum(axis=1) / num_teams
     df_merge['Stats_Power_Rank'] = df_merge['Stats_Power_Score'].rank(ascending = True)
     
     
@@ -189,81 +158,106 @@ def get_stats(records_df):
     
     # Variation is the difference between your stat ranking and you actual ranking
     df_merge['Variation'] = df_merge['Stats_Power_Rank'] - df_merge['Rank'] 
-
+    print(df_merge.columns)
+    
+    
     # Create a new column for the batter rank
-    df_merge['batter_rank'] = (df_merge['R_Rank_Stats']+df_merge['H_Rank_Stats']+df_merge['HR_Rank_Stats']+df_merge['SB_Rank_Stats']+df_merge['OPS_Rank_Stats']+df_merge['RBI_Rank_Stats'])/6
-    
+    ##HERE IS WHERE YOU ARE - NEED TO FIGURE OUT HOW TO BREAK OUT BATTING AND PITCHING COLS TO CALCULATE
+    columns_to_calculate = [col for col in df_merge.columns if col in Batting_Rank_Stats]
+    df_merge['batter_rank'] = df_merge[columns_to_calculate].sum(axis=1) / (num_teams / 2)
+
     # Create a new column for the pitcher rank
-    df_merge['pitcher_rank'] = (df_merge['ERA_Rank_Stats']+df_merge['WHIP_Rank_Stats']+df_merge['K9_Rank_Stats']+df_merge['QS_Rank_Stats']+df_merge['SVH_Rank_Stats']+df_merge['HRA_Rank_Stats'])/6
+    columns_to_calculate = [col for col in df_merge.columns if col in Pitching_Rank_Stats]
+    df_merge['pitcher_rank'] = df_merge[columns_to_calculate].sum(axis=1) / (num_teams / 2)
+
+    df_merge = df_merge.rename(columns={'Team Name': 'Team'})
+
+    df_merge_teams = build_team_numbers(df_merge)  
     
+    #print(df_merge_teams)
 
-    #BUILD TABLE WITH TEAM NAME AND NUMBER
-    source = uReq(YAHOO_LEAGUE_ID).read()
-    soup = bs.BeautifulSoup(source,'lxml')
-    table = soup.find('table')  # Use find() to get the first table
-
-    # Extract all href links from the table, if found
-    # We need to get a list of team names to map to player names, since team names change throughout the years
-    if table is not None:
-        links = []
-        for link in table.find_all('a'):  # Find all <a> tags within the table
-            link_text = link.text.strip()  # Extract the hyperlink text
-            link_url = link['href']  # Extract the href link
-            if link_text != '':
-                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
+    return df_merge_teams
         
-        #Here contains the Team name and team number
-        result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
-        #print(result_dict)
+# Normalized Ranks 
+def get_normalized_ranks(power_rank_df):
+ 
+    #parse through columns and figure out which ones are low-based
+    low_columns_to_analyze = []
+    high_columns_to_analyze = []
 
-
-
-    # Map team numbers from the dictionary to a new Series
-    # Iterate through the rows of the DataFrame
-    for index, row in df_merge.iterrows():
-        team_name = row['Team Name']
-        for link in links:
-            if link[0] == team_name:
-                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-                df_merge.at[index, 'Team_Number'] = team_number
-                break
-    #Need to obfuscate team dictionary to protect player identities (player_dict imported from hidden config.py file)  
-    df_merge['Player_Name'] = df_merge['Team_Number'].map(player_dict)
+    for column in power_rank_df.columns:
+        if '_Stats' in column and '_Rank_Stats' not in column:
+            if column in Low_Categories_Stats:
+                low_columns_to_analyze.append(column)
+            else:
+                high_columns_to_analyze.append(column)
+        else:
+            pass
+    # Calculate Score for each column grouped by team_number
     
-    print(df_merge)
+    print(low_columns_to_analyze)
+    print(high_columns_to_analyze)
 
-    return df_merge
-
-def write_mongo(power_rank_df):
+    for column in high_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = power_rank_df[column].min()
+        max_value = power_rank_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        power_rank_df[column + '_Score'] = scaler.fit_transform(power_rank_df[column].values.reshape(-1, 1))    
     
-    #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
-    ca = certifi.where()
-    client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-    db = client['YahooFantasyBaseball_2023']
-    collection = db['power_ranks']
+    # Calculate Score for each LOW column grouped by team_number
+    for column in low_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = power_rank_df[column].min()
+        max_value = power_rank_df[column].max()
+        
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+        
+        # Calculate and assign the scaled Score values
+        scaled_values = 100 - ((power_rank_df[column] - min_value) / (max_value - min_value)) * 80
+        power_rank_df[column + '_Score'] = scaled_values
 
-    #Delete Existing Documents
-    myquery = {}
-    x = collection.delete_many(myquery)
-    print(x.deleted_count, " documents deleted.")
+    # Get the list of Score columns
+    score_columns = [column + '_Score' for column in high_columns_to_analyze + low_columns_to_analyze]
 
-    #Insert New Live Standings
-    power_rank_df.reset_index(inplace=True)
-    data_dict = power_rank_df.to_dict("records")
-    collection.insert_many(data_dict)
-    client.close()
+    # Sum the Score columns
+    power_rank_df['Score_Sum'] = power_rank_df[score_columns].sum(axis=1)
+    power_rank_df['Score_Rank'] = power_rank_df['Score_Sum'].rank(ascending=False)
+    power_rank_df['Score_Variation'] = power_rank_df['Score_Rank'] - power_rank_df['Rank']
+
+    print(power_rank_df)
+    return power_rank_df
 
 
 def main():
     try:
         records_df = get_records()
         power_rank_df = get_stats(records_df)
-        write_mongo(power_rank_df)
+        clear_mongo(MONGO_DB,'Power_Ranks')
+        clear_mongo(MONGO_DB,'power_ranks')
+        write_mongo(MONGO_DB,power_rank_df,'Power_Ranks')
+        write_mongo(MONGO_DB,power_rank_df,'power_ranks')
+        print('Wrote out Power Ranks Stats to both mongo dbs')
+
+        power_rank_df = get_mongo_data(MONGO_DB,'Power_Ranks','')
+        #power_rank_season_df = get_mongo_data(MONGO_DB,'power_ranks_season_trend',empty_dict)
+        #schedule_df = get_mongo_data(MONGO_DB,'schedule',empty_dict)
+
+        normalized_ranks_df = get_normalized_ranks(power_rank_df)
+        clear_mongo(MONGO_DB,'normalized_ranks')
+        write_mongo(MONGO_DB,normalized_ranks_df,'normalized_ranks')
+        print(f'Write Normalized Ranks')
+
+
     except Exception as e:
         filename = os.path.basename(__file__)
-        error_message = str(e)
-        print(error_message)
-        send_failure_email(error_message,filename)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        line_number = exc_tb.tb_lineno
+        error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        send_failure_email(error_message, filename)
 
 
 
