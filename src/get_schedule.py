@@ -1,43 +1,31 @@
 import pandas as pd
 import bs4 as bs
-import urllib
 import urllib.request
 from urllib.request import urlopen as uReq
 from pymongo import MongoClient
-import time, datetime, os
-import certifi
+import time, datetime, os, sys
 from dotenv import load_dotenv
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from datetime_utils import *
+from mongo_utils import *
 from manager_dict import manager_dict
+from yahoo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
+MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_schedule():
+    num_teams = league_size()
     schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
     this_week = set_this_week()
-    for week in range(1,22):
-        for matchup in range(1,13):
-            time.sleep(3)
-
-        
-            try:
-                source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup)).read()
-                soup = bs.BeautifulSoup(source,'lxml')
-            except urllib.error.HTTPError as e:
-                if e.code == 404:
-                    print("Error 404: Page not found. Retrying...")
-                    print(YAHOO_LEAGUE_ID+'matchup?pspid=782201763&activity=matchups&week='+str(week))
-                    source = urllib.request.urlopen(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup)).read()
-                else:
-                    raise e
-
-
+    for week in range(1,24):
+        for matchup in range(1,(num_teams+1)):
+            soup = url_requests(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup))
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df['Week'] = week
@@ -90,24 +78,7 @@ def get_schedule():
         print(schedule_df)
 
 
-        # Set Up Connections
-        ca = certifi.where()
-        client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
-        
-        db = client['YahooFantasyBaseball_2023']
-        collection = db['schedule']
-
-        # #Delete Existing Documents From Last Week Only
-        # myquery = {"Week":week}
-        # x = collection.delete_many(myquery)
-        # print(x.deleted_count, " documents deleted.")
-
-        
-        # Reset Index and insert entire DF into MondgoDB
-        df.reset_index(inplace=True)
-        data_dict = schedule_df.to_dict("records")
-        collection.insert_many(data_dict)
-        client.close()
+        write_mongo(MONGO_DB,schedule_df,'schedule')
 
         schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
 
@@ -117,8 +88,10 @@ def main():
         get_schedule()
     except Exception as e:
         filename = os.path.basename(__file__)
-        error_message = str(e)
-        send_failure_email(error_message,filename)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        line_number = exc_tb.tb_lineno
+        error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        send_failure_email(error_message, filename)
 
 if __name__ == '__main__':
     main()

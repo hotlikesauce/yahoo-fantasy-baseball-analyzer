@@ -6,14 +6,18 @@ from urllib.request import urlopen as uReq
 import certifi
 from pymongo import MongoClient
 from datetime import datetime
-import datetime, os
+import datetime, os, sys
 from dotenv import load_dotenv
+import warnings
+# Ignore the FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
 from datetime_utils import set_last_week
 from manager_dict import manager_dict
 from mongo_utils import *
+from yahoo_utils import *
 
 # Load obfuscated strings from .env file
 load_dotenv()    
@@ -21,80 +25,65 @@ MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 MONGO_DB = os.environ.get('MONGO_DB')
 
-
-def getStandings():
-
-    #Set week number - These weeks are going to be 1 off since we are technically recording last week's data
-    #Set week number
-    lastWeek = set_last_week()
-
-    source = uReq(YAHOO_LEAGUE_ID).read()
-    soup = bs.BeautifulSoup(source,'lxml')
-
-    table = soup.find('table')  # Use find() to get the first table
-
-    # Extract all href links from the table, if found
-    if table is not None:
-        links = []
-        for link in table.find_all('a'):  # Find all <a> tags within the table
-            link_text = link.text.strip()  # Extract the hyperlink text
-            link_url = link['href']  # Extract the href link
-            if link_text != '':
-                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
-
-        # Print the extracted links and their associated hyperlink text
-        # for link_text, link_url in links:
-            # print(f'{link_text}, {link_url[-1]}')
+#This uses the weekly_results process to get scores week-by-week
+def season_standings():
+    weekly_results_df = get_mongo_data(MONGO_DB,'weekly_results','')
+    raw_score_df = pd.DataFrame()
+    num_cats = category_size()
+    for index, row in weekly_results_df.iterrows():
+         # Get the team number, week, score, opponent score, and number of categories
+        team_num = row['Team_Number']
+        week = row['Week']
+        score = row['Score']
+        opp_score = row['Opponent_Score']
         
-        #Here contains the Team name and team number
-        result_dict = {link_url[-1]: link_text for link_text, link_url in links if link_text != ''}
-        print(result_dict)
-
-
-    df_seasonRecords = pd.read_html(str(table))[0]
+        # Calculate the raw score based on the formula for wins and ties
+        raw_score = score + ((num_cats -(score+opp_score)) * 0.5)
+        
+        # Find the previous raw score for the same team and week
+        if week == 1:
+            prev_raw_score = 0
+        else:
+            prev_raw_score = raw_score_df.loc[(raw_score_df['Team_Number'] == team_num) & (raw_score_df['Week'] == week - 1), 'Raw_Score'].sum()
     
-    df_seasonRecords.columns = df_seasonRecords.columns.str.replace('[-]', '')
+        
+        # Calculate the running summation of the raw score
+        raw_score += prev_raw_score
+        
+        # Create a new row for the new DataFrame
+        new_row = {'Team_Number': team_num,
+                'Week': week,
+                'Raw_Score': raw_score}
+        
+        # Add the new row to the new DataFrame
+        raw_score_df = raw_score_df.append(new_row, ignore_index=True)
 
-    new = df_seasonRecords['WLT'].str.split("-", n = 2, expand = True)
-    new = new.astype(int)
+    # Sort the new DataFrame by team number and week
+    raw_score_df = raw_score_df.sort_values(['Team_Number', 'Week'])
 
-    # making separate first name column from new data frame
-    df_seasonRecords["Week"]= lastWeek
-    df_seasonRecords["WLT_Win"]= new[0]
-    df_seasonRecords["WLT_Loss"]= new[1]
-    df_seasonRecords["WLT_Draw"]= new[2]
-    df_seasonRecords["Raw_Score"]= df_seasonRecords["WLT_Win"] + df_seasonRecords["WLT_Draw"]*.5
-    df_seasonRecords['Games_Back'] = df_seasonRecords['Raw_Score'].max() - df_seasonRecords['Raw_Score']
-    df_seasonRecords['Pct'] = (df_seasonRecords['WLT_Win'] + (df_seasonRecords['WLT_Draw']*.5))/(df_seasonRecords['WLT_Win'] + df_seasonRecords['WLT_Draw'] + df_seasonRecords['WLT_Loss'])
+    # Calculate the rank based on raw score for each team and week
+    raw_score_df['Rank'] = raw_score_df.groupby(['Week'])['Raw_Score'].rank(ascending=False)
 
-    # Season standings numbers (Must adjust for draws counting 0.5)
-    df_seasonRecords = df_seasonRecords.sort_values(by=['Pct'],ascending=False,ignore_index=True)
 
-    # Map team numbers from the dictionary to a new Series
-    # Iterate through the rows of the DataFrame
-    for index, row in df_seasonRecords.iterrows():
-        team_name = row['Team']
-        for link in links:
-            if link[0] == team_name:
-                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-                df_seasonRecords.at[index, 'Team_Number'] = team_number
-                break
-    df_seasonRecords['Manager_Name'] = df_seasonRecords['Team_Number'].map(manager_dict)
-    print(df_seasonRecords.sort_values(by=['Pct'],ascending=False,ignore_index=True))
 
-    return df_seasonRecords
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+
+    print(raw_score_df)
+    return(raw_score_df)
 
 
 def main():
     try:
-        lastWeek = set_last_week()
-        clear_mongo_query(MONGO_DB,'standings_season_trend','"Week":'+str(lastWeek))
-        df_Standings = getStandings()
-        write_mongo(MONGO_DB,df_Standings,'standings_season_trend')
+        standing_season_df = season_standings()
+        clear_mongo_query(MONGO_DB,'standings_season_trend','')
+        write_mongo(MONGO_DB,standing_season_df,'standings_season_trend')
     except Exception as e:
         filename = os.path.basename(__file__)
-        error_message = str(e)
-        send_failure_email(error_message,filename)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        line_number = exc_tb.tb_lineno
+        error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        send_failure_email(error_message, filename)
 
 
 if __name__ == '__main__':

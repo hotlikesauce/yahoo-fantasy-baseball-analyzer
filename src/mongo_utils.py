@@ -10,7 +10,7 @@ MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 
 def mongo_write_team_IDs(db_name,df_Standings):
     
-    df_teamIDs = df_Standings[['Team', 'Team_Number', 'Manager_Name']].copy()    
+    df_teamIDs = df_Standings[['Team', 'Team_Number']].copy()    
     
     #Connect to Mongo, the ca is for ignoring TLS/SSL handshake issues
     ca = certifi.where()
@@ -83,8 +83,11 @@ def get_mongo_data(db_name,coll,query):
     db = client[db_name]
     collection = db[coll]
 
+    querymod = "{" + query + "}"
+    myquery = ast.literal_eval(querymod)
+
     # Retrieve the data from the collection
-    data = list(collection.find(query))
+    data = list(collection.find(myquery))
 
     # Convert the data to a pandas DataFrame
     df = pd.DataFrame(data)
