@@ -9,6 +9,9 @@ import certifi
 import os,sys
 from dotenv import load_dotenv
 from sklearn.preprocessing import MinMaxScaler
+import warnings
+# Ignore the FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email

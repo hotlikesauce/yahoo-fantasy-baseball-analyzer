@@ -70,7 +70,9 @@ def last_four_weeks(matchups_df):
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df['Week'] = week
+            print(df)
             df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
+            df.columns = df.columns.str.replace('HR.1', 'HRA')
             
             for column in df.columns:
                 if column in percentage_categories:

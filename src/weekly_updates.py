@@ -18,8 +18,8 @@ def main():
         ,get_season_trend_standings_main 
         ,get_weekly_prediction_main 
         ,get_weekly_results 
-        #,get_elo 
-        ,export_csv
+        ,get_elo 
+        #,export_csv
     ]
 
     for func in functions:

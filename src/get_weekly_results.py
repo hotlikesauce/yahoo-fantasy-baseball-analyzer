@@ -80,7 +80,9 @@ def get_weekly_stats(num_teams,leaguedf,most_recent_week):
                 table = soup.find_all('table')
                 df = pd.read_html(str(table))[1]
                 df['Week'] = week
+                print(df)
                 df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
+                df.columns = df.columns.str.replace('HR.1', 'HRA')
 
                 for column in df.columns:
                     if column in percentage_categories:
@@ -214,6 +216,7 @@ def main():
     try:
         #Aggregate W/L thorughout season
         df = get_mongo_data(MONGO_DB,'weekly_results','')
+        print(df)
         if not df.empty: 
             max_week = df['Week'].max()
             weekly_results_df = get_weekly_results(num_teams,max_week)

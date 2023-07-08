@@ -10,6 +10,9 @@ import certifi
 from pymongo import MongoClient
 import time,datetime,os,sys
 from dotenv import load_dotenv
+import warnings
+# Ignore the FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
@@ -120,8 +123,9 @@ def get_stats(records_df):
     num_teams = league_size()
     dfb = league_stats_batting_df()
     dfp = league_stats_pitching_df()
-
+    
     df=reduce(lambda x,y: pd.merge(x,y, on='Team Name', how='outer'), [dfb, dfp])
+
 
 
     for column in df:

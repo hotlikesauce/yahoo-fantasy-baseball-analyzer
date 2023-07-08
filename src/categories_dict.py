@@ -101,7 +101,8 @@ batting_abbreviations = {}
 
 pitching_abbreviations = {'K/9':'K9'
                           ,'HR':'HRA'
-                          ,'SV+H':'SVH'}
+                          ,'SV+H':'SVH'
+                          ,'HR.1':'HRA'}
 
 Batting_Rank_Stats = ["GP_Rank_Stats","GS_BAT_Rank_Stats","AB_Rank_Stats","R_Rank_Stats","H_Rank_Stats","1B_Rank_Stats","2B_Rank_Stats","3B_Rank_Stats","HR_Rank_Stats","RBI_Rank_Stats","SH_Rank_Stats","SF_Rank_Stats","SB_Rank_Stats","CS_Rank_Stats","BB_Rank_Stats","IBB_Rank_Stats","HBP_Rank_Stats","K_BAT_Rank_Stats","GIDP_Rank_Stats","TB_Bat_Rank_Stats","PO_Rank_Stats","A_Rank_Stats","ERR_Rank_Stats","FIELD_Rank_Stats","BA_Rank_Stats","OBP_Rank_Stats","SLG_Rank_Stats","OPS_Rank_Stats","EXBH_Rank_Stats","NSB_Rank_Stats","SB_PER_Rank_Stats","CYCLE_Rank_Stats","PA_Rank_Stats","GSHR_Rank_Stats","OA_Rank_Stats","DPT_Rank_Stats","CI_Rank_Stats"]
 

@@ -43,8 +43,7 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                 df = pd.read_html(str(table))[1]
                 df['Week'] = week
                 df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
-
-                print(df)
+                df.columns = df.columns.str.replace('HR.1', 'HRA')
 
                 for column in df.columns:
                     if column in percentage_categories:
@@ -60,9 +59,11 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                         
                         df[column] = df[column].astype(float)  # Convert column to float type
 
+
                 column_list = leaguedf.columns.tolist()
                 df = df[column_list]
                 df['Opponent'] = df.loc[1, 'Team']
+
 
                 allPlaydf = allPlaydf.append(df.loc[0], True)
 

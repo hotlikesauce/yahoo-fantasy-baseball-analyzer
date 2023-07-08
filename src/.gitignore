@@ -5,6 +5,7 @@
 *.xlsx
 *.pyc
 /.vscode
+/__pycache__
 week5_Recalc.py
 manager_dict.py
 /LALALand

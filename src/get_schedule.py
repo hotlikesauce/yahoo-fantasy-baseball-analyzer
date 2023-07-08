@@ -4,7 +4,11 @@ import urllib.request
 from urllib.request import urlopen as uReq
 from pymongo import MongoClient
 import time, datetime, os, sys
+import numpy as np
 from dotenv import load_dotenv
+import warnings
+# Ignore the FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Local Modules - email utils for failure emails, mongo utils to 
 from email_utils import send_failure_email
@@ -19,11 +23,11 @@ MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 MONGO_DB = os.environ.get('MONGO_DB')
 
-def get_schedule():
+def get_schedule(max_week):
     num_teams = league_size()
     schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
     this_week = set_this_week()
-    for week in range(1,24):
+    for week in range(max_week,24):
         for matchup in range(1,(num_teams+1)):
             soup = url_requests(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup))
             table = soup.find_all('table')
@@ -35,9 +39,14 @@ def get_schedule():
             df=df[['Team','Opponent','Week']]
 
             schedule_df = schedule_df.append(df.loc[0], True)
+
             print(schedule_df)
 
+            # Check if 'Opponent' field is NaN
+            if np.isnan(schedule_df.loc[0, 'Opponent']):
+                return  # Break and exit
 
+            
 
         #BUILD TABLE WITH TEAM NAME AND NUMBER
         source = uReq(YAHOO_LEAGUE_ID).read()
@@ -85,7 +94,12 @@ def get_schedule():
 
 def main():
     try:
-        get_schedule()
+        df = get_mongo_data(MONGO_DB,'schedule','')
+        if not df.empty: 
+            max_week = (df['Week'].max())+1
+            get_schedule(max_week)
+        else:
+            get_schedule(1)
     except Exception as e:
         filename = os.path.basename(__file__)
         exc_type, exc_obj, exc_tb = sys.exc_info()

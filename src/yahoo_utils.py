@@ -222,7 +222,7 @@ def league_stats_pitching_df():
 
     column_names = dfp.columns
 
-       # Iterate over the column names and modify them according to the logic
+    # Iterate over the column names and modify them according to the logic
     for i, column in enumerate(column_names):
         if column in pitching_abbreviations:
             new_column_name = pitching_abbreviations[column]
@@ -233,6 +233,49 @@ def league_stats_pitching_df():
 
 
     return dfp
+
+#Format for All_play
+def league_stats_all_play_df():
+    # Batting Records
+    soup = url_requests(YAHOO_LEAGUE_ID+'headtoheadstats?pt=B&type=record')
+    table = soup.find_all('table')
+    # dfp (data frame pitching) will be the list of pitching stat categories you have
+    dfb = pd.read_html(str(table))[0]
+    dfb = dfb.columns.tolist()
+
+
+    # Pitching Records
+    # Set the flag to control the loop
+    soup = url_requests(YAHOO_LEAGUE_ID+'headtoheadstats?pt=P&type=record')
+    table = soup.find_all('table')
+    # dfp (data frame pitching) will be the list of pitching stat categories you have
+    dfp = pd.read_html(str(table))[0]
+    dfp = dfp.columns.tolist()
+    # Remove duplicate team column
+    dfp.pop(0)
+    # Change to abbreviations
+    dfp = [pitching_abbreviations.get(item, item) for item in dfp]
+
+    print
+    # Iterate over the column names and modify them according to the logic
+    for i, column in enumerate(dfp):
+        if column in pitching_abbreviations:
+            new_column_name = pitching_abbreviations[column]
+            dfp.values[i] = new_column_name
+
+    # Update the column names in the DataFrame
+
+
+    combined_list = dfb+dfp
+    combined_list.insert(1, 'Week')
+
+    df = pd.DataFrame(columns=combined_list)
+    df = df.rename(columns={'Team Name': 'Team'})
+    
+    return df
+
+
+
 
 #This is to format the appropriate df for the all play scrape
 def league_stats_all_df():
@@ -256,6 +299,7 @@ def league_stats_all_df():
     # Change to abbreviations
     dfp = [pitching_abbreviations.get(item, item) for item in dfp]
 
+    print
     # Iterate over the column names and modify them according to the logic
     for i, column in enumerate(dfp):
         if column in pitching_abbreviations:
@@ -263,7 +307,6 @@ def league_stats_all_df():
             dfp.values[i] = new_column_name
 
     # Update the column names in the DataFrame
-
 
     combined_list = dfb+dfp
     combined_list.insert(1, 'Week')
