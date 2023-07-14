@@ -11,6 +11,7 @@ from pymongo import MongoClient
 import time,datetime,os,sys
 from dotenv import load_dotenv
 import warnings
+from sklearn.preprocessing import MinMaxScaler
 # Ignore the FutureWarning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 

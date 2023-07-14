@@ -32,7 +32,6 @@ class LiveStandings:
         df_teamRecords = pd.DataFrame(columns = ['Team','Team_Wins','Team_Loss','Team_Draw','Record'])
         df_weeklyMatchups = pd.DataFrame(columns = ['Team','Record'])
 
-        # Change this to the number of teams in your league (I have 12)
         for matchup in range(1,(league_size+1)):
             #To prevent DDOS, Yahoo limits your URL requests over a set amount of time. Sleep timer to hlep space our requests
             time.sleep(1)
@@ -47,6 +46,7 @@ class LiveStandings:
 
             table = soup.find_all('table')
             df_currentMatchup = pd.read_html(str(table))[1]
+            df_currentMatchup.columns = df_currentMatchup.columns[:-1].tolist() + ['Score']
 
             #print(df_currentMatchup)
             

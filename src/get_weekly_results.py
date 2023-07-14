@@ -37,6 +37,7 @@ def get_weekly_results(num_teams,max_week):
             soup = url_requests(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
+            df.columns = df.columns[:-1].tolist() + ['Score']
             df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
             df['Week']=week
             df=df[['Team','Week','Score']]
@@ -213,9 +214,10 @@ def get_running_stats(df):
 def main():
     num_teams = league_size()
     leaguedf = league_stats_all_df()
+    lastWeek = set_last_week()
     try:
         #Aggregate W/L thorughout season
-        clear_mongo(MONGO_DB,'weekly_results')
+        #clear_mongo_query(MONGO_DB,'weekly_results','"Week":'+str(lastWeek))
         df = get_mongo_data(MONGO_DB,'weekly_results','')
         print(df)
         if not df.empty: 
