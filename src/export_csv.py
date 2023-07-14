@@ -17,13 +17,15 @@ MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 ca = certifi.where()
 client = MongoClient(MONGO_CLIENT, tlsCAFile=ca)
 
-# List of collections to export
-collections = ['coefficient', 'power_ranks', 'power_ranks_season_trend', 'standings_season_trend','Coefficient_Last_Four','Running_ELO','Weekly_Predictions_Records','Weekly_Predictions_Records','normalized_ranks','weekly_results','weekly_results','team_dict']
+db = client[MONGO_DB]  # Replace 'your_database_name' with the actual database name
+
+# Retrieve all collection names in the database
+collection_names = db.list_collection_names()
 
 def main():
     # Iterate over each collection
-    for collection_name in collections:
-        collection = MONGO_DB[collection_name]
+    for collection_name in collection_names:
+        collection = db[collection_name]
 
         # Retrieve documents from the collection
         documents = collection.find()
@@ -63,7 +65,7 @@ def main():
     # Example usage
     output_zip = 'Summertime_Sadness.zip'
 
-    zip_csv_files(collections, output_zip)
+    zip_csv_files(collection_names, output_zip)
 
     send_csvs(output_zip)
     time.sleep(5)

@@ -215,6 +215,7 @@ def main():
     leaguedf = league_stats_all_df()
     try:
         #Aggregate W/L thorughout season
+        clear_mongo(MONGO_DB,'weekly_results')
         df = get_mongo_data(MONGO_DB,'weekly_results','')
         print(df)
         if not df.empty: 

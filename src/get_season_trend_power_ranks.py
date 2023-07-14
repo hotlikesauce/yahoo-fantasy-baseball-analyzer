@@ -180,6 +180,45 @@ def get_stats(records_df):
     return df_merge_teams
 
 
+def running_normalized_ranks(week_df):
+    # Columns to analyze
+    high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
+
+    low_columns_to_analyze = ['ERA_Stats', 'WHIP_Stats', 'HRA_Stats']
+
+    # Calculate Score for each column grouped by team_number
+    for column in high_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = week_df[column].min()
+        max_value = week_df[column].max()
+
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+
+        # Calculate and assign the scaled Score values
+        week_df[column + '_Score'] = scaler.fit_transform(week_df[column].values.reshape(-1, 1))    
+
+    # Calculate Score for each LOW column grouped by team_number
+    for column in low_columns_to_analyze:
+        min_score = 0  # Set the desired minimum Score value
+        min_value = week_df[column].min()
+        max_value = week_df[column].max()
+
+        scaler = MinMaxScaler(feature_range=(min_score, 100))
+
+        # Calculate and assign the scaled Score values
+        scaled_values = 100 - ((week_df[column] - min_value) / (max_value - min_value)) * 80
+        week_df[column + '_Score'] = scaled_values
+
+    # Get the list of Score columns
+    score_columns = [column + '_Score' for column in high_columns_to_analyze + low_columns_to_analyze]
+
+    # Sum the Score columns
+    week_df['Score_Sum'] = week_df[score_columns].sum(axis=1)
+    week_df['Score_Rank'] = week_df['Score_Sum'].rank(ascending=False)
+    #week_df['Score_Variation'] = week_df['Score_Rank'] - week_df['Rank']
+
+    return week_df
+
 def main():
     #This is for if the analysis started midseason. If that's the case, we default to the get_weekly_results power rankings
     try:

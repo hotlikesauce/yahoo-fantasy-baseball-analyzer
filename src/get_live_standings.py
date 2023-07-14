@@ -43,7 +43,11 @@ def getCurrentMatchups():
         table = soup.find_all('table')
         df_currentMatchup = pd.read_html(str(table))[1]
 
+        # Assuming df_currentMatchup is your DataFrame
+        df_currentMatchup.columns = df_currentMatchup.columns[:-1].tolist() + ['Score']
+
         print(df_currentMatchup)
+
         
         df_currentMatchup=df_currentMatchup[['Team','Score']]
 

@@ -249,10 +249,14 @@ def main():
         #power_rank_season_df = get_mongo_data(MONGO_DB,'power_ranks_season_trend',empty_dict)
         #schedule_df = get_mongo_data(MONGO_DB,'schedule',empty_dict)
 
+        lastWeek = set_last_week()
         normalized_ranks_df = get_normalized_ranks(power_rank_df)
         clear_mongo(MONGO_DB,'normalized_ranks')
         write_mongo(MONGO_DB,normalized_ranks_df,'normalized_ranks')
         print(f'Write Normalized Ranks')
+        clear_mongo_query(MONGO_DB,'running_normalized_ranks','"Week":'+str(lastWeek))
+        normalized_ranks_df['Week'] = lastWeek
+        write_mongo(MONGO_DB,normalized_ranks_df,'running_normalized_ranks')
 
 
     except Exception as e:
