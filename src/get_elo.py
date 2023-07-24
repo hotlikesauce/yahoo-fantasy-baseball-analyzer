@@ -156,11 +156,11 @@ def get_new_elo(expected_outcome_df,week_df):
 def main():
     try:
         this_week = set_this_week()
-
+        the_league_size = league_size()
         data = {
-            'Team_Number': list(range(1, (league_size+1))),
-            'ELO_Team_Sum': [1000] * league_size,
-            'Week': [1] * league_size
+            'Team_Number': list(range(1, (the_league_size+1))),
+            'ELO_Team_Sum': [1000] * the_league_size,
+            'Week': [1] * the_league_size
         }
 
         # Create the DataFrame
@@ -170,10 +170,10 @@ def main():
         
         
         for week in range(1,(this_week)):
-            week_dict =  {"Week":week}
+            week_dict =  str(f"Week:{week}")
+            print(week_dict)
             schedule_df = get_mongo_data(MONGO_DB,'schedule',week_dict)
             expected_outcome_df = expected_outcome(output_df,schedule_df)
-            week_dict =  {"Week":(week)}
             week_df = get_mongo_data(MONGO_DB,'weekly_results', week_dict)
             output_df = get_new_elo(expected_outcome_df, week_df)
             running_elo_df = running_elo_df.append(output_df, ignore_index=True)

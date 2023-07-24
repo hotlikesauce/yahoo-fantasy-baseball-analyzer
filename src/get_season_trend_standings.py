@@ -29,7 +29,7 @@ MONGO_DB = os.environ.get('MONGO_DB')
 #This uses the weekly_results process to get scores week-by-week
 def season_standings():
     weekly_results_df = get_mongo_data(MONGO_DB,'weekly_results','')
-    weekly_results_df.columns = weekly_results_df.columns[:-1].tolist() + ['Score']
+    #weekly_results_df.columns = weekly_results_df.columns[:-1].tolist() + ['Score']
     raw_score_df = pd.DataFrame()
     num_cats = category_size()
     for index, row in weekly_results_df.iterrows():

@@ -2,7 +2,7 @@ import certifi,os,pandas
 from pymongo import MongoClient, collection
 from dotenv import load_dotenv
 import pandas as pd
-import ast
+import ast, re
 load_dotenv()
 
 #Get Mongo Password from env vars
@@ -84,7 +84,15 @@ def get_mongo_data(db_name,coll,query):
     collection = db[coll]
 
     querymod = "{" + query + "}"
-    myquery = ast.literal_eval(querymod)
+    # Define a regular expression pattern to find keys without quotes
+    pattern = r'(?<=,|\{)\s*([A-Za-z_]\w*)\s*(?=:)'
+
+    # Function to add quotes to the matched keys
+    def add_quotes(match):
+        return f'"{match.group(1)}"'
+    querymod_with_quotes = re.sub(pattern, add_quotes, querymod)
+    print(querymod_with_quotes)
+    myquery = ast.literal_eval(querymod_with_quotes)
 
     # Retrieve the data from the collection
     data = list(collection.find(myquery))
