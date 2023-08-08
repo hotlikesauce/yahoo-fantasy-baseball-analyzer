@@ -32,6 +32,8 @@ def season_standings():
     #weekly_results_df.columns = weekly_results_df.columns[:-1].tolist() + ['Score']
     raw_score_df = pd.DataFrame()
     num_cats = category_size()
+    weekly_results_df.sort_values(by=['Team_Number', 'Week'], inplace=True)
+    print(weekly_results_df)
     for index, row in weekly_results_df.iterrows():
          # Get the team number, week, score, opponent score, and number of categories
         team_num = row['Team_Number']
