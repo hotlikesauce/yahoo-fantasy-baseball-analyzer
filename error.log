@@ -106,3 +106,6 @@ ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is no
 ERROR:root:get_elo.py: cannot access local variable 'appended_df' where it is not associated with a value - Error occurred at line 150
 ERROR:root:get_elo.py: 'Team_Number' - Error occurred at line 3805
 ERROR:root:get_elo.py: unsupported operand type(s) for +: 'function' and 'int' - Error occurred at line 161
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691

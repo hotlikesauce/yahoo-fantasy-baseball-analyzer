@@ -101,3 +101,4 @@ def get_mongo_data(db_name,coll,query):
     df = pd.DataFrame(data)
 
     return df
+

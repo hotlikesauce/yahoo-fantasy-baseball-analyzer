@@ -35,6 +35,9 @@ def convert_to_int(x):
 def main():
     try:
         this_week = set_this_week()
+        if this_week == 21:
+            print("No matchups next week, playoffs")
+            return
         # Convert the values in the 'week' column to integers
         schedule_df = get_mongo_data(MONGO_DB,'schedule','')
         schedule_df['Week'] = schedule_df['Week'].apply(convert_to_int)
