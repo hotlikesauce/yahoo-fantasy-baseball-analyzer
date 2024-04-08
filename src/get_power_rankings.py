@@ -258,6 +258,9 @@ def main():
         normalized_ranks_df['Week'] = lastWeek
         write_mongo(MONGO_DB,normalized_ranks_df,'running_normalized_ranks')
 
+        clear_mongo_query(MONGO_DB,'power_ranks_season_trend','"Week":'+str(lastWeek))
+        write_mongo(MONGO_DB,power_rank_df,'power_ranks_season_trend')
+        print(f'Write Season Trend Power Ranks')
 
     except Exception as e:
         filename = os.path.basename(__file__)
