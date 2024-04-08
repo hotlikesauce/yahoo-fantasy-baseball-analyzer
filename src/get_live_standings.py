@@ -104,7 +104,7 @@ def getLiveStandings(df_currentMatchup):
 
 
     final_return_df = build_team_numbers(df_liveStandings)
-    #final_return_df['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
+    final_return_df['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
     
 
     return final_return_df

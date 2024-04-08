@@ -897,3 +897,4 @@ Traceback (most recent call last):
 SyntaxError: invalid syntax
 2023-07-03 10:56:03.661 | INFO     | __main__:get_all_play:86 - 13
 2023-07-03 11:41:14.178 | INFO     | __main__:get_all_play:87 - 13
+2024-04-08 07:11:38.409 | INFO     | __main__:get_all_play:71 - Week: 1
