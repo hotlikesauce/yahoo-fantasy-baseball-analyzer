@@ -43,7 +43,7 @@ def get_schedule(max_week):
             print(schedule_df)
 
             # Check if 'Opponent' field is NaN
-            if np.isnan(schedule_df.loc[0, 'Opponent']):
+            if pd.isnull(schedule_df.loc[0, 'Opponent']):
                 return  # Break and exit
 
             
