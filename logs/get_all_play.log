@@ -898,3 +898,21 @@ SyntaxError: invalid syntax
 2023-07-03 10:56:03.661 | INFO     | __main__:get_all_play:86 - 13
 2023-07-03 11:41:14.178 | INFO     | __main__:get_all_play:87 - 13
 2024-04-08 07:11:38.409 | INFO     | __main__:get_all_play:71 - Week: 1
+2024-04-09 09:25:15.894 | INFO     | __main__:get_all_play:71 - Week: 1
+2024-04-15 03:22:39.917 | INFO     | __main__:get_all_play:71 - Week: 2
+2024-04-15 03:28:56.945 | INFO     | __main__:get_all_play:71 - Week: 1
+2024-04-15 03:29:37.701 | INFO     | __main__:get_all_play:71 - Week: 2
+2024-04-15 03:32:56.465 | INFO     | __main__:get_all_play:71 - Week: 0
+2024-04-15 03:33:37.537 | INFO     | __main__:get_all_play:71 - Week: 1
+2024-04-15 03:34:18.167 | INFO     | __main__:get_all_play:71 - Week: 2
+2024-04-15 03:40:31.570 | INFO     | __main__:get_all_play:71 - Week: 0
+2024-04-15 03:48:27.633 | INFO     | __main__:get_all_play:73 - Week: 1
+2024-04-15 03:49:08.334 | INFO     | __main__:get_all_play:73 - Week: 2
+2024-04-15 03:49:48.296 | INFO     | __main__:get_all_play:73 - Week: 2
+2024-04-15 03:52:51.939 | INFO     | __main__:get_all_play:73 - Week: 2
+2024-04-15 03:54:29.310 | INFO     | __main__:get_all_play:73 - Week: 1
+2024-04-15 03:55:11.528 | INFO     | __main__:get_all_play:73 - Week: 2
+2024-04-15 03:57:11.720 | INFO     | __main__:get_all_play:73 - Week: 1
+2024-04-15 03:57:52.381 | INFO     | __main__:get_all_play:73 - Week: 2
+2024-04-15 04:02:21.443 | INFO     | get_all_play:get_all_play:73 - Week: 1
+2024-04-15 04:03:02.937 | INFO     | get_all_play:get_all_play:73 - Week: 2

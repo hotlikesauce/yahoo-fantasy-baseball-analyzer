@@ -27,9 +27,11 @@ MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_all_play(num_teams,leaguedf,most_recent_week):
     thisWeek = set_this_week()
-    for week in range ((most_recent_week+1),thisWeek):
+    for week in range ((most_recent_week),thisWeek):
         #Function below sets up the dataframe for the all play function
-        if most_recent_week+1 == thisWeek:
+        if most_recent_week == thisWeek:
+            pass
+        elif most_recent_week == 0:
             pass
         else:
             allPlaydf = leaguedf
@@ -108,19 +110,23 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
             print(rankings_df_expanded)
             
             df = build_team_numbers(rankings_df_expanded)
+            df = build_opponent_numbers(rankings_df_expanded)
 
+            
             #db name, collection, dataframe
             write_mongo(MONGO_DB,df,'coefficient')
 
             # Reset dfs for new weeks so data isn't aggregated
             del allPlaydf, rankings_df, df
- 
+
 
 def main():
     thisWeek = set_this_week()
     num_teams = league_size()
     leaguedf = league_stats_all_df()
     logger.add("logs/get_all_play.log", rotation="500 MB")
+    clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(thisWeek-1))
+    clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(thisWeek-2))
     try:
         df = get_mongo_data(MONGO_DB,'coefficient','')
         if not df.empty: 
@@ -129,7 +135,7 @@ def main():
             if rankings_df is not None:
                 write_mongo(MONGO_DB,rankings_df,'coefficient')
         else:
-            rankings_df = get_all_play(num_teams,leaguedf,0)
+            rankings_df = get_all_play(num_teams,leaguedf,1)
             if rankings_df is not None:
                 write_mongo(MONGO_DB,rankings_df,'coefficient')
 

@@ -77,6 +77,30 @@ def build_team_numbers(df):
 
     return(df)
 
+def build_opponent_numbers(df):
+    soup = url_requests(YAHOO_LEAGUE_ID)
+
+    table = soup.find('table')  # Use find() to get the first table
+
+    # Extract all href links from the table, if found
+    if table is not None:
+        links = []
+        for link in table.find_all('a'):  # Find all <a> tags within the table
+            link_text = link.text.strip()  # Extract the hyperlink text
+            link_url = link['href']  # Extract the href link
+            if link_text != '':
+                links.append((link_text, link_url))  # Append the hyperlink text and link to the list
+
+    for index, row in df.iterrows():
+        team_name = row['Opponent']
+        for link in links:
+            if link[0] == team_name:
+                team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
+                df.at[index, 'Opponent_Number'] = team_number
+                break
+
+    return(df)
+    
 #Get Number of Teams
 def league_size():
     soup = url_requests(YAHOO_LEAGUE_ID)

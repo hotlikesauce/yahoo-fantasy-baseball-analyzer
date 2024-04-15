@@ -20,7 +20,7 @@ def main():
         ,get_season_trend_standings_main 
         ,get_weekly_prediction_main 
         ,get_elo 
-        ,get_remaining_sos
+        #,get_remaining_sos
         ,export_csv
     ]
 
