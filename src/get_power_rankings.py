@@ -220,7 +220,7 @@ def get_normalized_ranks(power_rank_df):
         scaler = MinMaxScaler(feature_range=(min_score, 100))
         
         # Calculate and assign the scaled Score values
-        scaled_values = 100 - ((power_rank_df[column] - min_value) / (max_value - min_value)) * 80
+        scaled_values = 100 - ((power_rank_df[column] - min_value) / (max_value - min_value)) * 100
         power_rank_df[column + '_Score'] = scaled_values
 
     # Get the list of Score columns
@@ -261,6 +261,13 @@ def main():
         clear_mongo_query(MONGO_DB,'power_ranks_season_trend','"Week":'+str(lastWeek))
         write_mongo(MONGO_DB,power_rank_df,'power_ranks_season_trend')
         print(f'Write Season Trend Power Ranks')
+
+        clear_mongo_query('Summertime_Sadness_All_Time','all_time_ranks_normalized','"Year":2024')
+        df_2024 = get_mongo_data('YahooFantasyBaseball_2024','normalized_ranks','')
+        df_2024['Manager'] = df_2024['Team_Number'].astype(str).map(manager_dict)
+        df_2024['Year'] = 2024
+        print(df_2024)
+        write_mongo('Summertime_Sadness_All_Time',df_2024,'all_time_ranks_normalized')
 
     except Exception as e:
         filename = os.path.basename(__file__)

@@ -217,7 +217,6 @@ def main():
     lastWeek = set_last_week()
     try:
         #Aggregate W/L thorughout season
-        #clear_mongo_query(MONGO_DB,'weekly_results','"Week":'+str(lastWeek))
         df = get_mongo_data(MONGO_DB,'weekly_results','')
         print(df)
         if not df.empty: 

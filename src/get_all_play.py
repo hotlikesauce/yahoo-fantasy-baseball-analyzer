@@ -125,8 +125,8 @@ def main():
     num_teams = league_size()
     leaguedf = league_stats_all_df()
     logger.add("logs/get_all_play.log", rotation="500 MB")
-    clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(thisWeek-1))
-    clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(thisWeek-2))
+    for x in range(1,thisWeek):
+        clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(x))
     try:
         df = get_mongo_data(MONGO_DB,'coefficient','')
         if not df.empty: 

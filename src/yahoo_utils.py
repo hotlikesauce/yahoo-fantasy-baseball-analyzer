@@ -76,6 +76,7 @@ def build_team_numbers(df):
                 break
 
     return(df)
+    
 
 def build_opponent_numbers(df):
     soup = url_requests(YAHOO_LEAGUE_ID)

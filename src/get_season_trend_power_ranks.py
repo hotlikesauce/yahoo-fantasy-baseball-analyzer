@@ -180,7 +180,6 @@ def get_stats(records_df):
     
     return df_merge_teams
 
-
 def running_normalized_ranks(week_df):
     # Columns to analyze
     high_columns_to_analyze = ['R_Stats', 'H_Stats', 'HR_Stats', 'RBI_Stats', 'SB_Stats', 'OPS_Stats','K9_Stats', 'QS_Stats', 'SVH_Stats' ]
@@ -207,7 +206,7 @@ def running_normalized_ranks(week_df):
         scaler = MinMaxScaler(feature_range=(min_score, 100))
 
         # Calculate and assign the scaled Score values
-        scaled_values = 100 - ((week_df[column] - min_value) / (max_value - min_value)) * 80
+        scaled_values = 100 - ((week_df[column] - min_value) / (max_value - min_value)) * 100
         week_df[column + '_Score'] = scaled_values
 
     # Get the list of Score columns

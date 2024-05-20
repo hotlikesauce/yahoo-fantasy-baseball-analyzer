@@ -42,6 +42,8 @@ def last_four_weeks_coefficient(data):
 
 def last_two_weeks_coefficient(data):
     
+    last_four_weeks_df = pd.DataFrame(data)
+
     # Filter the DataFrame based on the condition
     last_four_weeks_df = last_four_weeks_df[last_four_weeks_df['Week'] >= this_week - 2]
 
@@ -234,6 +236,14 @@ def main():
         print(last_four_weeks_coefficient_df)
         clear_mongo(MONGO_DB,'Coefficient_Last_Four')
         write_mongo(MONGO_DB,last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
+
+        this_week = set_this_week()
+        #Get coefficient of last 2 weeks
+        last_two_weeks_coefficient_df = last_two_weeks_coefficient(data)
+        print(last_two_weeks_coefficient_df)
+        clear_mongo(MONGO_DB,'Coefficient_Last_Two')
+        write_mongo(MONGO_DB,last_two_weeks_coefficient_df, 'Coefficient_Last_Two')
+        
         
         #Get matchups/schedule and last 4 weeks avg stats
         matchups_df = get_matchups(matchup_data)

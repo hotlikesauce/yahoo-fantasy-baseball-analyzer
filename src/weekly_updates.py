@@ -18,9 +18,9 @@ def main():
         ,get_all_play_main 
         ,get_weekly_results
         ,get_season_trend_standings_main 
-        #,get_weekly_prediction_main 
+        ,get_weekly_prediction_main 
         ,get_elo 
-        #,get_remaining_sos
+        ,get_remaining_sos
         ,export_csv
     ]
 

@@ -74,6 +74,8 @@ def main():
         # Add the 'Rank' column based on the sorting order
         grouped_df['SOS_Rank'] = range(1, len(grouped_df) + 1)
 
+        #grouped_df_teams = build_team_numbers(grouped_df)  
+
 
         # Now, 'final_df' contains the new column 'total_score_sum' which has the sum of 'score_sum' from power_ranks_df
         print(grouped_df)

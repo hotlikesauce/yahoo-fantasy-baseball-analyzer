@@ -27,7 +27,7 @@ def get_schedule(max_week):
     num_teams = league_size()
     schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
     this_week = set_this_week()
-    for week in range(max_week,24):
+    for week in range(18,22):
         for matchup in range(1,(num_teams+1)):
             soup = url_requests(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup))
             table = soup.find_all('table')

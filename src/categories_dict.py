@@ -90,7 +90,7 @@ pitching_categories = {"Pitching Appearances":"PITCH_APP",
 "Net Wins":"NW"}
 
 
-Low_Categories = ["CS","ERR","K_BAT","GIDP","ERA","WHIP","IR_SCORE","BS","B9","H9","OBPA","RL","3BA","2BA","1BA","TBA","BALK","WP","HB","IBBA","BBA","HRA","ER","R_PITCH","H_PITCH","L"]
+Low_Categories = ["CS","ERR","TB","K_BAT","GIDP","ERA","WHIP","IR_SCORE","BS","B9","H9","OBPA","RL","3BA","2BA","1BA","TBA","BALK","WP","HB","IBBA","BBA","HRA","ER","R_PITCH","H_PITCH","L"]
 
 Low_Categories_Stats = ["CS_Stats","ERR_Stats","K_BAT_Stats","GIDP_Stats","ERA_Stats","WHIP_Stats","IR_SCORE_Stats","BS_Stats","B9_Stats","H9_Stats","OBPA_Stats","RL_Stats","3BA_Stats","2BA_Stats","1BA_Stats","TBA_Stats","BALK_Stats","WP_Stats","HB_Stats","IBBA_Stats","BBA_Stats","HRA_Stats","ER_Stats","R_PITCH_Stats","H_PITCH_Stats","L_Stats"]
 
