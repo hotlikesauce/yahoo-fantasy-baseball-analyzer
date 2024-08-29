@@ -1,0 +1,4 @@
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
+ERROR:root:get_elo.py: "None of [Index(['Opponent_Team_Number', 'Week'], dtype='object')] are in the [columns]" - Error occurred at line 6171
+ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
