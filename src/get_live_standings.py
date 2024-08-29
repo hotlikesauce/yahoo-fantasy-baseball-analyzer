@@ -77,37 +77,48 @@ def getLiveStandings(df_currentMatchup):
 
     df_seasonRecords.columns = df_seasonRecords.columns.str.replace('[-]', '')
 
-    new = df_seasonRecords['WLT'].str.split("-", n = 2, expand = True)
+    new = df_seasonRecords['WLT'].str.split("-", n=2, expand=True)
     new = new.astype(int)
-    # making separate first name column from new data frame
-    df_seasonRecords["WLT_Win"]= new[0]
-    df_seasonRecords["WLT_Loss"]= new[1]
-    df_seasonRecords["WLT_Draw"]= new[2]
-    df_seasonRecords['Raw_Score_Static'] = (df_seasonRecords['WLT_Win'] + (df_seasonRecords['WLT_Draw']*.5))
+    df_seasonRecords["WLT_Win"] = new[0]
+    df_seasonRecords["WLT_Loss"] = new[1]
+    df_seasonRecords["WLT_Draw"] = new[2]
+    df_seasonRecords['Raw_Score_Static'] = df_seasonRecords['WLT_Win'] + (df_seasonRecords['WLT_Draw'] * 0.5)
 
-    #calculate live standings from season records and live records
     df_liveStandings = df_seasonRecords.merge(df_currentMatchup, on='Team')
     df_liveStandings['Live_Wins'] = df_liveStandings['WLT_Win'] + df_liveStandings['Team_Wins']
     df_liveStandings['Live_Loss'] = df_liveStandings['WLT_Loss'] + df_liveStandings['Team_Loss']
     df_liveStandings['Live_Draw'] = df_liveStandings['WLT_Draw'] + df_liveStandings['Team_Draw']
-    df_liveStandings['Raw_Score'] = (df_liveStandings['Live_Wins'] + (df_liveStandings['Live_Draw']*.5))
+    df_liveStandings['Raw_Score'] = df_liveStandings['Live_Wins'] + (df_liveStandings['Live_Draw'] * 0.5)
     df_liveStandings['Games_Back'] = df_liveStandings['Raw_Score'].max() - df_liveStandings['Raw_Score']
-    df_liveStandings['Pct'] = (df_liveStandings['Live_Wins'] + (df_liveStandings['Live_Draw']*.5))/(df_liveStandings['Live_Wins'] + df_liveStandings['Live_Draw'] + df_liveStandings['Live_Loss'])
+    df_liveStandings['Pct'] = (df_liveStandings['Live_Wins'] + (df_liveStandings['Live_Draw'] * 0.5)) / (df_liveStandings['Live_Wins'] + df_liveStandings['Live_Draw'] + df_liveStandings['Live_Loss'])
     df_liveStandings['Current Matchup'] = df_liveStandings['Team_Wins'].astype(int).astype(str) + '-' + df_liveStandings['Team_Loss'].astype(int).astype(str) + '-' + df_liveStandings['Team_Draw'].astype(int).astype(str)
-    df_liveStandings = df_liveStandings.sort_values(by=['Pct'],ascending=False,ignore_index=True)
-    print(df_liveStandings[['Team','Pct','Raw_Score']].sort_values(by=['Pct'],ascending=False,ignore_index=True))
-    #Need to change below when people clinch playoffs
-    try:        
-        df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*','').astype(int)
+
+    # Sort by Raw_Score in descending order
+    df_liveStandings = df_liveStandings.sort_values(by=['Raw_Score'], ascending=False, ignore_index=True)
+
+    # Add rank_live field, explicitly handling ties
+    df_liveStandings['rank_live'] = df_liveStandings['Raw_Score'].rank(method='first', ascending=False).astype(int)
+    
+    # Now handle ties
+    df_liveStandings['rank_live'] = df_liveStandings.groupby('Raw_Score')['rank_live'].transform('min')
+
+    print(df_liveStandings[['Team', 'Pct', 'Raw_Score', 'rank_live']])
+
+    try:
+        df_liveStandings['Rank'] = df_liveStandings['Rank'].str.replace('*', '').astype(int)
     except AttributeError:
         print("No one has clinched playoffs yet, yo")
 
-
     final_return_df = build_team_numbers(df_liveStandings)
     final_return_df['Manager_Name'] = df_liveStandings['Team_Number'].map(manager_dict)
+
+    print(final_return_df)
+    return final_return_df
+
     
 
-    return final_return_df
+
+
    
 
 def main():
