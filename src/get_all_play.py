@@ -27,7 +27,7 @@ MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_all_play(num_teams,leaguedf,most_recent_week):
     thisWeek = set_this_week()
-    for week in range ((18),thisWeek):
+    for week in range ((most_recent_week),thisWeek):
         #Function below sets up the dataframe for the all play function
         if most_recent_week == thisWeek:
             pass
@@ -127,7 +127,7 @@ def main():
     num_teams = league_size()
     leaguedf = league_stats_all_df()
     logger.add("logs/get_all_play.log", rotation="500 MB")
-    for x in range(18,thisWeek):
+    for x in range(1,thisWeek):
         clear_mongo_query(MONGO_DB,'coefficient','"Week":'+str(x))
     try:
         df = get_mongo_data(MONGO_DB,'coefficient','')
