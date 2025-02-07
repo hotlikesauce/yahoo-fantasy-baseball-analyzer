@@ -158,7 +158,7 @@ def get_normalized_ranks(all_time_rank_df):
 def main():
     try:
         #clear_mongo('Summertime_Sadness_All_Time','all_time_ranks_normalized')
-        for year in range(2023,2024):
+        for year in range(2024,2025):
             #clear_mongo_query('Summertime_Sadness_All_Time','all_time_ranks_normalized','"Week"'+str(year))
             all_time_rank_df = get_stats(year)
             normalized_ranks_df = get_normalized_ranks(all_time_rank_df)

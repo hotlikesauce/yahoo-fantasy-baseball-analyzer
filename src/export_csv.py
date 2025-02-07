@@ -72,7 +72,7 @@ def main():
     os.remove('Summertime_Sadness.zip')
 
 if __name__ == '__main__':
-    if MONGO_DB == 'YahooFantasyBaseball_2024':
+    if MONGO_DB == 'YahooFantasyBaseball_2025':
         main()
     else:
         pass

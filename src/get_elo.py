@@ -195,7 +195,7 @@ def main():
         #send_failure_email(error_message,filename)
 
 if __name__ == '__main__':
-    if MONGO_DB == 'YahooFantasyBaseball_2024':
+    if MONGO_DB == 'YahooFantasyBaseball_2025':
         main()
     else:
         pass
