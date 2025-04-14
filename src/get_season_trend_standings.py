@@ -60,7 +60,8 @@ def season_standings():
                 'Raw_Score': raw_score}
         
         # Add the new row to the new DataFrame
-        raw_score_df = raw_score_df.append(new_row, ignore_index=True)
+        raw_score_df = pd.concat([raw_score_df, pd.DataFrame([new_row])], ignore_index=True)
+
 
     # Sort the new DataFrame by team number and week
     raw_score_df = raw_score_df.sort_values(['Team_Number', 'Week'])

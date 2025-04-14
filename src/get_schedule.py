@@ -10,7 +10,7 @@ import warnings
 # Ignore the FutureWarning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-# Local Modules - email utils for failure emails, mongo utils to 
+# Local Modules
 from email_utils import send_failure_email
 from datetime_utils import *
 from mongo_utils import *
@@ -25,78 +25,79 @@ MONGO_DB = os.environ.get('MONGO_DB')
 
 def get_schedule(max_week):
     num_teams = league_size()
-    schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
     this_week = set_this_week()
-    for week in range(18,22):
-        for matchup in range(1,(num_teams+1)):
-            soup = url_requests(YAHOO_LEAGUE_ID+'matchup?date=totals&week='+str(week)+'&mid1='+str(matchup))
+
+    for week in range(1, 22):
+        rows = []
+        for matchup in range(1, num_teams + 1):
+            soup = url_requests(YAHOO_LEAGUE_ID + f'matchup?date=totals&week={week}&mid1={matchup}')
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df['Week'] = week
-            df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
+            df.columns = df.columns.str.replace('[#,@,&,/,+]', '', regex=True)
 
-            df['Opponent'] = df.loc[1,'Team']
-            df=df[['Team','Opponent','Week']]
+            df['Opponent'] = df.loc[1, 'Team']
+            df = df[['Team', 'Opponent', 'Week']]
+            rows.append(df.loc[0])
 
-            schedule_df = schedule_df.append(df.loc[0], True)
+        # Build the full schedule DataFrame
+        schedule_df = pd.DataFrame(rows)
+        print(schedule_df)
 
-            print(schedule_df)
+        # Check for missing opponent info
+        if schedule_df['Opponent'].isnull().any():
+            return
 
-            # Check if 'Opponent' field is NaN
-            if pd.isnull(schedule_df.loc[0, 'Opponent']):
-                return  # Break and exit
-
-            
-
-        #BUILD TABLE WITH TEAM NAME AND NUMBER
+        # BUILD TABLE WITH TEAM NAME AND NUMBER
         source = uReq(YAHOO_LEAGUE_ID).read()
-        soup = bs.BeautifulSoup(source,'lxml')
+        soup = bs.BeautifulSoup(source, 'lxml')
 
-        table = soup.find('table')  # Use find() to get the first table
-
-        # Extract all href links from the table, if found
+        table = soup.find('table')
+        links = []
         if table is not None:
-            links = []
-            for link in table.find_all('a'):  # Find all <a> tags within the table
-                link_text = link.text.strip()  # Extract the hyperlink text
-                link_url = link['href']  # Extract the href link
-                if link_text != '':
-                    links.append((link_text, link_url))  # Append the hyperlink text and link to the list
+            for link in table.find_all('a'):
+                link_text = link.text.strip()
+                link_url = link['href']
+                if link_text:
+                    links.append((link_text, link_url))
 
-
-        # Map team numbers from the dictionary to a new Series
-        #Iterate through the rows of the DataFrame
+        print(schedule_df)
+        # Map team numbers
+        # Map team numbers
         for index, row in schedule_df.iterrows():
             team_name = row['Team']
+            team_number = None  # Initialize team_number to avoid overwriting in each iteration
+            
+            # Loop through each link and find the correct team match
             for link in links:
                 if link[0] == team_name:
-                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
-                    schedule_df.at[index, 'Team_Number'] = team_number
-                    break
-        
-        #Opponent Team Numbers
+                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:]
+                    break  # Exit the loop once a match is found
+            
+            # Only update the team number if it was found
+            if team_number:
+                schedule_df.at[index, 'Team_Number'] = team_number
+                print(schedule_df)
+                break  # Exit the loop once a match is found
+
         for index, row in schedule_df.iterrows():
             team_name = row['Opponent']
             for link in links:
                 if link[0] == team_name:
-                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:] # Grab the last 2 characters if they are both digits, else grab the last character
+                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:]
                     schedule_df.at[index, 'Opponent_Team_Number'] = team_number
                     break
-        
+
         schedule_df = schedule_df.drop(['Team', 'Opponent'], axis=1)
         print(schedule_df)
 
-
-        write_mongo(MONGO_DB,schedule_df,'schedule')
-
-        schedule_df = pd.DataFrame(columns = ['Team','Opponent','Week'])
-
+        write_mongo(MONGO_DB, schedule_df, 'schedule')
 
 def main():
     try:
-        df = get_mongo_data(MONGO_DB,'schedule','')
-        if not df.empty: 
-            max_week = (df['Week'].max())+1
+        df = get_mongo_data(MONGO_DB, 'schedule', '')
+        if not df.empty:
+            max_week = df['Week'].max() + 1
             get_schedule(max_week)
         else:
             get_schedule(1)
@@ -105,6 +106,7 @@ def main():
         exc_type, exc_obj, exc_tb = sys.exc_info()
         line_number = exc_tb.tb_lineno
         error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        print(error_message)
         send_failure_email(error_message, filename)
 
 if __name__ == '__main__':

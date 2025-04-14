@@ -1,26 +1,23 @@
+import os
+import sys
+import logging
+import traceback
 import pandas as pd
-import bs4 as bs
-import urllib
-import urllib.request
-from urllib.request import urlopen as uReq
-from functools import reduce
+import numpy as np
 from pymongo import MongoClient
 import certifi
-import numpy as np
-import os, logging, traceback, sys
 from dotenv import load_dotenv
 from sklearn.preprocessing import MinMaxScaler
 
-# Local Modules - email utils for failure emails, mongo utils to 
+# Local modules
 from email_utils import send_failure_email
 from manager_dict import manager_dict
-from mongo_utils import *
-from datetime_utils import *
-
+from mongo_utils import get_mongo_data, write_mongo, clear_mongo
+from datetime_utils import set_this_week
 from yahoo_utils import *
 
-# Load obfuscated strings from .env file
-load_dotenv()    
+# Load environment variables
+load_dotenv()
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 MONGO_DB = os.environ.get('MONGO_DB')
@@ -28,175 +25,120 @@ MONGO_DB = os.environ.get('MONGO_DB')
 logging.basicConfig(filename='error.log', level=logging.ERROR)
 
 def get_initial_elo():
-    league_size = league_size()
-    data = {
-    'Team_Number': list(range(1, (league_size+1))),
-    'ELO_Sum': [0.9] * league_size,
-    'Week': [1] * league_size
-    }
+    size = league_size()
+    return pd.DataFrame({
+        'Team_Number': list(range(1, size + 1)),
+        'ELO_Sum': [0.9] * size,
+        'Week': [1] * size
+    })
 
-    # Creating the DataFrame
-    initial_elo_df = pd.DataFrame(data)
+def expected_outcome(elo_df, schedule_df):
+    def convert_nested(value):
+        return int(value['$numberInt']) if isinstance(value, dict) and '$numberInt' in value else value
 
-    return initial_elo_df
+    schedule_df = schedule_df.applymap(convert_nested)
 
-def expected_outcome(elo_df,schedule_df):
-
-    # Convert the nested values to their regular representation
-    def convert_nested_values(value):
-        if isinstance(value, dict) and '$numberInt' in value:
-            return int(value['$numberInt'])
-        return value
-
-    # Apply the conversion function to each cell in the DataFrame
-    schedule_df = schedule_df.applymap(convert_nested_values)
-
-    try:
-        elo_df.drop(columns=['Expected_Result_Ra', 'Normalized_Score_Difference'], inplace=True)
-        elo_df.drop(columns=['ELO_Team_Sum'], inplace=True)
-        elo_df.rename(columns={'New_ELO': 'ELO_Team_Sum'}, inplace=True)
-        elo_df.rename(columns={'ELO_Sum': 'ELO_Team_Sum'}, inplace=True)
-    except KeyError:
-        pass
-
-    # Select the desired columns from elo_df
-    print('ELO DF IN EXPECTED OUTCOME')
-    print('-----------------------------------------------')
+    # Drop and rename columns safely
+    elo_df = elo_df.copy()
+    for col in ['Expected_Result_Ra', 'Normalized_Score_Difference', 'ELO_Team_Sum']:
+        elo_df.drop(columns=[col], errors='ignore', inplace=True)
     print(elo_df)
+    elo_df.rename(columns={'New_ELO': 'ELO_Team_Sum', 'ELO_Sum': 'ELO_Team_Sum'}, inplace=True)
 
     elo_subset = elo_df[['Team_Number', 'ELO_Team_Sum', 'Week']]
+    schedule_subset = schedule_df[['Opponent_Team_Number', 'Week']].rename(columns={'Week': 'Next_Week'})
 
-    # Selecting the desired columns from 'schedule_df'
-    schedule_subset = schedule_df[['Opponent_Team_Number', 'Week']]
-    try:
-        schedule_subset.rename(columns={'Week': 'Next_Week'}, inplace=True)
-    except KeyError:
-        pass
+    joined_df = pd.concat([elo_subset.reset_index(drop=True), schedule_subset.reset_index(drop=True)], axis=1).dropna()
 
-    # Creating a new DataFrame with the specified columns and values
-    joined_df = pd.concat([elo_subset, schedule_subset], axis=1)
-    joined_df = joined_df.dropna()
+    for col in ['Team_Number', 'Opponent_Team_Number']:
+        joined_df[col] = joined_df[col].astype('int64')
 
+    # Merge to get opponent ELO
+    joined_df = joined_df.merge(
+        elo_subset[['Team_Number', 'ELO_Team_Sum']],
+        left_on='Opponent_Team_Number',
+        right_on='Team_Number',
+        how='left',
+        suffixes=('', '_opponent')
+    )
 
-    print(joined_df)
-    
-    # Convert the data type of 'Opponent_Team_Number' to int64
-    joined_df['Opponent_Team_Number'] = joined_df['Opponent_Team_Number'].astype('int64')
-
-    # Merge the DataFrames on 'Opponent_Team_Number' and 'Team_Number'
-    # Convert the data type of 'Opponent_Team_Number' to match 'Team_Number'
-    joined_df['Opponent_Team_Number'] = joined_df['Opponent_Team_Number'].astype(elo_subset['Team_Number'].dtype)
-
-
-    joined_df['Team_Number'] = joined_df['Team_Number'].astype('int64')
-    joined_df['Opponent_Team_Number'] = joined_df['Opponent_Team_Number'].astype('int64')
-
-    elo_subset['Team_Number'] = elo_subset['Team_Number'].astype('int64')
-
-    # Merge the DataFrames on 'Opponent_Team_Number' and 'Team_Number'
-    joined_df = pd.merge(joined_df, elo_subset[['Team_Number', 'ELO_Team_Sum']], left_on='Opponent_Team_Number', right_on='Team_Number', how='left')
-    
-    # Rename the ELO_Team_Sum column to a desired name (e.g., ELO_Opponent_Sum)
-    joined_df.rename(columns={'ELO_Team_Sum': 'ELO_Opponent_Sum'}, inplace=True)
-
-    # Drop the additional Team_Number column
-    joined_df.drop('Team_Number_y', axis=1, inplace=True)
-
-    # Rename the columns in joined_df
-    joined_df.rename(columns={'Team_Number_x': 'Team_Number', 'ELO_Team_Sum_x': 'ELO_Team_Sum', 'ELO_Team_Sum_y': 'ELO_Opponent_Sum'}, inplace=True)
+    joined_df.rename(columns={'ELO_Team_Sum_opponent': 'ELO_Opponent_Sum'}, inplace=True)
+    joined_df.drop(columns=['Team_Number_opponent'], inplace=True)
 
     joined_df['Expected_Result_Ra'] = 1 / (1 + 25 ** ((joined_df['ELO_Opponent_Sum'] - joined_df['ELO_Team_Sum']) / 400))
 
-    
-
     return joined_df
 
-def get_new_elo(expected_outcome_df,week_df):
-
-    #DUPLICATE TEAM_NUMBER COLS - NEED TO REDIFE COL FROM OBJ TO INT
+def get_new_elo(expected_outcome_df, week_df):
     week_df['Team_Number'] = week_df['Team_Number'].astype('int64')
-    merged_df = expected_outcome_df.merge(week_df[['Normalized_Score_Difference', 'Team_Number']], on=['Team_Number'], how='left')
 
-    print(merged_df)
+    merged_df = expected_outcome_df.merge(
+        week_df[['Normalized_Score_Difference', 'Team_Number']],
+        on='Team_Number',
+        how='left'
+    )
 
     K_Factor = 50
+    results = []
 
-    appended_df = pd.DataFrame() 
-
-
-    for index, row in merged_df.iterrows():
+    for _, row in merged_df.iterrows():
         week = row['Week']
         team_number = row['Team_Number']
-        elo_team_sum = row['ELO_Team_Sum']
-        Expected_Result_Ra = (row['Expected_Result_Ra']-.5)*2
-        Normalized_Score_Difference = (row['Normalized_Score_Difference']-.5)*2
+        elo = row['ELO_Team_Sum']
+        expected = (row['Expected_Result_Ra'] - 0.5) * 2
+        actual = (row['Normalized_Score_Difference'] - 0.5) * 2
 
-        #scaled_expected = sigmoid(Expected_Result_Ra*10)
-        #scaled_actual = sigmoid(Normalized_Score_Difference*10)
+        new_elo = elo + K_Factor * (actual - expected)
 
-
-        New_ELO = (elo_team_sum + K_Factor*(Normalized_Score_Difference)-Expected_Result_Ra)
-
-        appended_row = pd.DataFrame({
-            'Week': [week+1],
-            'Team_Number': [team_number],
-            'ELO_Team_Sum': [elo_team_sum],
-            'Expected_Result_Ra': [Expected_Result_Ra],
-            'Normalized_Score_Difference': [Normalized_Score_Difference],
-            'New_ELO': [New_ELO]
+        results.append({
+            'Week': week + 1,
+            'Team_Number': team_number,
+            'ELO_Team_Sum': elo,
+            'Expected_Result_Ra': expected,
+            'Normalized_Score_Difference': actual,
+            'New_ELO': new_elo
         })
 
-        # Append the row DataFrame to the appended_df DataFrame
-        appended_df = pd.concat([appended_df, appended_row], ignore_index=True)
-
-    print(appended_df)
-    return appended_df
-   
+    return pd.DataFrame(results)
 
 def main():
     try:
-        this_week = set_this_week()
-        the_league_size = league_size()
-        data = {
-            'Team_Number': list(range(1, (the_league_size+1))),
-            'ELO_Team_Sum': [1000] * the_league_size,
-            'Week': [1] * the_league_size
-        }
+        current_week = set_this_week()
+        num_teams = league_size()
 
-        # Create the DataFrame
-        week_1_df = pd.DataFrame(data)
+        week_1_df = pd.DataFrame({
+            'Team_Number': list(range(1, num_teams + 1)),
+            'ELO_Team_Sum': [1000] * num_teams,
+            'Week': [1] * num_teams
+        })
+
         running_elo_df = pd.DataFrame()
-        output_df = week_1_df
-        
-        
-        for week in range(1,(this_week)):
-            week_dict =  str(f"Week:{week}")
-            print(week_dict)
-            schedule_df = get_mongo_data(MONGO_DB,'schedule',week_dict)
-            expected_outcome_df = expected_outcome(output_df,schedule_df)
-            week_df = get_mongo_data(MONGO_DB,'weekly_results', week_dict)
-            output_df = get_new_elo(expected_outcome_df, week_df)
-            running_elo_df = running_elo_df.append(output_df, ignore_index=True)
+        output_df = week_1_df.copy()
 
-        week_1_df = week_1_df.rename(columns={'ELO_Team_Sum': 'New_ELO'})
-        running_elo_df = running_elo_df.append(week_1_df, ignore_index=True)
-        running_elo_df['Team_Number'] = running_elo_df['Team_Number'].astype(int).astype(str).replace('\.0', '', regex=True)
-        print(running_elo_df)
-        clear_mongo(MONGO_DB,'Running_ELO')
-        write_mongo(MONGO_DB,running_elo_df,'Running_ELO')
+        for week in range(1, current_week):
+            week_key = f"Week:{week}"
+            schedule_df = get_mongo_data(MONGO_DB, 'schedule', week_key)
+            expected_df = expected_outcome(output_df, schedule_df)
+
+            week_results_df = get_mongo_data(MONGO_DB, 'weekly_results', week_key)
+            output_df = get_new_elo(expected_df, week_results_df)
+            running_elo_df = pd.concat([running_elo_df, output_df], ignore_index=True)
+
+        week_1_df.rename(columns={'ELO_Team_Sum': 'New_ELO'}, inplace=True)
+        running_elo_df = pd.concat([running_elo_df, week_1_df], ignore_index=True)
+
+        running_elo_df['Team_Number'] = running_elo_df['Team_Number'].astype(int).astype(str).str.replace('\.0', '', regex=True)
+
+        clear_mongo(MONGO_DB, 'Running_ELO')
+        write_mongo(MONGO_DB, running_elo_df, 'Running_ELO')
 
     except Exception as e:
         filename = os.path.basename(__file__)
         line_number = traceback.extract_tb(sys.exc_info()[2])[-1][1]
         error_message = str(e)
-        additional_info = f'Error occurred at line {line_number}'
-        logging.error(f'{filename}: {error_message} - {additional_info}')
-        raise  # Raising the exception again to propagate it
-        #send_failure_email(error_message,filename)
+        logging.error(f'{filename}: {error_message} - Line {line_number}')
+        raise
 
 if __name__ == '__main__':
     if MONGO_DB == 'YahooFantasyBaseball_2025':
         main()
-    else:
-        pass
-

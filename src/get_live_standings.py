@@ -63,7 +63,7 @@ def getCurrentMatchups():
         
         # print(df_teamRecords[['Team','Record']].loc[0])
 
-        df_weeklyMatchups = df_weeklyMatchups.append(df_teamRecords.loc[0], True)
+        df_weeklyMatchups = pd.concat([df_weeklyMatchups, df_teamRecords.loc[[0]]], ignore_index=True)
 
     #print(df_weeklyMatchups[['Team','Record']])
     
@@ -74,9 +74,11 @@ def getLiveStandings(df_currentMatchup):
 
     table = soup.find_all('table')
     df_seasonRecords = pd.read_html(str(table))[0]
-
-    df_seasonRecords.columns = df_seasonRecords.columns.str.replace('[-]', '')
-
+    print(df_seasonRecords.columns)
+    
+    df_seasonRecords.columns = df_seasonRecords.columns.str.replace('-', '')
+    print(df_seasonRecords.columns)
+    
     new = df_seasonRecords['WLT'].str.split("-", n=2, expand=True)
     new = new.astype(int)
     df_seasonRecords["WLT_Win"] = new[0]
@@ -131,6 +133,7 @@ def main():
     except Exception as e:
         filename = os.path.basename(__file__)
         error_message = str(e)
+        print(error_message)
         send_failure_email(error_message,filename)
 
 

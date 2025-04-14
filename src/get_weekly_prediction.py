@@ -27,7 +27,6 @@ this_week = set_this_week()
 
 
 def last_four_weeks_coefficient(data):
-    
     print(data)
     # Convert the data to a pandas DataFrame
     last_four_weeks_df = pd.DataFrame(data)
@@ -38,10 +37,9 @@ def last_four_weeks_coefficient(data):
     print(last_four_weeks_df)
 
     # You can now work with the filtered DataFrame
-    return(last_four_weeks_df)
+    return last_four_weeks_df
 
 def last_two_weeks_coefficient(data):
-    
     last_four_weeks_df = pd.DataFrame(data)
 
     # Filter the DataFrame based on the condition
@@ -49,47 +47,45 @@ def last_two_weeks_coefficient(data):
 
     # You can now work with the filtered DataFrame
     print(last_four_weeks_df)
-    return(last_four_weeks_df)
+    return last_four_weeks_df
 
 def last_week_coefficient(data):
-    # Filter the DataFrame based on the condition
-    last_four_weeks_df = last_four_weeks_df[last_four_weeks_df['Week'] >= this_week - 1]
-
-    # You can now work with the filtered DataFrame
-    print(last_four_weeks_df)
-    return(last_four_weeks_df)
+    # Note: There seems to be an error in this function: last_four_weeks_df is not defined.
+    # Assuming you intended to filter the provided data:
+    last_week_df = pd.DataFrame(data)
+    last_week_df = last_week_df[last_week_df['Week'] >= this_week - 1]
+    print(last_week_df)
+    return last_week_df
 
 def last_four_weeks(matchups_df):
     num_teams = league_size()
     this_week = set_this_week()
     leaguedf = league_stats_all_df()
     cols = leaguedf.columns.tolist()
-    #Set week number
-    last_four_weeks_stats = pd.DataFrame(columns = cols)
-    for week in range(this_week-4,this_week):
-        for matchup in range(1,(num_teams+1)):
-            soup = url_requests(YAHOO_LEAGUE_ID+'matchup?week='+str(week)+'&module=matchup&mid1='+str(matchup))
+    # Set week number and create an empty DataFrame with the same columns as leaguedf
+    last_four_weeks_stats = pd.DataFrame(columns=cols)
+    for week in range(this_week - 4, this_week):
+        for matchup in range(1, (num_teams + 1)):
+            soup = url_requests(YAHOO_LEAGUE_ID + 'matchup?week=' + str(week) + '&module=matchup&mid1=' + str(matchup))
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df['Week'] = week
             print(df)
-            df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
+            df.columns = df.columns.str.replace('[#,@,&,/,+]', '', regex=True)
             df.columns = df.columns.str.replace('HR.1', 'HRA')
             
             for column in df.columns:
                 if column in percentage_categories:
-                    # Logic below to handle asterisks that happen for % based stats when ties occur
+                    # Handle asterisks that occur for % based stats when ties occur
                     df[column] = df[column].astype(str)  # Convert column to string type
-                    # Remove asterisks from column values
-                    df[column] = df[column].map(lambda x: x.rstrip('*'))
-                    # Replace '-' with '0.00'
-                    df[column] = df[column].replace(['-'], '0.00')
-                    # Convert column to float type
-                    df[column] = df[column].astype(float)  
+                    df[column] = df[column].map(lambda x: x.rstrip('*'))  # Remove asterisks
+                    df[column] = df[column].replace(['-'], '0.00')  # Replace '-' with '0.00'
+                    df[column] = df[column].astype(float)  # Convert column to float type
 
             column_list = leaguedf.columns.tolist()
             df = df[column_list]
-            last_four_weeks_stats = last_four_weeks_stats.append(df.loc[0], True)
+            # Replace deprecated append() with pd.concat()
+            last_four_weeks_stats = pd.concat([last_four_weeks_stats, df.loc[[0]]], ignore_index=True)
 
     cols_to_average = []
     for column in last_four_weeks_stats:
@@ -111,7 +107,6 @@ def last_four_weeks(matchups_df):
     return final_return_df
 
 def get_matchups(matchups_df):
-
     # Convert the nested values to their regular representation
     def convert_nested_values(value):
         if isinstance(value, dict) and '$numberInt' in value:
@@ -133,15 +128,11 @@ def get_matchups(matchups_df):
     matchups_df = matchups_df.drop_duplicates(subset=['Week', 'Team_Number', 'Opponent_Team_Number'])
     matchups_df = matchups_df.drop('_id', axis=1)
     
-
-
-
     return matchups_df
 
 def predict_matchups(last_four_weeks_stats_df):
     # Iterate over the rows of the DataFrame
-
-    high_cols_to_compare = [col for col in last_four_weeks_stats_df.columns if col not in Low_Categories_Avg and col not in ['Team', 'Team_Number','Opponent_Team_Number']]
+    high_cols_to_compare = [col for col in last_four_weeks_stats_df.columns if col not in Low_Categories_Avg and col not in ['Team', 'Team_Number', 'Opponent_Team_Number']]
     low_cols_to_compare = [col for col in last_four_weeks_stats_df.columns if col in Low_Categories_Avg]
         
     for index, row in last_four_weeks_stats_df.iterrows():
@@ -154,15 +145,11 @@ def predict_matchups(last_four_weeks_stats_df):
         team_row = last_four_weeks_stats_df.loc[last_four_weeks_stats_df['Team_Number'] == team_num]
         opp_row = last_four_weeks_stats_df.loc[last_four_weeks_stats_df['Team_Number'] == opp_num]
         
-        #Compare the values for each column
+        # Compare the values for each column in high_cols_to_compare
         for col in high_cols_to_compare:
             team_value = team_row[col].values[0]
             opp_value = opp_row[col].values[0]
-            
-            # Add the 'WL' suffix to the column name
             col_wl = col + '_WL'
-            
-            # Compare the values and assign the corresponding values to the new column
             if team_value > opp_value:
                 last_four_weeks_stats_df.at[index, col_wl] = 1
             elif team_value < opp_value:
@@ -170,23 +157,17 @@ def predict_matchups(last_four_weeks_stats_df):
             else:
                 last_four_weeks_stats_df.at[index, col_wl] = 0.5
         
-                
-        # Compare the values for each column
+        # Compare the values for each column in low_cols_to_compare
         for col in low_cols_to_compare:
             team_value = team_row[col].values[0]
             opp_value = opp_row[col].values[0]
-            
-            # Add the 'WL' suffix to the column name
             col_wl = col + '_WL'
-            
-            # Compare the values and assign the corresponding values to the new column
             if team_value < opp_value:
                 last_four_weeks_stats_df.at[index, col_wl] = 1
             elif team_value > opp_value:
                 last_four_weeks_stats_df.at[index, col_wl] = 0
             else:
                 last_four_weeks_stats_df.at[index, col_wl] = 0.5
-        
 
     print(last_four_weeks_stats_df)
     return last_four_weeks_stats_df
@@ -218,54 +199,53 @@ def get_records(last_four_weeks_stats_df):
         
         # Create a new row with the results
         result_row = {'Team': team_name, 'Opponent': ', '.join(opponent_names),
-                    'Win': win_count, 'Loss': loss_count, 'Tie': tie_count}
+                      'Win': win_count, 'Loss': loss_count, 'Tie': tie_count}
         
-        # Append the row to the result DataFrame
-        result_df = result_df.append(result_row, ignore_index=True)
+        # Replace deprecated append() with pd.concat()
+        result_df = pd.concat([result_df, pd.DataFrame([result_row])], ignore_index=True)
 
     return result_df
 
 
 def main():
-    data = get_mongo_data(MONGO_DB,'coefficient','')
-    matchup_data = get_mongo_data(MONGO_DB,'schedule','')
+    data = get_mongo_data(MONGO_DB, 'coefficient', '')
+    matchup_data = get_mongo_data(MONGO_DB, 'schedule', '')
     try:
         this_week = set_this_week()
-        #Get coefficient of last 4 weeks
+        # Get coefficient of last 4 weeks
         last_four_weeks_coefficient_df = last_four_weeks_coefficient(data)
         print(last_four_weeks_coefficient_df)
-        clear_mongo(MONGO_DB,'Coefficient_Last_Four')
-        write_mongo(MONGO_DB,last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
+        clear_mongo(MONGO_DB, 'Coefficient_Last_Four')
+        write_mongo(MONGO_DB, last_four_weeks_coefficient_df, 'Coefficient_Last_Four')
 
         this_week = set_this_week()
-        #Get coefficient of last 2 weeks
+        # Get coefficient of last 2 weeks
         last_two_weeks_coefficient_df = last_two_weeks_coefficient(data)
         print(last_two_weeks_coefficient_df)
-        clear_mongo(MONGO_DB,'Coefficient_Last_Two')
-        write_mongo(MONGO_DB,last_two_weeks_coefficient_df, 'Coefficient_Last_Two')
+        clear_mongo(MONGO_DB, 'Coefficient_Last_Two')
+        write_mongo(MONGO_DB, last_two_weeks_coefficient_df, 'Coefficient_Last_Two')
         
+        # # Get matchups/schedule and last 4 weeks avg stats
+        # matchups_df = get_matchups(matchup_data)
+        # last_four_weeks_avg = last_four_weeks(matchups_df)
+        # print(last_four_weeks_avg)
         
-        #Get matchups/schedule and last 4 weeks avg stats
-        matchups_df = get_matchups(matchup_data)
-        last_four_weeks_avg = last_four_weeks(matchups_df)
-        print(last_four_weeks_avg)
-        
-        #compare based on matchups
-        predictions_df = predict_matchups(last_four_weeks_avg)
-        clear_mongo(MONGO_DB,'Weekly_Predictions_Stats')
-        write_mongo(MONGO_DB,predictions_df,'Weekly_Predictions_Stats')
+        # # Compare based on matchups
+        # predictions_df = predict_matchups(last_four_weeks_avg)
+        # clear_mongo(MONGO_DB, 'Weekly_Predictions_Stats')
+        # write_mongo(MONGO_DB, predictions_df, 'Weekly_Predictions_Stats')
 
-        #Get stats and predicted records
-        records_df = get_records(predictions_df)
-        clear_mongo(MONGO_DB,'Weekly_Predictions_Records')
-        write_mongo(MONGO_DB,records_df, 'Weekly_Predictions_Records')
-
+        # # Get stats and predicted records
+        # records_df = get_records(predictions_df)
+        # clear_mongo(MONGO_DB, 'Weekly_Predictions_Records')
+        # write_mongo(MONGO_DB, records_df, 'Weekly_Predictions_Records')
 
     except Exception as e:
         filename = os.path.basename(__file__)
         exc_type, exc_obj, exc_tb = sys.exc_info()
         line_number = exc_tb.tb_lineno
         error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        print(error_message)
         send_failure_email(error_message, filename)
 
 if __name__ == '__main__':

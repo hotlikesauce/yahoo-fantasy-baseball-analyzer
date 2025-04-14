@@ -27,32 +27,35 @@ MONGO_DB = os.environ.get('MONGO_DB')
 
 
 def get_seasons_best(df,table):
-    # Initialize a list to store the top 10 results for each stat
-    top_1_dfs = []
+    if df.empty:
+        pass
+    else:
+        # Initialize a list to store the top 10 results for each stat
+        top_1_dfs = []
 
-    # Loop through each column in the DataFrame
-    for column in df.columns:
-        if column in ['Team', 'Week', 'Opponent']:
-            # Skip non-stat columns
-            pass
-        elif column in Low_Categories:
-            # Sort in ascending order for low categories and get top 10
-            top_1 = df.sort_values(by=column, ascending=True).head(1)
-            top_1['Stat_Category'] = column  # Add a column to indicate the stat category
-            top_1_dfs.append(top_1)
-        else:
-            # Sort in descending order for high categories and get top 10
-            top_1 = df.sort_values(by=column, ascending=False).head(1)
-            top_1['Stat_Category'] = column  # Add a column to indicate the stat category
-            top_1_dfs.append(top_1)
+        # Loop through each column in the DataFrame
+        for column in df.columns:
+            if column in ['Team', 'Week', 'Opponent']:
+                # Skip non-stat columns
+                pass
+            elif column in Low_Categories:
+                # Sort in ascending order for low categories and get top 10
+                top_1 = df.sort_values(by=column, ascending=True).head(1)
+                top_1['Stat_Category'] = column  # Add a column to indicate the stat category
+                top_1_dfs.append(top_1)
+            else:
+                # Sort in descending order for high categories and get top 10
+                top_1 = df.sort_values(by=column, ascending=False).head(1)
+                top_1['Stat_Category'] = column  # Add a column to indicate the stat category
+                top_1_dfs.append(top_1)
 
-    # Combine all top 10 results into a single DataFrame
-    top_10_df = pd.concat(top_1_dfs, ignore_index=True)
-    print(top_10_df)
+        # Combine all top 10 results into a single DataFrame
+        top_10_df = pd.concat(top_1_dfs, ignore_index=True)
+        print(top_10_df)
 
 
 
-    stat_columns = ['R', 'H', 'HR', 'RBI', 'SB', 'OPS', 'HRA', 'ERA', 'WHIP', 'K9', 'QS', 'SVH']
+    stat_columns = ['R', 'H', 'HR', 'RBI', 'SB', 'OPS', 'TB', 'ERA', 'WHIP', 'K9', 'QS', 'SVH']
 
     # Create an empty DataFrame to store the results
     result_df = pd.DataFrame(columns=['Team', 'Week', 'Stat_Category', 'Total','Opponent'])
@@ -105,6 +108,7 @@ def main():
         exc_type, exc_obj, exc_tb = sys.exc_info()
         line_number = exc_tb.tb_lineno
         error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        print(error_message)
         send_failure_email(error_message, filename)
 
 

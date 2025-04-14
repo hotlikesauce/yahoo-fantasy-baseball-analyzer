@@ -23,10 +23,11 @@ load_dotenv()
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 YAHOO_LEAGUE_ID = os.environ.get('YAHOO_LEAGUE_ID')
 MONGO_DB = os.environ.get('MONGO_DB')
-
+lastWeek = set_last_week()
 
 def get_all_play(num_teams,leaguedf,most_recent_week):
     thisWeek = set_this_week()
+    lastWeek = set_last_week()
     for week in range ((most_recent_week),thisWeek):
         #Function below sets up the dataframe for the all play function
         if most_recent_week == thisWeek:
@@ -44,8 +45,8 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                 table = soup.find_all('table')
                 df = pd.read_html(str(table))[1]
                 df['Week'] = week
-                df.columns = df.columns.str.replace('[#,@,&,/,+]', '')
-                df.columns = df.columns.str.replace('HR.1', 'HRA')
+                df.columns = df.columns.str.replace('[#,@,&,/,+]', '', regex=True)
+                #df.columns = df.columns.str.replace('HR.1', 'HRA')
 
                 for column in df.columns:
                     if column in percentage_categories:
@@ -67,15 +68,18 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                 df['Opponent'] = df.loc[1, 'Team']
 
 
-                allPlaydf = allPlaydf.append(df.loc[0], True)
+                allPlaydf = pd.concat([allPlaydf, df.loc[[0]]], ignore_index=True)
 
-            print(week)
-            print(allPlaydf)
+
+            #print(week)
+            #print(allPlaydf)
+            clear_mongo_query(MONGO_DB,'week_stats','"Week":'+str(lastWeek))
             write_mongo(MONGO_DB,allPlaydf,'week_stats')
             logger.info(f'Week: {week}')
 
             # Calculate implied win statistics - The person with the most Runs in a week has an implied win of 1.0, because they would defeat every other team in that category.
             # Lowest scoring player has implied wins of 0, which we manually set to avoid dividing by 0
+            print(allPlaydf)
             for column in allPlaydf:
                 if column in ['Team','Week','Opponent']:
                     pass
@@ -91,19 +95,26 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                     allPlaydf[column+'_Coeff'] = allPlaydf[column+'_Rank'] / (num_teams - 1)
 
                 coeff_cols = [col for col in allPlaydf.columns if 'Coeff' in col]
-                coeff_cols.append('Team')
-                coeff_cols.append('Week')
-                coeff_cols.append('Opponent')
+                coeff_cols.extend(['Team', 'Week', 'Opponent'])
                 rankings_df = allPlaydf[coeff_cols]
             
-            cols_to_sum = rankings_df.columns[:df.shape[1]-1]
+            cols_to_sum = [col for col in rankings_df.columns if col not in ['Team', 'Week','Opponent']]
+            for col in cols_to_sum:
+                rankings_df[col] = pd.to_numeric(rankings_df[col], errors='coerce')
+
+            # Now sum the numeric columns along axis=1
             rankings_df['Expected_Wins'] = rankings_df[cols_to_sum].sum(axis=1)
+
             
             # Remove Individual Stat Columns
             rankings_df = rankings_df[['Team', 'Week', 'Opponent', 'Expected_Wins']]
-            
+            print(rankings_df)
+
+            rankings_df['Team'] = rankings_df['Team'].astype(str)
+            rankings_df['Opponent'] = rankings_df['Opponent'].astype(str)
+
             rankings_df_expanded = rankings_df.merge(right=rankings_df, left_on='Team', right_on='Opponent')
-            
+
             rankings_df_expanded = rankings_df_expanded.rename(columns={"Team_x": "Team", "Week_x": "Week","Opponent_x": "Opponent","Expected_Wins_x": "Team_Expected_Wins","Expected_Wins_y": "Opponent_Expected_Wins"})
             rankings_df_expanded = rankings_df_expanded[['Week', 'Team', 'Team_Expected_Wins', 'Opponent', 'Opponent_Expected_Wins']]
             rankings_df_expanded['Matchup_Difference'] = (rankings_df_expanded['Team_Expected_Wins'] - rankings_df_expanded['Opponent_Expected_Wins']).apply(lambda x: round(x, 2))
@@ -112,6 +123,7 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
             print(rankings_df_expanded)
             
             df = build_team_numbers(rankings_df_expanded)
+            print(df)
             df = build_opponent_numbers(rankings_df_expanded)
 
             
@@ -138,6 +150,7 @@ def main():
                 write_mongo(MONGO_DB,rankings_df,'coefficient')
         else:
             rankings_df = get_all_play(num_teams,leaguedf,1)
+            print(rankings_df)
             if rankings_df is not None:
                 write_mongo(MONGO_DB,rankings_df,'coefficient')
 
@@ -146,6 +159,7 @@ def main():
         exc_type, exc_obj, exc_tb = sys.exc_info()
         line_number = exc_tb.tb_lineno
         error_message = f"Error occurred in {filename} at line {line_number}: {str(e)}"
+        print(error_message)
         send_failure_email(error_message, filename)
 
 

@@ -110,3 +110,6 @@ ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occu
 ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
 ERROR:root:get_remaining_sos.py: documents must be a non-empty list - Error occurred at line 691
 ERROR:root:get_remaining_sos.py: 'Team' - Error occurred at line 3805
+ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252
+ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252
+ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252

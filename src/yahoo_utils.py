@@ -107,7 +107,7 @@ def build_opponent_numbers(df):
             link_url = link['href']  # Extract the href link
             if link_text != '':
                 links.append((link_text, link_url))  # Append the hyperlink text and link to the list
-
+    print(df)
     for index, row in df.iterrows():
         team_name = row['Opponent']
         for link in links:
