@@ -92,7 +92,7 @@ pitching_categories = {"Pitching Appearances":"PITCH_APP",
 
 Low_Categories = ["CS","ERR","TB","K_BAT","GIDP","ERA","WHIP","IR_SCORE","BS","B9","H9","OBPA","RL","3BA","2BA","1BA","TBA","BALK","WP","HB","IBBA","BBA","HRA","ER","R_PITCH","H_PITCH","L"]
 
-Low_Categories_Stats = ["CS_Stats","ERR_Stats","K_BAT_Stats","GIDP_Stats","ERA_Stats","WHIP_Stats","IR_SCORE_Stats","BS_Stats","B9_Stats","H9_Stats","OBPA_Stats","RL_Stats","3BA_Stats","2BA_Stats","1BA_Stats","TBA_Stats","BALK_Stats","WP_Stats","HB_Stats","IBBA_Stats","BBA_Stats","HRA_Stats","ER_Stats","R_PITCH_Stats","H_PITCH_Stats","L_Stats"]
+Low_Categories_Stats = ["CS_Stats","ERR_Stats","K_BAT_Stats","GIDP_Stats","ERA_Stats","WHIP_Stats","IR_SCORE_Stats","BS_Stats","B9_Stats","H9_Stats","OBPA_Stats","RL_Stats","3BA_Stats","2BA_Stats","1BA_Stats","TB_Stats","BALK_Stats","WP_Stats","HB_Stats","IBBA_Stats","BBA_Stats","HRA_Stats","ER_Stats","R_PITCH_Stats","H_PITCH_Stats","L_Stats"]
 
 Low_Categories_Avg = ["CS_Avg","ERR_Avg","K_BAT_Avg","GIDP_Avg","ERA_Avg","WHIP_Avg","IR_SCORE_Avg","BS_Avg","B9_Avg","H9_Avg","OBPA_Avg","RL_Avg","3BA_Avg","2BA_Avg","1BA_Avg","TBA_Avg","BALK_Avg","WP_Avg","HB_Avg","IBBA_Avg","BBA_Avg","HRA_Avg","ER_Avg","R_PITCH_Avg","H_PITCH_Avg","L_Avg"]
 

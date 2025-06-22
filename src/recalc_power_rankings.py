@@ -30,7 +30,7 @@ MONGO_DB = os.environ.get('MONGO_DB')
 
 
 def get_normalized_ranks(all_time_rank_df):
-    print(all_time_rank_df)
+    #print(all_time_rank_df)
     #parse through columns and figure out which ones are low-based
     low_columns_to_analyze = []
     high_columns_to_analyze = []
@@ -46,8 +46,8 @@ def get_normalized_ranks(all_time_rank_df):
         pass
     # Calculate Score for each column grouped by team_number
     
-    print(low_columns_to_analyze)
-    print(high_columns_to_analyze)
+    #print(low_columns_to_analyze)
+    #print(high_columns_to_analyze)
 
     for column in high_columns_to_analyze:
         min_score = 0  # Set the desired minimum Score value
@@ -79,39 +79,64 @@ def get_normalized_ranks(all_time_rank_df):
     all_time_rank_df['Score_Rank'] = all_time_rank_df['Score_Sum'].rank(ascending=False)
     all_time_rank_df = build_team_numbers(all_time_rank_df)  
 
-    print(all_time_rank_df)
+    #print(all_time_rank_df)
     return all_time_rank_df
 
 def main():
     num_teams = league_size()
     leaguedf = league_stats_all_df()
     lastWeek = set_last_week()
+    thisweek = set_this_week()
     try:
         running_df = pd.DataFrame()
     
-        for week in range(1,2):
+        for week in range(1,thisweek):
             weeks_of_interest = [week]
 
 
             #Generate ranks and running ranks in lieu of running power ranks which started at the beginning of the season
             for weeks in weeks_of_interest:
                 weekly_stats_df = get_mongo_data(MONGO_DB,'weekly_stats','"Week": '+str(weeks))
+
+                team_rename_dict = {
+                    "Bobby's Big Witt": "Mendoza Line",
+                    "Mediocre White Excellence": "Jac Off",
+                    "Moniebol (is this thing on?)🐳": "Moniebol 🐳",
+                    "Moniebol (when u DEI u DIE)🐳": "Moniebol 🐳",
+                    "Ready to Plow": "Getting Plowed.",
+                    "Saggy Tatis": "Hoern Hub",
+                    "Torpedo Dong": "PCA 3/4/5 & Ohtani"
+                }
+
+                # Apply the mapping to the 'Team' column
+                weekly_stats_df['Team'] = weekly_stats_df['Team'].replace(team_rename_dict)
                 running_df = pd.concat([running_df, weekly_stats_df], ignore_index=True)
             aggregations = {
                 'R': 'sum', 'H': 'sum', 'HR': 'sum', 'RBI': 'sum', 'SB': 'sum',
-                'HRA': 'sum', 'QS': 'sum', 'SVH': 'sum',
+                'TB': 'sum', 'QS': 'sum', 'SVH': 'sum',
                 'OPS': 'mean', 'ERA': 'mean', 'WHIP': 'mean', 'K9': 'mean'
             }
+
+
 
             # Group by 'Team' and aggregate
             team_stats = running_df.groupby('Team').agg(aggregations).reset_index()
 
-            print(team_stats)
             normalized_ranks_df = get_normalized_ranks(team_stats)
             normalized_ranks_df['Week'] = week
-            print(normalized_ranks_df)
-            #clear_mongo_query(MONGO_DB,'running_normalized_ranks','"Week":'+str(week))
-            #write_mongo(MONGO_DB,normalized_ranks_df,'running_normalized_ranks')
+            #print(normalized_ranks_df[[col for col in normalized_ranks_df.columns if col.endswith('_Score') or col == 'Team' or col == 'Score_Sum']])
+
+            if week == 10:
+                print(team_stats[['Team','K9']])
+                # Print only Team, Score_Sum, Score_Rank, and each _Score column
+                columns_to_print = ['Team', 'Score_Sum', 'Score_Rank'] + \
+                                [col for col in normalized_ranks_df.columns if col.endswith('_Score')]
+                print(normalized_ranks_df[columns_to_print])
+
+            else:
+                pass
+            clear_mongo_query(MONGO_DB,'running_normalized_ranks','"Week":'+str(week))
+            write_mongo(MONGO_DB,normalized_ranks_df,'running_normalized_ranks')
 
     except Exception as e:
         filename = os.path.basename(__file__)

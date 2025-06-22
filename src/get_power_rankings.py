@@ -232,6 +232,7 @@ def get_normalized_ranks(power_rank_df):
     power_rank_df['Score_Variation'] = power_rank_df['Score_Rank'] - power_rank_df['Rank']
 
     print(power_rank_df)
+
     return power_rank_df
 
 
