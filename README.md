@@ -31,16 +31,33 @@ Technologies Used: Python, MongoDB
 
 ## Usage
 
-- One of the many ways you can use this project is to run the Live Standings script every hour as a scheduled task. That will push data to mongo dB where you can then use a free tier of mongo db, and utilize the mongo dB charts interface to make a live-updating table
+### Local Usage
+- Run the Live Standings script every hour as a scheduled task to push data to MongoDB
+- Run the Weekly Updates script every week after weekly scores are calculated
+
+### AWS Lambda Deployment (Recommended)
+
+Deploy your scripts to run automatically in the cloud:
+
+```bash
+# Quick setup and deployment
+python setup.py      # Check prerequisites and install dependencies
+python test_lambda.py # Test your functions locally
+python deploy.py     # Deploy to AWS Lambda
+```
+
+This creates two Lambda functions:
+- **Weekly Updates**: Runs every Sunday at 5am ET
+- **Live Standings**: Runs every 15 minutes continuously
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+
+### Data Visualization
+- Use MongoDB Charts with your data for live-updating dashboards
   - [Live Standings](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9ca-38db-40b7-8761-892ed32c586e)
+  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
 
   - ![live](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/152959ea-8c2e-4ae6-82b3-079a53222f2b)
-
-
-- Additionally, you can run the Weekly Updates script every week after weekly scores have been calculated which generates weekly standings, power rankings, and an all-play type coefficient.
-
-  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
-  - ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
  
 ## Contributing
 

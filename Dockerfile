@@ -1,12 +1,15 @@
-# Dockerfile
-FROM python:3.9 
+FROM public.ecr.aws/lambda/python:3.9
+
+# Copy function code and source
+COPY lambda_handler.py ${LAMBDA_TASK_ROOT}
+COPY src/ ${LAMBDA_TASK_ROOT}/src/
 
 # Install dependencies
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
-# Copy all files from the current directory to the root of the container
-COPY . /
+# Set environment variables
+ENV PYTHONPATH="${LAMBDA_TASK_ROOT}:${LAMBDA_TASK_ROOT}/src"
 
-# Specify the command to run within the container
-CMD [ "python", "weekly_updates.py" ]
+# Default handler
+CMD [ "lambda_handler.lambda_handler_weekly" ]

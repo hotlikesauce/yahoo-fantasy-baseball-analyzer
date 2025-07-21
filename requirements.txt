@@ -5,3 +5,5 @@ pymongo==4.2.0
 python-dotenv==1.0.0
 Requests==2.31.0
 setuptools==58.1.0
+aws-cdk-lib>=2.0.0
+constructs>=10.0.0
