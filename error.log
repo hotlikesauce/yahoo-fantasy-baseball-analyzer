@@ -114,3 +114,9 @@ ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252
 ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252
 ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6252
 ERROR:root:get_elo.py: "['ELO_Team_Sum'] not in index" - Line 6174
+ERROR:root:get_remaining_sos.py: 'Avg_Power_Rank' - Error occurred at line 3805
+ERROR:root:get_remaining_sos.py: 'Week' - Error occurred at line 3805
+ERROR:root:get_remaining_sos.py: 'Opponent_Team_Number' - Error occurred at line 1850
+ERROR:root:get_remaining_sos.py: 'Week' - Error occurred at line 3805
+ERROR:root:get_remaining_sos.py: 'Team_Number' - Error occurred at line 888
+ERROR:root:get_remaining_sos.py: 'Team_Number' - Error occurred at line 888

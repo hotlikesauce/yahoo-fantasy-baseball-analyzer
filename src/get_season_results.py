@@ -82,7 +82,7 @@ def get_seasons_best(df,table):
         result_df = pd.concat([result_df, top_stat_df], ignore_index=True)
 
 
-
+    result_df = build_team_numbers(result_df)
 
     print(result_df)
     write_mongo(MONGO_DB,result_df,str(table))
@@ -95,6 +95,7 @@ def main():
     logger.add("logs/get_all_play.log", rotation="500 MB")
     try:
         df = get_mongo_data(MONGO_DB,'week_stats','')
+        print(df)
         long_weeks_df = df[df['Week'].isin([1, 15])]
         regular_weeks_df = df[~df['Week'].isin([1, 15])]
         clear_mongo(MONGO_DB,'seasons_best_long')

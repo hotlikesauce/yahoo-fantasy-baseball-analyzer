@@ -26,72 +26,94 @@ MONGO_DB = os.environ.get('MONGO_DB')
 def get_schedule(max_week):
     num_teams = league_size()
     this_week = set_this_week()
+    
+    # Get team_dict from MongoDB for joining
+    team_dict_df = get_mongo_data(MONGO_DB, 'team_dict', '')
+    if team_dict_df.empty:
+        print("Error: team_dict collection is empty. Cannot proceed without team mappings.")
+        return
+    
+    # Create team name to number mapping
+    team_name_to_number = dict(zip(team_dict_df['Team'], team_dict_df['Team_Number']))
+    print(f"Team mappings loaded: {team_name_to_number}")
 
-    for week in range(1, 22):
+    # Clear existing schedule data before inserting new data
+    clear_mongo(MONGO_DB, 'schedule')
+
+    for week in range(this_week, 22):
         rows = []
-        for matchup in range(1, num_teams + 1):
-            soup = url_requests(YAHOO_LEAGUE_ID + f'matchup?date=totals&week={week}&mid1={matchup}')
-            table = soup.find_all('table')
-            df = pd.read_html(str(table))[1]
-            df['Week'] = week
-            df.columns = df.columns.str.replace('[#,@,&,/,+]', '', regex=True)
+        processed_matchups = set()  # Track processed matchups to avoid duplicates
+        
+        # Get all team matchups for this week
+        for team_id in range(1, num_teams + 1):
+            try:
+                soup = url_requests(YAHOO_LEAGUE_ID + f'matchup?date=totals&week={week}&mid1={team_id}')
+                table = soup.find_all('table')
+                df = pd.read_html(str(table))[1]
+                df['Week'] = week
+                df.columns = df.columns.str.replace('[#,@,&,/,+]', '', regex=True)
 
-            df['Opponent'] = df.loc[1, 'Team']
-            df = df[['Team', 'Opponent', 'Week']]
-            rows.append(df.loc[0])
+                if len(df) >= 2:
+                    team1_name = df.loc[0, 'Team']
+                    team2_name = df.loc[1, 'Team']
+                    
+                    # Create a sorted tuple to represent this matchup (order doesn't matter)
+                    matchup_key = tuple(sorted([team1_name, team2_name]))
+                    
+                    # Only process if we haven't seen this matchup yet
+                    if matchup_key not in processed_matchups:
+                        # Team 1 vs Team 2
+                        team1_row = df.loc[0].copy()
+                        team1_row['Opponent'] = team2_name
+                        
+                        # Team 2 vs Team 1  
+                        team2_row = df.loc[1].copy()
+                        team2_row['Opponent'] = team1_name
+                        
+                        # Add both teams to rows
+                        rows.append(team1_row[['Team', 'Opponent', 'Week']])
+                        rows.append(team2_row[['Team', 'Opponent', 'Week']])
+                        
+                        # Mark this matchup as processed
+                        processed_matchups.add(matchup_key)
+                        
+            except Exception as e:
+                # Skip invalid team IDs
+                continue
 
         # Build the full schedule DataFrame
         schedule_df = pd.DataFrame(rows)
+        
+        if schedule_df.empty:
+            print(f"No schedule data found for week {week}")
+            continue
+            
+        print(f"Schedule data for week {week}:")
         print(schedule_df)
 
         # Check for missing opponent info
         if schedule_df['Opponent'].isnull().any():
-            return
+            print(f"Missing opponent data for week {week}")
+            continue
 
-        # BUILD TABLE WITH TEAM NAME AND NUMBER
-        source = uReq(YAHOO_LEAGUE_ID).read()
-        soup = bs.BeautifulSoup(source, 'lxml')
+        # Map team names to team numbers using the team_dict from MongoDB
+        schedule_df['Team_Number'] = schedule_df['Team'].map(team_name_to_number)
+        schedule_df['Opponent_Team_Number'] = schedule_df['Opponent'].map(team_name_to_number)
+        
+        # Check if all teams were mapped successfully
+        if schedule_df['Team_Number'].isnull().any() or schedule_df['Opponent_Team_Number'].isnull().any():
+            print(f"Warning: Some teams could not be mapped for week {week}")
+            print("Unmapped teams:", schedule_df[schedule_df['Team_Number'].isnull() | schedule_df['Opponent_Team_Number'].isnull()])
+            continue
 
-        table = soup.find('table')
-        links = []
-        if table is not None:
-            for link in table.find_all('a'):
-                link_text = link.text.strip()
-                link_url = link['href']
-                if link_text:
-                    links.append((link_text, link_url))
+        # Keep only the required columns: team_number, opponent_number, week
+        final_schedule_df = schedule_df[['Team_Number', 'Opponent_Team_Number', 'Week']].copy()
+        
+        print(f"Final schedule data for week {week}:")
+        print(final_schedule_df)
 
-        print(schedule_df)
-        # Map team numbers
-        # Map team numbers
-        for index, row in schedule_df.iterrows():
-            team_name = row['Team']
-            team_number = None  # Initialize team_number to avoid overwriting in each iteration
-            
-            # Loop through each link and find the correct team match
-            for link in links:
-                if link[0] == team_name:
-                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:]
-                    break  # Exit the loop once a match is found
-            
-            # Only update the team number if it was found
-            if team_number:
-                schedule_df.at[index, 'Team_Number'] = team_number
-                print(schedule_df)
-                break  # Exit the loop once a match is found
-
-        for index, row in schedule_df.iterrows():
-            team_name = row['Opponent']
-            for link in links:
-                if link[0] == team_name:
-                    team_number = link[1][-2:] if link[1][-2:].isdigit() else link[1][-1:]
-                    schedule_df.at[index, 'Opponent_Team_Number'] = team_number
-                    break
-
-        schedule_df = schedule_df.drop(['Team', 'Opponent'], axis=1)
-        print(schedule_df)
-
-        write_mongo(MONGO_DB, schedule_df, 'schedule')
+        # Write to MongoDB
+        write_mongo(MONGO_DB, final_schedule_df, 'schedule')
 
 def main():
     try:

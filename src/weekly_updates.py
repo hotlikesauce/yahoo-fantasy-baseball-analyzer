@@ -10,6 +10,7 @@ from get_weekly_results import main as get_weekly_results
 from get_elo import main as get_elo
 from export_csv import main as export_csv
 from get_remaining_sos import main as get_remaining_sos
+from get_season_results import main as get_season_results
 
 
 def main():
@@ -21,7 +22,8 @@ def main():
         ,get_weekly_results
         ,get_season_trend_standings_main 
         ,get_weekly_prediction_main 
-        ,get_elo 
+        ,get_elo
+        ,get_season_results
         #,get_remaining_sos
         #,export_csv
     ]

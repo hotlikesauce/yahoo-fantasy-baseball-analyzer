@@ -74,7 +74,8 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
             #print(week)
             #print(allPlaydf)
             clear_mongo_query(MONGO_DB,'week_stats','"Week":'+str(lastWeek))
-            write_mongo(MONGO_DB,allPlaydf,'week_stats')
+            df_week_stats = build_team_numbers(allPlaydf)
+            write_mongo(MONGO_DB,df_week_stats,'week_stats')
             logger.info(f'Week: {week}')
 
             # Calculate implied win statistics - The person with the most Runs in a week has an implied win of 1.0, because they would defeat every other team in that category.
