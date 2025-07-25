@@ -193,8 +193,8 @@ def get_remaining_sos(avg_opponent_power=None):
             print(f"Sample team_dict data:")
             print(team_dict_df.head())
             
-            # Ensure Team_Number is integer in team_dict
-            team_dict_df['Team_Number'] = team_dict_df['Team_Number'].astype(int)
+            # Ensure Team_Number is string in team_dict for mapping
+            team_dict_df['Team_Number'] = team_dict_df['Team_Number'].astype(str)
             team_name_mapping = dict(zip(team_dict_df['Team_Number'], team_dict_df['Team']))
             
             print(f"Team name mapping created: {team_name_mapping}")
@@ -206,14 +206,14 @@ def get_remaining_sos(avg_opponent_power=None):
         games_per_team = merged_df.groupby('Team_Number').size()
         print(f"\nGames remaining per team:")
         for team_num in sorted(games_per_team.index):
-            team_name = team_name_mapping.get(team_num, f"Team {team_num}")
+            team_name = team_name_mapping.get(str(team_num), f"Team {team_num}")
             print(f"Team {team_num} ({team_name}): {games_per_team[team_num]} games")
         
         # Debug: Show total opponent power per team before aggregation
         print(f"\nTotal opponent power per team (before final aggregation):")
         temp_totals = merged_df.groupby('Team_Number')['Score_Sum'].sum()
         for team_num in sorted(temp_totals.index):
-            team_name = team_name_mapping.get(team_num, f"Team {team_num}")
+            team_name = team_name_mapping.get(str(team_num), f"Team {team_num}")
             print(f"Team {team_num} ({team_name}): {temp_totals[team_num]:.2f}")
         
         # Debug: Check for any duplicate games or missing weeks
@@ -325,7 +325,7 @@ def get_remaining_sos(avg_opponent_power=None):
         
         # Use the existing team_name_mapping that was already created above
         if team_name_mapping:
-            sos_summary['Team_Name'] = sos_summary['Team_Number'].map(team_name_mapping)
+            sos_summary['Team_Name'] = sos_summary['Team_Number'].astype(str).map(team_name_mapping)
         else:
             print("Warning: No team name mapping available")
             sos_summary['Team_Name'] = sos_summary['Team_Number'].astype(str)
@@ -356,6 +356,9 @@ def get_remaining_sos(avg_opponent_power=None):
                         'Games_Remaining', 'Schedule_Difficulty']
         
         sos_final = sos_summary[final_columns].copy()
+        
+        # Cast Team_Number as string for MongoDB storage
+        sos_final['Team_Number'] = sos_final['Team_Number'].astype(str)
         
         # Display results
         print("\n" + "="*60)

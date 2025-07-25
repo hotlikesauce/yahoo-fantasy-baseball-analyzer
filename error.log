@@ -120,3 +120,9 @@ ERROR:root:get_remaining_sos.py: 'Opponent_Team_Number' - Error occurred at line
 ERROR:root:get_remaining_sos.py: 'Week' - Error occurred at line 3805
 ERROR:root:get_remaining_sos.py: 'Team_Number' - Error occurred at line 888
 ERROR:root:get_remaining_sos.py: 'Team_Number' - Error occurred at line 888
+ERROR:root:get_weekly_luck_analysis.py: "['Team_Name'] not in index" - Error occurred at line 6174
+ERROR:root:get_weekly_luck_analysis.py: "['Team_Name'] not in index" - Error occurred at line 6174
+ERROR:root:get_weekly_luck_analysis.py: 'Team_Expected_Wins_opponent' - Error occurred at line 3805
+ERROR:root:get_weekly_luck_analysis.py: 'Team_Expected_Wins_opponent' - Error occurred at line 3805
+ERROR:root:get_weekly_luck_analysis.py: "['Opponent_Actual_Wins'] not in index" - Error occurred at line 6174
+ERROR:root:get_weekly_luck_analysis.py: "['Opponent_Actual_Wins'] not in index" - Error occurred at line 6174
