@@ -1,3 +1,4 @@
+Flask==2.3.3
 beautifulsoup4==4.11.1
 certifi==2022.9.24
 pandas==1.5.1
@@ -5,5 +6,6 @@ pymongo==4.2.0
 python-dotenv==1.0.0
 Requests==2.31.0
 setuptools==58.1.0
-aws-cdk-lib>=2.0.0
-constructs>=10.0.0
+gunicorn==21.2.0
+numpy==1.25.2
+bson==0.5.10

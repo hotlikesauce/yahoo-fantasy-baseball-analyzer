@@ -31,9 +31,14 @@ def get_weekly_results(num_teams, max_week):
     lastWeek = set_last_week()
     thisWeek = set_this_week()
     for week in range((max_week + 1), thisWeek):
+        print(f"Processing week {week}...")
         # Sleep timer to avoid rapid requests to the Yahoo servers
         for matchup in range(1, (num_teams + 1)):
+            print(f"  Processing matchup {matchup}/{num_teams} for week {week}")
             soup = url_requests(YAHOO_LEAGUE_ID + 'matchup?week=' + str(week) + '&module=matchup&mid1=' + str(matchup))
+            
+            # Add delay after each Yahoo API request to prevent throttling
+            time.sleep(2)  # 2 second delay between requests
             table = soup.find_all('table')
             df = pd.read_html(str(table))[1]
             df.columns = df.columns[:-1].tolist() + ['Score']
@@ -43,11 +48,26 @@ def get_weekly_results(num_teams, max_week):
             df['Opponent'] = df.loc[1, 'Team']
             df['Opponent_Score'] = df.loc[1, 'Score']
 
-            # Calculate score differences and normalize them
+            # Calculate ties and adjust scores
+            # Total categories = 12, so ties = 12 - team_wins - opponent_wins
+            team_wins = df.loc[0, 'Score']
+            opponent_wins = df.loc[1, 'Score']
+            ties = 12 - team_wins - opponent_wins
+            
+            # Adjust scores to include half points for ties
+            df.loc[0, 'Score'] = team_wins + (ties * 0.5)
+            df.loc[1, 'Score'] = opponent_wins + (ties * 0.5)
+            
+            # Update opponent score after adjustment
+            df['Opponent_Score'] = df.loc[1, 'Score']
+
+            # Calculate score differences and normalize them (using adjusted scores)
             df['Score_Difference'] = df['Score'] - df['Opponent_Score']
-            min_value = -1 * num_teams
-            max_value = num_teams
+            min_value = -1 * 12  # Max possible difference is now 12 (12-0 with no ties)
+            max_value = 12
             df['Normalized_Score_Difference'] = (df['Score_Difference'] - min_value) / (max_value - min_value)
+            
+            print(f"Week {week}, Matchup {matchup}: Raw scores {team_wins}-{opponent_wins}, Ties: {ties}, Adjusted scores: {df.loc[0, 'Score']}-{df.loc[1, 'Score']}")
 
             # Instead of append, use pd.concat with df.loc[[0]] to ensure it's a DataFrame
             weekly_results_df = pd.concat([weekly_results_df, df.loc[[0]]], ignore_index=True)
@@ -64,10 +84,15 @@ def get_weekly_stats(num_teams, leaguedf, most_recent_week):
         if most_recent_week + 1 == thisWeek:
             pass
         else:
+            print(f"Processing weekly stats for week {week}...")
             allPlaydf = leaguedf.copy()
             for matchup in range(1, (num_teams + 1)):
+                print(f"  Processing stats matchup {matchup}/{num_teams} for week {week}")
                 # Sleep timer to avoid rapid requests to Yahoo servers
                 soup = url_requests(YAHOO_LEAGUE_ID + 'matchup?week=' + str(week) + '&module=matchup&mid1=' + str(matchup))
+                
+                # Add delay after each Yahoo API request to prevent throttling
+                time.sleep(2)  # 2 second delay between requests
                 table = soup.find_all('table')
                 df = pd.read_html(str(table))[1]
                 df['Week'] = week
@@ -174,11 +199,25 @@ def main():
     num_teams = league_size()
     leaguedf = league_stats_all_df()
     lastWeek = set_last_week()
+    
+    # Set this to True to reprocess all weeks with corrected tie scoring
+    REPROCESS_ALL_WEEKS = False
+    
     try:
         # Aggregate W/L throughout season
         df = get_mongo_data(MONGO_DB, 'weekly_results', '')
         print(df)
-        if not df.empty: 
+        
+        if REPROCESS_ALL_WEEKS:
+            print("REPROCESSING ALL WEEKS with corrected tie scoring...")
+            # Clear existing data and reprocess all weeks
+            clear_mongo(MONGO_DB, 'weekly_results')
+            weekly_results_df = get_weekly_results(num_teams, 0)
+            if weekly_results_df is not None and not weekly_results_df.empty:
+                print("Reprocessed weekly results with tie adjustments:")
+                print(weekly_results_df)
+                write_mongo(MONGO_DB, weekly_results_df, 'weekly_results')
+        elif not df.empty: 
             max_week = df['Week'].max()
             weekly_results_df = get_weekly_results(num_teams, max_week)
             if weekly_results_df is not None and not weekly_results_df.empty:

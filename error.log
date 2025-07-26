@@ -126,3 +126,5 @@ ERROR:root:get_weekly_luck_analysis.py: 'Team_Expected_Wins_opponent' - Error oc
 ERROR:root:get_weekly_luck_analysis.py: 'Team_Expected_Wins_opponent' - Error occurred at line 3805
 ERROR:root:get_weekly_luck_analysis.py: "['Opponent_Actual_Wins'] not in index" - Error occurred at line 6174
 ERROR:root:get_weekly_luck_analysis.py: "['Opponent_Actual_Wins'] not in index" - Error occurred at line 6174
+ERROR:root:check_minimum_innings.py: module 'datetime' has no attribute 'now' - Error occurred at line 139
+ERROR:root:check_minimum_innings.py: module 'datetime' has no attribute 'now' - Error occurred at line 139

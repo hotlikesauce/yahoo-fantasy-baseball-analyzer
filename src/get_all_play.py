@@ -85,15 +85,19 @@ def get_all_play(num_teams,leaguedf,most_recent_week):
                 if column in ['Team','Week','Opponent']:
                     pass
                 elif column in Low_Categories:
-                    allPlaydf[column+'_Rank'] = allPlaydf[column].rank(ascending=False) - 1
-                    # Set the index to newly created column, Rating_Rank
+                    # For low categories (ERA, WHIP), lower values are better
+                    # Rank ascending: best team (lowest value) gets rank 1, worst gets rank 12
+                    # Then invert: best team gets coefficient 1.0, worst gets coefficient 0.0
+                    allPlaydf[column+'_Rank'] = allPlaydf[column].rank(ascending=True)
                     allPlaydf.set_index(column+'_Rank')
-                    allPlaydf[column+'_Coeff'] = allPlaydf[column+'_Rank'] / (num_teams - 1)
+                    allPlaydf[column+'_Coeff'] = (num_teams - allPlaydf[column+'_Rank']) / (num_teams - 1)
                 else:
-                    allPlaydf[column+'_Rank'] = allPlaydf[column].rank(ascending=True) - 1
-                    # Set the index to newly created column, Rating_Rank
+                    # For high categories (HR, RBI), higher values are better
+                    # Rank descending: best team (highest value) gets rank 1, worst gets rank 12  
+                    # Then invert: best team gets coefficient 1.0, worst gets coefficient 0.0
+                    allPlaydf[column+'_Rank'] = allPlaydf[column].rank(ascending=False)
                     allPlaydf.set_index(column+'_Rank')
-                    allPlaydf[column+'_Coeff'] = allPlaydf[column+'_Rank'] / (num_teams - 1)
+                    allPlaydf[column+'_Coeff'] = (num_teams - allPlaydf[column+'_Rank']) / (num_teams - 1)
 
                 coeff_cols = [col for col in allPlaydf.columns if 'Coeff' in col]
                 coeff_cols.extend(['Team', 'Week', 'Opponent'])
