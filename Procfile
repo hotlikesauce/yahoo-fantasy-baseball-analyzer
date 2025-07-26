@@ -1,1 +1,1 @@
-web: gunicorn frontend.app:app
+web: python -m gunicorn frontend.app:app --host 0.0.0.0 --port $PORT

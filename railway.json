@@ -3,6 +3,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "gunicorn frontend.app:app --host 0.0.0.0 --port $PORT"
+    "startCommand": "python -m gunicorn frontend.app:app --host 0.0.0.0 --port $PORT"
   }
 }
