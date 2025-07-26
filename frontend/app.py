@@ -8,12 +8,20 @@ import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from mongo_utils import get_mongo_data
+try:
+    from mongo_utils import get_mongo_data
+except ImportError:
+    # Fallback for deployment
+    import sys
+    import os
+    src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
+    sys.path.insert(0, src_path)
+    from mongo_utils import get_mongo_data
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', 'src', '.env'))
-MONGO_DB = os.environ.get('MONGO_DB')
+MONGO_DB = os.environ.get('MONGO_DB', 'YahooFantasyBaseball_2025')
 
 app = Flask(__name__)
 
