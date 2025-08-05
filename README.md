@@ -85,7 +85,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ## Contributing
 
-Please feel free to improve on my code and provide any optimizations you can create. I am always looking for improvements and recommendations on datasets which would be userful to compile.
+Please feel free to improve on my code and provide any optimizations you can create. I am always looking for improvements and recommendations on datasets which would be useful to compile.
 
 ## License
 
