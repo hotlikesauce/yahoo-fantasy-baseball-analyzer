@@ -55,7 +55,6 @@ def main():
     ]
 ```
 
-- ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
 
 ### AWS Lambda Deployment (Recommended)
 
@@ -77,13 +76,16 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 ### Data Visualization
 - Use MongoDB Charts with your data for live-updating dashboards
   - [Live Standings](https://charts.mongodb.com/charts-pc-kmmrs/public/dashboards/9356d15c-ebdd-4ac3-a061-858c0a3b5026)
-  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/public/dashboards/47923ebc-cab2-4670-96a0-cbb87193490a)
-
+  
   - ![live](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/152959ea-8c2e-4ae6-82b3-079a53222f2b)
  
+  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/public/dashboards/47923ebc-cab2-4670-96a0-cbb87193490a)
+
+  - ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
+
 ## Contributing
 
-Please feel free to improve on my code and provide any optimizations you can create. I am always looking for improvements and recommendations on how to structure my code.
+Please feel free to improve on my code and provide any optimizations you can create. I am always looking for improvements and recommendations on datasets which would be userful to compile.
 
 ## License
 
