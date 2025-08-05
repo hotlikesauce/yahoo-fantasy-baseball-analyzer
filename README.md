@@ -27,13 +27,35 @@ Technologies Used: Python, MongoDB
 
 - The way it's currently set up, you will need to manipulate your gmail account to allow for third party apps to send emails on your behalf for failure notifications
 
-- You will need a manager_dict.py file containing the names of fantasy team managers in your league. This is used to create a team dictionary to handle fantasy team name changes throughout the course of the year. I have created a manager_dict_example.py file as a template.
-
 ## Usage
 
 ### Local Usage
 - Run the Live Standings script every hour as a scheduled task to push data to MongoDB
+```bash
+python get_live_standings.py
+```
 - Run the Weekly Updates script every week after weekly scores are calculated
+```bash
+python weekly_updates.py
+```
+- Functions which will be run as a part of the weekly updates
+```bash
+def main():
+    functions = [
+        get_live_standings_main
+        ,get_season_trend_power_ranks_main 
+        ,get_power_rankings_main 
+        ,get_all_play_main 
+        ,get_weekly_results
+        ,get_season_trend_standings_main 
+        ,get_weekly_prediction_main 
+        ,get_elo
+        ,get_season_results
+        ,get_remaining_sos
+    ]
+```
+
+- ![demo](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/5d4fcfeb-33ee-4dad-88d6-18de16486e26)
 
 ### AWS Lambda Deployment (Recommended)
 
@@ -54,8 +76,8 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ### Data Visualization
 - Use MongoDB Charts with your data for live-updating dashboards
-  - [Live Standings](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9ca-38db-40b7-8761-892ed32c586e)
-  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/dashboards/6435c9b3-8957-412e-8267-bed12f8caacb)
+  - [Live Standings](https://charts.mongodb.com/charts-pc-kmmrs/public/dashboards/9356d15c-ebdd-4ac3-a061-858c0a3b5026)
+  - [Stat Analysis](https://charts.mongodb.com/charts-pc-kmmrs/public/dashboards/47923ebc-cab2-4670-96a0-cbb87193490a)
 
   - ![live](https://github.com/hotlikesauce/YahooFantasyBaseball_2023/assets/46724986/152959ea-8c2e-4ae6-82b3-079a53222f2b)
  
@@ -69,7 +91,7 @@ Please feel free to improve on my code and provide any optimizations you can cre
 
 ## Acknowledgments
 
-Thank you to my league Summertime Sadness Fantasy Baseball for the stat ideas, the thousands of Stack Overflow posts I read, and ChatGPT.
+Thank you to my league Summertime Sadness Fantasy Baseball for the stat ideas, the thousands of Stack Overflow posts I read, and AI tools.
 
 ## Contact
 

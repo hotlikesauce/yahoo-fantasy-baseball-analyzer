@@ -24,8 +24,7 @@ def main():
         ,get_weekly_prediction_main 
         ,get_elo
         ,get_season_results
-        #,get_remaining_sos
-        #,export_csv
+        ,get_remaining_sos
     ]
 
     for func in functions:
