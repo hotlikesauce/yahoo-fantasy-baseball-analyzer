@@ -6,22 +6,32 @@ import pandas as pd
 from bson import ObjectId
 import numpy as np
 
+# Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 try:
     from mongo_utils import get_mongo_data
-except ImportError:
+except ImportError as e:
+    print(f"Import error: {e}")
     # Fallback for deployment
-    import sys
-    import os
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
     sys.path.insert(0, src_path)
-    from mongo_utils import get_mongo_data
+    try:
+        from mongo_utils import get_mongo_data
+    except ImportError as e2:
+        print(f"Second import error: {e2}")
+        # Create a dummy function if import fails
+        def get_mongo_data(db, collection, query):
+            return pd.DataFrame()
+
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', 'src', '.env'))
 MONGO_DB = os.environ.get('MONGO_DB', 'YahooFantasyBaseball_2025')
+
+print(f"Starting app with MONGO_DB: {MONGO_DB}")
+print(f"Environment variables loaded: {bool(os.environ.get('MONGO_CLIENT'))}")
 
 app = Flask(__name__)
 
@@ -75,6 +85,11 @@ def clean_data_for_json(df):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Railway"""
+    return jsonify({'status': 'healthy', 'message': 'App is running'})
 
 @app.route('/api/weekly-luck')
 def weekly_luck_data():
