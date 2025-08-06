@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  weekly-updates:
+    build:
+      context: .
+      dockerfile: Dockerfile.weekly
+    environment:
+      - MONGO_CLIENT=${MONGO_CLIENT}
+      - MONGO_DB=${MONGO_DB}
+    volumes:
+      # Only mount logs in production
+      - ./logs:/app/logs
+    networks:
+      - fantasy-network
+    restart: "no"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+    # Add logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  fantasy-network:
+    driver: bridge

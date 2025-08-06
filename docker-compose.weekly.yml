@@ -1,0 +1,44 @@
+services:
+  weekly-updates:
+    build:
+      context: .
+      dockerfile: Dockerfile.weekly
+    env_file:
+      - src/.env
+    volumes:
+      # Mount logs directory to persist logs
+      - ./logs:/app/logs
+      # Mount src for development (remove in production)
+      - ./src:/app/src
+    networks:
+      - fantasy-network
+    # Don't restart automatically - this is a job, not a service
+    restart: "no"
+    # Optional: set resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+
+  # Optional: MongoDB for local testing
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=YahooFantasyBaseball_2025
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - fantasy-network
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+
+networks:
+  fantasy-network:
+    driver: bridge

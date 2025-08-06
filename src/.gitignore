@@ -1,6 +1,7 @@
 .env
 *.pem
 *.csv
+*.log
 *.docx
 *.xlsx
 *.pyc

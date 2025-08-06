@@ -1,0 +1,9 @@
+@echo off
+echo Starting scheduled weekly updates...
+docker-compose -f docker-compose.weekly.yml up --build -d weekly-updates
+
+echo Waiting for completion...
+docker-compose -f docker-compose.weekly.yml logs -f weekly-updates
+
+echo Cleaning up...
+docker-compose -f docker-compose.weekly.yml down
