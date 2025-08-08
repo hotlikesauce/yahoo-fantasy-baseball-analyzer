@@ -88,7 +88,7 @@ def index():
 
 @app.route('/health')
 def health_check():
-    """Health check endpoint for Railway"""
+    """Health check endpoint"""
     return jsonify({'status': 'healthy', 'message': 'App is running'})
 
 @app.route('/api/weekly-luck')
